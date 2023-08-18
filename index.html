@@ -1,0 +1,216 @@
+<html>
+    <head>
+    <link rel="stylesheet" href="jqwidgets/styles/jqx.base.css" type="text/css" />
+
+        <script src="scripts/jquery-1.11.1.min.js"></script>
+        <script src="jqwidgets/jqxcore.js"></script>
+        <script src="jqwidgets/jqxribbon.js"></script>
+        <script src="jqwidgets/jqxwindow.js"></script>
+        <script src="jqwidgets/jqxmenu.js"></script>
+        <script src="jqwidgets/jqxlayout.js"></script>
+        <script src="jqwidgets/jqxdockinglayout.js"></script>
+        <script src="jqwidgets/jqxbuttons.js"></script>
+        <script src="jqwidgets/jqxscrollbar.js"></script>
+        <script src="jqwidgets/jqxtextarea.js"></script>
+        <script src="jqwidgets/jqxdata.js"></script>
+        <script src="jqwidgets/jqxdraw.js"></script>
+        <script src="jqwidgets/jqxtree.js"></script>
+
+        <style type="text/css">
+            .jqx-layout-group-auto-hide-content-vertical
+            {
+                width: 200px;
+            }
+        </style>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                // the 'layout' JSON array defines the internal structure of the docking layout
+                var layout = [{
+                    type: 'layoutGroup',
+                    orientation: 'horizontal',
+                    items: [
+                    {
+                        type: 'autoHideGroup',
+                        alignment: 'left',
+                        width: '10%',
+                        unpinnedWidth: 200,
+                        items: [{
+                            type: 'layoutPanel',
+                            title: 'Toolbox',
+                            contentContainer: 'ToolboxPanel'
+                        }, {
+                            type: 'layoutPanel',
+                            title: 'Help',
+                            contentContainer: 'HelpPanel'
+                        }]
+                    },
+                    {
+                        type: 'layoutGroup',
+                        orientation: 'vertical',
+                        width: '80%',
+                        items: [
+                            {
+                            type: 'documentGroup',
+                            height: '50%',
+                            minHeight: 200,
+                            items: [{
+                                type: 'documentPanel',
+                                title: 'Disassembler',
+                                contentContainer: 'dock-disam',
+                                },
+                                {
+                                type: 'documentPanel',
+                                title: 'Sprite',
+                                contentContainer: 'dock-sprite'
+                                }]
+                            },
+                            {
+                            type: 'tabbedGroup',
+                            height: '50%',
+                            minHeight: 200,
+                            pinnedHeight: 30,
+                            items: [{
+                                type: 'layoutPanel',
+                                title: 'Error List',
+                                contentContainer: 'ErrorListPanel'
+                            }]
+                            }]
+                    },
+                    {
+                        type: 'tabbedGroup',
+                        width: '10%',
+                        minWidth: 200,
+                        items: [{
+                            type: 'layoutPanel',
+                            title: 'Solution Explorer',
+                            contentContainer: 'SolutionExplorerPanel',
+                            initContent: function () {
+                                // initialize a jqxTree inside the Solution Explorer Panel
+                                var source = [{
+                                    icon: '../../../images/earth.png',
+                                    label: 'Project',
+                                    expanded: true,
+                                    items: [{
+                                        icon: '../../../images/folder.png',
+                                        label: 'css',
+                                        expanded: true,
+                                        items: [{
+                                            icon: '../../../images/nav1.png',
+                                            label: 'jqx.base.css'
+                                        }, {
+                                            icon: '../../../images/nav1.png',
+                                            label: 'jqx.energyblue.css'
+                                        }, {
+                                            icon: '../../../images/nav1.png',
+                                            label: 'jqx.orange.css'
+                                        }]
+                                    }, {
+                                        icon: '../../../images/folder.png',
+                                        label: 'scripts',
+                                        items: [{
+                                            icon: '../../../images/nav1.png',
+                                            label: 'jqxcore.js'
+                                        }, {
+                                            icon: '../../../images/nav1.png',
+                                            label: 'jqxdata.js'
+                                        }, {
+                                            icon: '../../../images/nav1.png',
+                                            label: 'jqxgrid.js'
+                                        }]
+                                    }, {
+                                        icon: '../../../images/nav1.png',
+                                        label: 'index.htm',
+                                        selected: true
+                                    }]
+                                }];
+    
+                                $('#solutionExplorerTree').jqxTree({ source: source, width: 190 });
+                            }
+                        }, {
+                            type: 'layoutPanel',
+                            title: 'Properties',
+                            contentContainer: 'PropertiesPanel'
+                        }]
+                    }]
+                }];
+    
+                $('#dockingLayout').jqxDockingLayout({ 
+                    width: "100%", 
+                    height: "100%", 
+                    layout: layout, 
+                    contextMenu: true });
+    
+                $('#viewServerExplorer').jqxButton();
+                $('#viewServerExplorer').click(function () {
+                    $('#dockingLayout').jqxDockingLayout('addFloatGroup', 300, 200, { x: 500, y: 200 }, 'layoutPanel', 'Server Explorer', '<div id="serverExplorerTree" style="border: none;"></div>', function () {
+                        var source = [{
+                            icon: '../../../images/dataadapter.png',
+                            label: 'Data Connections',
+                            expanded: true,
+                            items: [{
+                                icon: '../../../images/validator.png',
+                                label: 'northwinddatabase.mdf'
+                            }]
+                        }, {
+                            icon: '../../../images/nav1.png',
+                            label: 'Servers',
+                            items: [{
+                                icon: '../../../images/nav1.png',
+                                label: 'WorkStation3-PC'
+                            }, {
+                                icon: '../../../images/dragdrop.png',
+                                label: 'SharePoint Connections'
+                            }]
+                        }];
+    
+                        $('#serverExplorerTree').jqxTree({ source: source, width: '100%', height: 'auto' });
+                    });
+    
+                    $('#viewServerExplorer').jqxButton({ disabled: true });
+                });
+            });
+        </script>
+            
+        <script src="mnemonics.js"></script>
+        <script src="disasm.js"></script>
+        <script src="dock-asm.js"></script>
+        <script src="dock-sprite.js"></script>
+    </head>
+    <body>
+        <div id="container"></div> 
+        <div id="dockingLayout">
+            <!--The panel content divs can have a flat structure-->
+            <!--autoHideGroup-->
+            <div data-container="ToolboxPanel">
+                List of tools</div>
+            <div data-container="HelpPanel">
+                Help topics</div>
+            <!--documentGroup-->
+            <div data-container="dock-disam">
+                <div id="disam"></div>
+            </div>
+            <div data-container="dock-sprite">
+                <img id="sprite" style="transform-origin: top left; transform: scale(2);"/>
+            </div>
+            <!--bottom tabbedGroup-->
+            <div data-container="ErrorListPanel">
+                No errors.</div>
+            <!--right tabbedGroup-->
+            <div data-container="SolutionExplorerPanel">
+                <div id="solutionExplorerTree" style="border: none;">
+                </div>
+            </div>
+            <div data-container="PropertiesPanel">
+                List of properties</div>
+        </div>
+        <button id="viewServerExplorer">
+            View Server Explorer
+        </button>
+        <script>
+            dock_sprite("http://localhost:9009/vera/sprite/0")
+            dock_disasm("http://localhost:9009/dump/0/080d")
+        </script>   
+       
+    </body>
+</html>
