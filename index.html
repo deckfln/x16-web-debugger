@@ -15,6 +15,7 @@
         <script src="jqwidgets/jqxdata.js"></script>
         <script src="jqwidgets/jqxdraw.js"></script>
         <script src="jqwidgets/jqxtree.js"></script>
+        <script src="jqwidgets/jqxdatatable.js"></script>
 
         <style type="text/css">
             .jqx-layout-group-auto-hide-content-vertical
@@ -39,10 +40,6 @@
                             type: 'layoutPanel',
                             title: 'Toolbox',
                             contentContainer: 'ToolboxPanel'
-                        }, {
-                            type: 'layoutPanel',
-                            title: 'Help',
-                            contentContainer: 'HelpPanel'
                         }]
                     },
                     {
@@ -83,54 +80,8 @@
                         minWidth: 200,
                         items: [{
                             type: 'layoutPanel',
-                            title: 'Solution Explorer',
-                            contentContainer: 'SolutionExplorerPanel',
-                            initContent: function () {
-                                // initialize a jqxTree inside the Solution Explorer Panel
-                                var source = [{
-                                    icon: '../../../images/earth.png',
-                                    label: 'Project',
-                                    expanded: true,
-                                    items: [{
-                                        icon: '../../../images/folder.png',
-                                        label: 'css',
-                                        expanded: true,
-                                        items: [{
-                                            icon: '../../../images/nav1.png',
-                                            label: 'jqx.base.css'
-                                        }, {
-                                            icon: '../../../images/nav1.png',
-                                            label: 'jqx.energyblue.css'
-                                        }, {
-                                            icon: '../../../images/nav1.png',
-                                            label: 'jqx.orange.css'
-                                        }]
-                                    }, {
-                                        icon: '../../../images/folder.png',
-                                        label: 'scripts',
-                                        items: [{
-                                            icon: '../../../images/nav1.png',
-                                            label: 'jqxcore.js'
-                                        }, {
-                                            icon: '../../../images/nav1.png',
-                                            label: 'jqxdata.js'
-                                        }, {
-                                            icon: '../../../images/nav1.png',
-                                            label: 'jqxgrid.js'
-                                        }]
-                                    }, {
-                                        icon: '../../../images/nav1.png',
-                                        label: 'index.htm',
-                                        selected: true
-                                    }]
-                                }];
-    
-                                $('#solutionExplorerTree').jqxTree({ source: source, width: 190 });
-                            }
-                        }, {
-                            type: 'layoutPanel',
-                            title: 'Properties',
-                            contentContainer: 'PropertiesPanel'
+                            title: 'Breakpoints',
+                            contentContainer: 'dock-breakpoint'
                         }]
                     }]
                 }];
@@ -140,52 +91,47 @@
                     height: "100%", 
                     layout: layout, 
                     contextMenu: true });
-    
-                $('#viewServerExplorer').jqxButton();
-                $('#viewServerExplorer').click(function () {
-                    $('#dockingLayout').jqxDockingLayout('addFloatGroup', 300, 200, { x: 500, y: 200 }, 'layoutPanel', 'Server Explorer', '<div id="serverExplorerTree" style="border: none;"></div>', function () {
-                        var source = [{
-                            icon: '../../../images/dataadapter.png',
-                            label: 'Data Connections',
-                            expanded: true,
-                            items: [{
-                                icon: '../../../images/validator.png',
-                                label: 'northwinddatabase.mdf'
-                            }]
-                        }, {
-                            icon: '../../../images/nav1.png',
-                            label: 'Servers',
-                            items: [{
-                                icon: '../../../images/nav1.png',
-                                label: 'WorkStation3-PC'
-                            }, {
-                                icon: '../../../images/dragdrop.png',
-                                label: 'SharePoint Connections'
-                            }]
-                        }];
-    
-                        $('#serverExplorerTree').jqxTree({ source: source, width: '100%', height: 'auto' });
-                    });
-    
-                    $('#viewServerExplorer').jqxButton({ disabled: true });
-                });
-            });
+        });
         </script>
-            
+        <style>
+            .debug-bar {
+                width: 90px; /* Set a specific width */
+                background-color: #222; /* Dark-grey background */
+              }
+              
+              .debug-bar a {
+                float: left; /* Float links side by side */
+                text-align: center; /* Center-align text */
+                width: 20%; /* Equal width (5 icons with 20% width each = 100%) */
+                padding: 12px 0; /* Some top and bottom padding */
+                transition: all 0.3s ease; /* Add transition for hover effects */
+                color: white; /* White text color */
+                font-size: 36px; /* Increased font size */
+              }
+              
+              .debug-bar a:hover {
+                background-color: #eee; /* Add a hover color */
+              }
+        </style>            
         <script src="mnemonics.js"></script>
         <script src="disasm.js"></script>
         <script src="dock-asm.js"></script>
         <script src="dock-sprite.js"></script>
+        <script src="dock-breakpoints.js"></script>
     </head>
     <body>
-        <div id="container"></div> 
         <div id="dockingLayout">
             <!--The panel content divs can have a flat structure-->
             <!--autoHideGroup-->
             <div data-container="ToolboxPanel">
-                List of tools</div>
-            <div data-container="HelpPanel">
-                Help topics</div>
+                List of tools
+                <div class="debug-bar">
+                    <a href="#" onclick="debug_continue();"><img height="16px" width="16px" src="images/breakpoint/filled_continue_icon_215869.png"></a>
+                    <a href="#" onclick="debug_stepover();"><img height="16px" width="16px" src="images/breakpoint/box16-icon56-24.png"></a>
+                    <a href="#" onclick="debug_stepinto();"><img height="16px" width="16px" src="images/breakpoint/debug_step_into_icon_137695.png"></a>
+                    <a href="#" onclick="debug_stepout();"><img height="16px" width="16px" src="images/breakpoint/debug_step_out_icon_138699.png"></a>
+                </div>
+            </div>
             <!--documentGroup-->
             <div data-container="dock-disam">
                 <div id="disam"></div>
@@ -197,20 +143,17 @@
             <div data-container="ErrorListPanel">
                 No errors.</div>
             <!--right tabbedGroup-->
-            <div data-container="SolutionExplorerPanel">
-                <div id="solutionExplorerTree" style="border: none;">
-                </div>
+            <div data-container="dock-breakpoint">
+                <div id="breakpoints"></div>
             </div>
-            <div data-container="PropertiesPanel">
-                List of properties</div>
         </div>
         <button id="viewServerExplorer">
             View Server Explorer
         </button>
         <script>
             dock_sprite("http://localhost:9009/vera/sprite/0")
-            dock_disasm("http://localhost:9009/dump/0/080d")
+            dock_breakpoints();
+            dock_disasm("http://localhost:9009/dump/0/080d");
         </script>   
-       
     </body>
 </html>

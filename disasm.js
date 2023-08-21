@@ -84,7 +84,7 @@ function disam_line(memory, asm, bank)
         case op_mode.MODE_IMM: {
             let value = memory[asm.pc + 1];
 
-            asm.txt = mnemonic + " #" + value;
+            asm.txt = mnemonic + " #$" + snprintf(value,"%02X");
 			asm.next = asm.pc + 2;
             break;
         } 

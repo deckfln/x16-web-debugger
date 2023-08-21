@@ -1,4 +1,4 @@
-function dock_disasm(remote)
+function dock_disasm(remote, callback)
 {
     fetch (remote, {
         method: 'GET',
@@ -6,10 +6,7 @@ function dock_disasm(remote)
     })
     .then ( response => response.arrayBuffer())
     .then ( buffer => {
-        let container = $("#disam");
-        let table = $("<table>");
-        let tbody = $("<tbody>");
-    
+        let table = [];
         let bytes = new Uint8Array( buffer );
         let pc = 0
         let asm = {
@@ -18,23 +15,58 @@ function dock_disasm(remote)
             txt: "",
             next: 0
         }
+        let brk=false;
         while (asm.next < 256) {
             disam_line(bytes, asm, 0);
-    
-            let tr = $("<tr>");
-            let adr = $("<td>");
-            adr.text(snprintf(asm.pc + asm.start, "%04X"));
-            let txt = $("<td>");
-            txt.text(asm.txt);
-    
-            tr.append(adr);
-            tr.append(txt);
-    
-            tbody.append(tr);
+            brk=false;
+            if (Breakpoints[asm.pc + asm.start] != undefined) {
+                brk = true;
+            }
+            table.push({
+                'breakpoint':brk,
+                'addr':asm.pc + asm.start,
+                'instr':asm.txt
+            })
             asm.pc = asm.next;
         }
-        table.append(tbody);
-        container.append(table);
+        return table
+    })
+    .then (table => {
+        let source = {
+            localData:table,
+            dataType: "array",
+            dataFields:
+            [
+                { name: 'breakpoint', type: 'boolean' },
+                { name: 'addr', type: 'string' },
+                { name: 'instr', type: 'string' }
+            ]
+        };
+        
+        var dataAdapter = new $.jqx.dataAdapter(source);
+        $("#disam").jqxDataTable(
+        {
+            width: '100%',
+            pageable: false,
+            source: dataAdapter,
+            columnsResize: false,
+            columns: [
+                {
+                    width: 16,
+                    text: 'B', columnType: 'none', editable: false, sortable: false, dataField: 'breakpoint', cellsRenderer: function (row, column, value) {
+                        // render custom column.
+                        let src = "images/breakpoint/off.png";
+                        if (value) {
+                            src = "images/breakpoint/on.png"
+                        }
+                        let addr = table[row].addr;
+                        return "<img id='brk"+addr+"' src='"+src+"'/ onClick='toggleBreapoint(" + row + "," + addr + ",0);'>"
+                    }
+                },
+                { text: 'addr', dataField: 'addr', width: 100 },
+                { text: 'instr', dataField: 'instr'},
+            ]
+        });
     })
     .catch (error => { 
         console.log(error);
