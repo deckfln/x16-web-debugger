@@ -32,17 +32,6 @@
                     orientation: 'horizontal',
                     items: [
                     {
-                        type: 'autoHideGroup',
-                        alignment: 'left',
-                        width: '10%',
-                        unpinnedWidth: 200,
-                        items: [{
-                            type: 'layoutPanel',
-                            title: 'Toolbox',
-                            contentContainer: 'ToolboxPanel'
-                        }]
-                    },
-                    {
                         type: 'layoutGroup',
                         orientation: 'vertical',
                         width: '80%',
@@ -60,6 +49,11 @@
                                 type: 'documentPanel',
                                 title: 'Sprite',
                                 contentContainer: 'dock-sprite'
+                                },
+                                {
+                                type: 'documentPanel',
+                                title: 'CPU',
+                                contentContainer: 'dock-cpu'
                                 }]
                             },
                             {
@@ -115,9 +109,11 @@
         </style>            
         <script src="mnemonics.js"></script>
         <script src="disasm.js"></script>
+        <script src="debug.js"></script>
         <script src="dock-asm.js"></script>
         <script src="dock-sprite.js"></script>
         <script src="dock-breakpoints.js"></script>
+        <script src="dock-cpu.js"></script>
     </head>
     <body>
         <div id="dockingLayout">
@@ -125,19 +121,28 @@
             <!--autoHideGroup-->
             <div data-container="ToolboxPanel">
                 List of tools
+            </div>
+            <!--documentGroup-->
+            <div data-container="dock-disam">
                 <div class="debug-bar">
                     <a href="#" onclick="debug_continue();"><img height="16px" width="16px" src="images/breakpoint/filled_continue_icon_215869.png"></a>
                     <a href="#" onclick="debug_stepover();"><img height="16px" width="16px" src="images/breakpoint/box16-icon56-24.png"></a>
                     <a href="#" onclick="debug_stepinto();"><img height="16px" width="16px" src="images/breakpoint/debug_step_into_icon_137695.png"></a>
                     <a href="#" onclick="debug_stepout();"><img height="16px" width="16px" src="images/breakpoint/debug_step_out_icon_138699.png"></a>
                 </div>
-            </div>
-            <!--documentGroup-->
-            <div data-container="dock-disam">
+                <div id="jump"><input type="text" id="goto" name="goto" required minlength="4" maxlength="4" size="10" onkeypress="clickPress(event)"/></div>
                 <div id="disam"></div>
             </div>
             <div data-container="dock-sprite">
                 <img id="sprite" style="transform-origin: top left; transform: scale(2);"/>
+            </div>
+            <div data-container="dock-cpu">
+                <div id="pc"></div>
+                <div id="sp"></div>
+                <div id="a"></div>
+                <div id="x"></div>
+                <div id="y"></div>
+                <div id="status"></div>
             </div>
             <!--bottom tabbedGroup-->
             <div data-container="ErrorListPanel">
@@ -147,13 +152,11 @@
                 <div id="breakpoints"></div>
             </div>
         </div>
-        <button id="viewServerExplorer">
-            View Server Explorer
-        </button>
         <script>
             dock_sprite("http://localhost:9009/vera/sprite/0")
             dock_breakpoints();
-            dock_disasm("http://localhost:9009/dump/0/080d");
+            dock_disasm(0, 0);
+            check_cpu();
         </script>   
     </body>
 </html>

@@ -10,7 +10,13 @@ function snprintf(value, format)
 			if (format[i] == "X") {
 				let len = parseInt(format.substring(start, i));
 				let zeros = "000000";
-				v = ("000000" + value.toString(16)).slice(-len);
+				try {
+					v = ("000000" + value.toString(16)).slice(-len);
+				}
+				catch {
+					console.log("error");
+					return "";
+				}
 				in_format = false;
 				print += v;
 			}
@@ -68,8 +74,6 @@ function disam_line(memory, asm, bank)
 		case op_mode.MODE_ZPREL: {
             let zp     = memory[asm.pc + 1];
             let target = asm.start + asm.pc + 3 + memory[asm.pc + 2];
-
-            console.write(mnemonic);
 
             let r = disasm_label(zp, bank, false, "$%02X");
             let r1 = disasm_label(target, bank, is_branch, "$%04X");
