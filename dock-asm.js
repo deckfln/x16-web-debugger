@@ -15,6 +15,7 @@ function dock_disasm(bank, address)
             pc: 0,
             start: address,
             txt: "",
+            symbol: undefined,
             next: 0
         }
         let brk=false;
@@ -32,12 +33,14 @@ function dock_disasm(bank, address)
             if (i >= aDisasm.length) {
                 aDisasm.push({
                     'addr':asm.pc + asm.start,
-                    'instr':asm.txt
-                })    
+                    'instr':asm.txt,
+                    'symbol': asm.symbol
+                })
             }
             else {
                 aDisasm[i].addr = asm.pc + asm.start;
                 aDisasm[i].instr = asm.txt;
+                aDisasm[i].symbol = asm.symbol;
             }
             asm.pc = asm.next;
             i++;
@@ -57,6 +60,7 @@ function dock_disam_refresh()
 
         let src = "images/breakpoint/off.png";
         let addr = aDisasm[i].addr;
+        let symbol = aDisasm[i].symbol; if (symbol == undefined) symbol = "";
         if (addr == currentPC) {
             if (Breakpoints[addr] != undefined) {
                 src = "images/breakpoint/brk_pc.png"
@@ -70,7 +74,7 @@ function dock_disam_refresh()
         }
         let img = "<img id='brk"+addr+"' src='"+src+"'/ onClick='toggleBreapoint(" + i + "," + addr + ",0);'>"
 
-        $tr.append("<td>"+img+"</td><td>"+snprintf(aDisasm[i].addr,"%04X")+"</td><td>"+aDisasm[i].instr)+"</td>";
+        $tr.append("<td>"+symbol+"</td><td>"+img+"</td><td>"+snprintf(aDisasm[i].addr,"%04X")+"</td><td>"+aDisasm[i].instr)+"</td>";
         table.append($tr);
     }
     $('#disam')[0].innerHTML = table[0].outerHTML;

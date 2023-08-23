@@ -39,6 +39,9 @@ function snprintf(value, format)
 // ported from https://github.com/indigodarkwolf/box16/blob/master/src/overlay/disasm_overlay.cpp
 function disasm_label(target, bank, branch_target, format)
 {
+	if (hSymbols[target] != undefined) {
+		return hSymbols[target];
+	}
 	let r = snprintf(target, format);
     return r;
 }
@@ -70,6 +73,9 @@ function disam_line(memory, asm, bank)
 
 	const mode = mnemonics_mode[opcode];
 
+	let abs = asm.start + asm.pc;
+	asm.symbol = hSymbols[abs];
+	
 	switch (mode) {
 		case op_mode.MODE_ZPREL: {
             let zp     = memory[asm.pc + 1];
