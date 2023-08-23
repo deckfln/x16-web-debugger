@@ -87,7 +87,7 @@
     
                 $('#dockingLayout').jqxDockingLayout({ 
                     width: "100%", 
-                    height: "100%", 
+                    height: $(document).height()-40, 
                     layout: layout, 
                     contextMenu: true });
         });
@@ -98,7 +98,8 @@
             }
             .debug-bar {
                 width: 90px; /* Set a specific width */
-                background-color: #222; /* Dark-grey background */
+                background-color: #eee; /* Dark-grey background */
+                height: 40px;
               }
               
               .debug-bar a {
@@ -124,9 +125,16 @@
         <script src="dock-sprite.js"></script>
         <script src="dock-breakpoints.js"></script>
         <script src="dock-cpu.js"></script>
+        <script src="dock-sources.js"></script>
     </head>
     <body>
-        <div id="dockingLayout">
+        <div class="debug-bar">
+            <a href="#" onclick="debug_continue();"><img height="16px" width="16px" src="images/breakpoint/filled_continue_icon_215869.png"></a>
+            <a href="#" onclick="debug_stepover();"><img height="16px" width="16px" src="images/breakpoint/box16-icon56-24.png"></a>
+            <a href="#" onclick="debug_stepinto();"><img height="16px" width="16px" src="images/breakpoint/debug_step_into_icon_137695.png"></a>
+            <a href="#" onclick="debug_stepout();"><img height="16px" width="16px" src="images/breakpoint/debug_step_out_icon_138699.png"></a>
+        </div>
+<div id="dockingLayout">
             <!--The panel content divs can have a flat structure-->
             <!--autoHideGroup-->
             <div data-container="ToolboxPanel">
@@ -135,14 +143,8 @@
             <!--documentGroup-->
             <div data-container="dock-disam" id="dock-disam">
                 <div class="disam-menu">
-                    <div class="debug-bar">
-                        <a href="#" onclick="debug_continue();"><img height="16px" width="16px" src="images/breakpoint/filled_continue_icon_215869.png"></a>
-                        <a href="#" onclick="debug_stepover();"><img height="16px" width="16px" src="images/breakpoint/box16-icon56-24.png"></a>
-                        <a href="#" onclick="debug_stepinto();"><img height="16px" width="16px" src="images/breakpoint/debug_step_into_icon_137695.png"></a>
-                        <a href="#" onclick="debug_stepout();"><img height="16px" width="16px" src="images/breakpoint/debug_step_out_icon_138699.png"></a>
-                    </div>
                     <div id="jump"><input type="text" id="goto" name="goto" required minlength="4" maxlength="4" size="10" onkeypress="clickPress(event)"/></div>
-                    </div>
+                </div>
                 <div id="disam"></div>
             </div>
             <div data-container="dock-sprite">
@@ -157,7 +159,7 @@
                 <div id="status"></div>
                 <input type='file' accept='text/plain' onchange='openFile(event)'>
             </div>
-            <div data-container="tab-source">
+            <div data-container="tab-source" onscroll="console.log(this.scrollY);">
                 <div id="source"></div>
             </div>
             <!--bottom tabbedGroup-->
@@ -169,6 +171,12 @@
             </div>
         </div>
         <script>
+
+const img_brk_on="images/breakpoint/on.png";
+const img_brk_off="images/breakpoint/off.png";
+const img_brk_pc="images/breakpoint/brk_pc.png"
+const img_pc="images/breakpoint/pc.png"
+
 let Config=undefined;
 function init1()
 {
@@ -178,9 +186,10 @@ function init1()
 function init2()
 {
     dock_sprite("http://localhost:9009/vera/sprite/0")
-    dock_breakpoints();
+    load_breakpoints();
     dock_disasm(0, 0);
-    check_cpu();
+    load_source(0);
+    check_cpu();    // start CPU monitoring
 }
 
 fetch("config.json")

@@ -10,7 +10,7 @@ function toggleBreapoint(row, addr, bank)
     .then ( response => response.json())
     .then ( json => {
         if (json.status == "ok") {
-            dock_breakpoints(dock_disam_refresh);
+            load_breakpoints(dock_disam_refresh);
         }
     })
     .catch (error => { 
@@ -20,7 +20,7 @@ function toggleBreapoint(row, addr, bank)
 
 let aBreakpoints = [];
 
-function dock_breakpoints(callback)
+function load_breakpoints(callback)
 {
     let remote = "http://localhost:9009/breakpoint";
     fetch (remote, {

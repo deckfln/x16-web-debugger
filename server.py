@@ -25,7 +25,7 @@ class app(SimpleHTTPRequestHandler):
   def translate_path(self, path: str) -> str:
     global config
     if path[0:6] == "/code/":
-       path = path.replace("/code/", config['sources']+"/")
+       path = path.replace("/code/", config['root']+"/")
        print(path)
        return path
     return super().translate_path(path)

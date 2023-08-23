@@ -1,5 +1,6 @@
 {
-    "sources":"d:/dev/x16/x16-uncharted",
+    "root":"d:/dev/x16/x16-uncharted",
+    "sources":"src",
     "remote":"http://localhost:9009",
     "debuginfo":"bin/test.dbg",
     "symbols":"bin/main.sym"

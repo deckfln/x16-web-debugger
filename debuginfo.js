@@ -19,7 +19,6 @@ function load_debuginfo(file, callback)
         for (i in lines) {
             let cols = lines[i].split("\t");
             if (cols.length < 2) {
-                console.log("oops");
                 continue;
             }
             let type = cols[0];
@@ -54,7 +53,8 @@ function load_debuginfo(file, callback)
                     break;
                 case "file":
                     attrs['id']=parseInt(attrs.id);
-                    dbg_files[attrs.id] = attrs['name'];
+                    attrs.name = attrs.name.replaceAll("\"","")
+                    dbg_files[attrs.id] = { "name":attrs.name, "lines":{}};
                     break;
                 case "seg":
                     if (attrs.name=="\"CODE\"") {
@@ -69,9 +69,11 @@ function load_debuginfo(file, callback)
         // bind memory addresses to source file/line number
         for (id in dbg_spans) {
             let span = dbg_spans[id];
+            span.start += dbg_entry;
             let line = dbg_lines[span.id];
-            if (line != undefined && dbg_address[span.start + dbg_entry] == undefined) {
-                dbg_address[span.start + dbg_entry] = line;
+            if (line != undefined && dbg_address[span.start] == undefined) {
+                dbg_address[span.start] = line;
+                dbg_files[line.file].lines[line.line] = span;
             }
         }
         if (callback) {

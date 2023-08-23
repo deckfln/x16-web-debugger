@@ -26,6 +26,7 @@ function dock_cpu()
         if (json.myStatus == 0 && (currentPC != json.pc || currentBank != json.bank)) {            
             currentBank = json.bank;
             currentPC = json.pc;
+
             let found = $('#brk'+currentPC);   // PC is on screen ?
             if (found.length == 0) {
                 // jumped page
@@ -35,6 +36,7 @@ function dock_cpu()
                 // move PC on screen
                 dock_disam_refresh();
             }
+            update_source();
         }
     })
     .catch (error => { 
