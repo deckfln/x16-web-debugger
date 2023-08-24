@@ -1,97 +1,11 @@
 <html>
     <head>
-    <link rel="stylesheet" href="jqwidgets/styles/jqx.base.css" type="text/css" />
+    <link rel="stylesheet" href="lib/css/dock-manager.css">
+    <link rel="stylesheet" href="lib/css/dock-manager-style.css">
+    <link rel="stylesheet" href="css/demo.css">
 
-        <script src="scripts/jquery-1.11.1.min.js"></script>
-        <script src="jqwidgets/jqxcore.js"></script>
-        <script src="jqwidgets/jqxribbon.js"></script>
-        <script src="jqwidgets/jqxwindow.js"></script>
-        <script src="jqwidgets/jqxmenu.js"></script>
-        <script src="jqwidgets/jqxlayout.js"></script>
-        <script src="jqwidgets/jqxdockinglayout.js"></script>
-        <script src="jqwidgets/jqxbuttons.js"></script>
-        <script src="jqwidgets/jqxscrollbar.js"></script>
-        <script src="jqwidgets/jqxtextarea.js"></script>
-        <script src="jqwidgets/jqxdata.js"></script>
-        <script src="jqwidgets/jqxdraw.js"></script>
-        <script src="jqwidgets/jqxtree.js"></script>
-        <script src="jqwidgets/jqxdatatable.js"></script>
-
-        <style type="text/css">
-            .jqx-layout-group-auto-hide-content-vertical
-            {
-                width: 200px;
-            }
-        </style>
-
-        <script type="text/javascript">
-            $(document).ready(function () {
-                // the 'layout' JSON array defines the internal structure of the docking layout
-                var layout = [{
-                    type: 'layoutGroup',
-                    orientation: 'horizontal',
-                    items: [
-                    {
-                        type: 'layoutGroup',
-                        orientation: 'vertical',
-                        width: '80%',
-                        items: [
-                            {
-                            type: 'documentGroup',
-                            height: '50%',
-                            minHeight: 200,
-                            items: [{
-                                type: 'documentPanel',
-                                title: 'Disassembler',
-                                contentContainer: 'dock-disam',
-                                },
-                                {
-                                type: 'documentPanel',
-                                title: 'Sprite',
-                                contentContainer: 'dock-sprite'
-                                },
-                                {
-                                type: 'documentPanel',
-                                title: 'CPU',
-                                contentContainer: 'dock-cpu'
-                                },
-                                {
-                                type: 'documentPanel',
-                                title: 'Source',
-                                contentContainer: 'tab-source'
-                                }]
-                            },
-                            {
-                            type: 'tabbedGroup',
-                            height: '50%',
-                            minHeight: 200,
-                            pinnedHeight: 30,
-                            items: [{
-                                type: 'layoutPanel',
-                                title: 'Error List',
-                                contentContainer: 'ErrorListPanel'
-                            }]
-                            }]
-                    },
-                    {
-                        type: 'tabbedGroup',
-                        width: '10%',
-                        minWidth: 200,
-                        items: [{
-                            type: 'layoutPanel',
-                            title: 'Breakpoints',
-                            contentContainer: 'dock-breakpoint'
-                        }]
-                    }]
-                }];
-    
-                $('#dockingLayout').jqxDockingLayout({ 
-                    width: "100%", 
-                    height: $(document).height()-40, 
-                    layout: layout, 
-                    contextMenu: true });
-        });
-        </script>
+    <script src="scripts/jquery-1.11.1.min.js"></script>
+    <script src="lib/es5/dock-spawn-ts.js"></script>
         <style>
             .disasm-menu {
                 width: 100%;
@@ -134,70 +48,42 @@
             <a href="#" onclick="debug_stepinto();"><img height="16px" width="16px" src="images/breakpoint/debug_step_into_icon_137695.png"></a>
             <a href="#" onclick="debug_stepout();"><img height="16px" width="16px" src="images/breakpoint/debug_step_out_icon_138699.png"></a>
         </div>
-<div id="dockingLayout">
-            <!--The panel content divs can have a flat structure-->
-            <!--autoHideGroup-->
-            <div data-container="ToolboxPanel">
-                List of tools
-            </div>
-            <!--documentGroup-->
-            <div data-container="dock-disam" id="dock-disam">
-                <div class="disam-menu">
-                    <div id="jump"><input type="text" id="goto" name="goto" required minlength="4" maxlength="4" size="10" onkeypress="clickPress(event)"/></div>
-                </div>
-                <div id="disam"></div>
-            </div>
-            <div data-container="dock-sprite">
-                <img id="sprite" style="transform-origin: top left; transform: scale(2);"/>
-            </div>
-            <div data-container="dock-cpu">
-                <div id="pc"></div>
-                <div id="sp"></div>
-                <div id="a"></div>
-                <div id="x"></div>
-                <div id="y"></div>
-                <div id="status"></div>
-                <input type='file' accept='text/plain' onchange='openFile(event)'>
-            </div>
-            <div data-container="tab-source" onscroll="console.log(this.scrollY);">
-                <div id="source"></div>
-            </div>
-            <!--bottom tabbedGroup-->
-            <div data-container="ErrorListPanel">
-                No errors.</div>
-            <!--right tabbedGroup-->
-            <div data-container="dock-breakpoint">
-                <div id="breakpoints"></div>
-            </div>
-        </div>
-        <script>
 
+<div id="dock_div" style="height:calc(100% - 60px); width: 100%; position: absolute; left: 0; top: 40px;">
+    <div id="my_dock_manager" class="my-dock-manager" style="position: relative;"></div>
+    <div id="dock-cpu" data-panel-caption="cpu" class="state-window" hidden>
+        <div id="pc"></div>
+        <div id="sp"></div>
+        <div id="a"></div>
+        <div id="x"></div>
+        <div id="y"></div>
+        <div id="status"></div>
+        <input type='file' accept='text/plain' onchange='openFile(event)'>
+    </div>
+    <div id="dock-disam" data-panel-caption="Disassembler" class="editor1-window editor-host">
+        <div class="disam-menu">
+            <div id="jump"><input type="text" id="goto" name="goto" required minlength="4" maxlength="4" size="10" onkeypress="clickPress(event)"/></div>
+        </div>
+        <div id="disam"  style="overflow: scroll;"></div>
+    </div>
+    <div id="dock-source" data-panel-caption="source" class="editor1-window editor-host" style="overflow:scroll;" onscroll="source_scroll(this);">
+    </div>
+    <div id="dock-sprite" data-panel-caption="Sprite 0">
+        <img id="sprite" style="transform-origin: top left; transform: scale(2);"/>
+    </div>
+    <div id="dock-breakpoint" data-panel-caption="Breakpoints">
+    </div>
+</div>
+
+<script type="module" src="ide.js"></script>
+
+<script>
 const img_brk_on="images/breakpoint/on.png";
 const img_brk_off="images/breakpoint/off.png";
 const img_brk_pc="images/breakpoint/brk_pc.png"
 const img_pc="images/breakpoint/pc.png"
 
 let Config=undefined;
-function init1()
-{
-    load_symbols(Config.symbols, init2);
-}
-
-function init2()
-{
-    dock_sprite("http://localhost:9009/vera/sprite/0")
-    load_breakpoints();
-    dock_disasm(0, 0);
-    load_source(0);
-    check_cpu();    // start CPU monitoring
-}
-
-fetch("config.json")
-.then ( response => response.json())
-.then ( json => {
-    Config = json;
-    load_debuginfo(Config.debuginfo, init1);
-})
-        </script>   
+</script>   
     </body>
 </html>

@@ -35,43 +35,7 @@ function load_breakpoints(callback)
             Breakpoints[json[i].addr] = json[i].bank;
             aBreakpoints.push(json[i]);
         }
-        if ($("#tablebreakpoints").length == 0) {
-            let source = {
-                localData:aBreakpoints,
-                dataType: "array",
-                dataFields:
-                [
-                    { name: 'addr', type: 'hexadecimal' },
-                    { name: 'bank', type: 'number' }
-                ]
-            };
-            var dataAdapter = new $.jqx.dataAdapter(source);
-            $("#breakpoints").jqxDataTable(
-            {
-                width: '100%',
-                source: dataAdapter,
-                columnsResize: true,
-                columns: [
-                    {
-                        width: 16,
-                        text: 'B', columnType: 'none', editable: false, sortable: false, dataField: null, cellsRenderer: function (row, column, value) {
-                            // render custom column.
-                            let addr = aBreakpoints[row].addr;
-                            return "<img id='brk" + addr + "' src='images/breakpoint/on.png' onClick='toggleBreapoint(" + row + "," + addr + ",0);'>"
-                        }
-                    },
-                    { text: 'addr', dataField: 'addr', width: 100,cellsRenderer: function (row, column, value) {
-                        // render custom column.
-                        let addr = snprintf(aBreakpoints[row].addr,"%04X");
-                        return addr;
-                    } },
-                    { text: 'bank', dataField: 'bank'},
-                ]
-            });
-        }
-        else {
-            $("#breakpoints").jqxDataTable('updateBoundData');;
-        }
+        breakpoints_refresh();
 
         if (callback) {
             callback();
@@ -80,4 +44,32 @@ function load_breakpoints(callback)
     .catch (error => { 
         console.log(error);
     })       
+}
+
+function breakpoints_refresh()
+{
+    let table=$('<table>');
+    for (i=0; i < Breakpoints.length; i++) {
+        let $tr=$('<tr>');
+
+        let src = "images/breakpoint/off.png";
+        let addr = Breakpoints[i].addr;
+        let symbols = "";
+        if (addr == currentPC) {
+            if (Breakpoints[addr] != undefined) {
+                src = "images/breakpoint/brk_pc.png"
+            }
+            else {
+                src = "images/breakpoint/pc.png"
+            }                                
+        }
+        else if (Breakpoints[addr] != undefined) {
+            src = "images/breakpoint/on.png"
+        }
+        let img = "<img id='brk"+addr+"' src='"+src+"'/ onClick='toggleBreapoint(" + i + "," + addr + ",0);'>"
+
+        $tr.append("<td>"+img+"</td><td>"+snprintf(Breakpoints[i].addr,"%04X")+"</td><td>"+symbol+"</td><td>"+Breakpoints[i].bank)+"</td>";
+        table.append($tr);
+    }
+    $('#dock_breakpoint')[0].innerHTML = table[0].outerHTML;
 }

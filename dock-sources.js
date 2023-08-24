@@ -48,7 +48,7 @@ function display_source(fileID, txt)
         $tr.append("<td>"+img+"</td><td>"+addr+"</td><td>"+lines[i]+"</td>");
         table.append($tr);
     }
-    $('#source')[0].innerHTML = table[0].outerHTML;
+    $('#dock-source')[0].innerHTML = table[0].outerHTML;
 
 }
 
@@ -95,7 +95,12 @@ function update_source()
         }
    
         // move the scroll position
-        let scrollY = $('source').scrollY;
+        let scrollY = $('dock-source').scrollY;
         console.log(scrollY);
     }
+}
+
+function source_scroll(elm)
+{
+    console.log(elm.scrollTop);    
 }
