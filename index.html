@@ -3,8 +3,11 @@
     <link rel="stylesheet" href="lib/css/dock-manager.css">
     <link rel="stylesheet" href="lib/css/dock-manager-style.css">
     <link rel="stylesheet" href="css/demo.css">
+    <link rel="stylesheet" href="./jstree/themes/default/style.min.css">
 
     <script src="scripts/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="./jstree/jstree.min.js"></script>
+
     <script src="lib/es5/dock-spawn-ts.js"></script>
         <style>
             .disasm-menu {
@@ -29,6 +32,10 @@
               .debug-bar a:hover {
                 background-color: #eee; /* Add a hover color */
               }
+
+              .line-number {
+                height: 28px;
+              }
         </style>            
         <script src="mnemonics.js"></script>
         <script src="disasm.js"></script>
@@ -41,15 +48,17 @@
         <script src="dock-cpu.js"></script>
         <script src="dock-sources.js"></script>
     </head>
-    <body>
-        <div class="debug-bar">
-            <a href="#" onclick="debug_continue();"><img height="16px" width="16px" src="images/breakpoint/filled_continue_icon_215869.png"></a>
-            <a href="#" onclick="debug_stepover();"><img height="16px" width="16px" src="images/breakpoint/box16-icon56-24.png"></a>
-            <a href="#" onclick="debug_stepinto();"><img height="16px" width="16px" src="images/breakpoint/debug_step_into_icon_137695.png"></a>
-            <a href="#" onclick="debug_stepout();"><img height="16px" width="16px" src="images/breakpoint/debug_step_out_icon_138699.png"></a>
+    <body style="width: 100%; height: 100%; margin: 0;">
+        <div class="demo-header" id="header" style="width:100%">
+            <div class="debug-bar">
+                <a href="#" onclick="debug_continue();"><img height="16px" width="16px" src="images/breakpoint/filled_continue_icon_215869.png"></a>
+                <a href="#" onclick="debug_stepover();"><img height="16px" width="16px" src="images/breakpoint/box16-icon56-24.png"></a>
+                <a href="#" onclick="debug_stepinto();"><img height="16px" width="16px" src="images/breakpoint/debug_step_into_icon_137695.png"></a>
+                <a href="#" onclick="debug_stepout();"><img height="16px" width="16px" src="images/breakpoint/debug_step_out_icon_138699.png"></a>
+            </div>
         </div>
 
-<div id="dock_div" style="height:calc(100% - 60px); width: 100%; position: absolute; left: 0; top: 40px;">
+<div id="dock_div" style="height:calc(100% - 40px); width: 100%; position: absolute; left: 0; top: 40px;">
     <div id="my_dock_manager" class="my-dock-manager" style="position: relative;"></div>
     <div id="dock-cpu" data-panel-caption="cpu" class="state-window" hidden>
         <div id="pc"></div>
@@ -66,12 +75,14 @@
         </div>
         <div id="disam"  style="overflow: scroll;"></div>
     </div>
-    <div id="dock-source" data-panel-caption="source" class="editor1-window editor-host" style="overflow:scroll;" onscroll="source_scroll(this);">
+    <div id="dock-source" data-panel-caption="source" class="editor1-window editor-host" style="overflow:scroll;"">
     </div>
     <div id="dock-sprite" data-panel-caption="Sprite 0">
         <img id="sprite" style="transform-origin: top left; transform: scale(2);"/>
     </div>
     <div id="dock-breakpoint" data-panel-caption="Breakpoints">
+    </div>
+    <div id="dock-files" data-panel-caption="Files">
     </div>
 </div>
 

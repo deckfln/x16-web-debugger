@@ -11,7 +11,7 @@ function snprintf(value, format)
 				let len = parseInt(format.substring(start, i));
 				let zeros = "000000";
 				try {
-					v = ("000000" + value.toString(16)).slice(-len);
+					v = ("000000" + parseInt(value).toString(16)).slice(-len);
 				}
 				catch {
 					console.log("error");

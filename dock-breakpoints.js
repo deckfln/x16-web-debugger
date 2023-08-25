@@ -9,6 +9,7 @@ function toggleBreapoint(row, addr, bank)
     })
     .then ( response => response.json())
     .then ( json => {
+        source_toggleBreakpoint(addr);
         if (json.status == "ok") {
             load_breakpoints(dock_disam_refresh);
         }
@@ -30,10 +31,10 @@ function load_breakpoints(callback)
     .then ( response => response.json())
     .then ( json => {
         Breakpoints = {}
-        aBreakpoints.length = 0;
         for (i in json) {
-            Breakpoints[json[i].addr] = json[i].bank;
-            aBreakpoints.push(json[i]);
+            let addr = parseInt(json[i].addr);
+            let bank = parseInt(json[i].bank);
+            Breakpoints[addr] = bank;
         }
         breakpoints_refresh();
 
@@ -49,27 +50,14 @@ function load_breakpoints(callback)
 function breakpoints_refresh()
 {
     let table=$('<table>');
-    for (i=0; i < Breakpoints.length; i++) {
-        let $tr=$('<tr>');
+    for (let addr in Breakpoints) {
+        let tr=$('<tr>');
 
-        let src = "images/breakpoint/off.png";
-        let addr = Breakpoints[i].addr;
-        let symbols = "";
-        if (addr == currentPC) {
-            if (Breakpoints[addr] != undefined) {
-                src = "images/breakpoint/brk_pc.png"
-            }
-            else {
-                src = "images/breakpoint/pc.png"
-            }                                
-        }
-        else if (Breakpoints[addr] != undefined) {
-            src = "images/breakpoint/on.png"
-        }
+        let src = "images/breakpoint/on.png";
         let img = "<img id='brk"+addr+"' src='"+src+"'/ onClick='toggleBreapoint(" + i + "," + addr + ",0);'>"
 
-        $tr.append("<td>"+img+"</td><td>"+snprintf(Breakpoints[i].addr,"%04X")+"</td><td>"+symbol+"</td><td>"+Breakpoints[i].bank)+"</td>";
-        table.append($tr);
+        tr.append("<td>"+img+"</td><td>"+snprintf(addr,"%04X")+"</td><td>"+Breakpoints[addr])+"</td>";
+        table.append(tr);
     }
-    $('#dock_breakpoint')[0].innerHTML = table[0].outerHTML;
+    document.getElementById("dock-breakpoint").innerHTML = table[0].outerHTML;
 }

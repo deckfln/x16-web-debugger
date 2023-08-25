@@ -10,14 +10,16 @@ window.onload = () => {
     let d_sprite = new DockSpawnTS.PanelContainer(document.getElementById("dock-sprite"), dockManager, null, "document");
     let d_cpu = new DockSpawnTS.PanelContainer(document.getElementById("dock-cpu"), dockManager);
     let d_breakpoints = new DockSpawnTS.PanelContainer(document.getElementById("dock-breakpoint"), dockManager);
+    let d_files = new DockSpawnTS.PanelContainer(document.getElementById("dock-files"), dockManager);
 
     let documentNode = dockManager.context.model.documentManagerNode;
-    let outputNode = dockManager.dockLeft(documentNode, d_cpu, 0.2);
+    let outputNode = dockManager.dockLeft(documentNode, d_cpu, 0.15);
         dockManager.dockFill(outputNode, d_cpu);
         dockManager.dockDown(outputNode, d_breakpoints, 0.5);
     dockManager.dockFill(documentNode, d_disasm);
     dockManager.dockFill(documentNode, d_source);
-    dockManager.dockRight(documentNode, d_sprite, 0.2);
+    dockManager.dockRight(documentNode, d_files, 0.2);
+    dockManager.dockDown(documentNode, d_sprite, 0.2);
 
     function init1()
     {
@@ -27,9 +29,8 @@ window.onload = () => {
     function init2()
     {
         dock_sprite("http://localhost:9009/vera/sprite/0")
-        load_breakpoints();
+        load_breakpoints(load_source);
         dock_disasm(0, 0);
-        load_source(0);
         check_cpu();    // start CPU monitoring
     }
 

@@ -1,7 +1,13 @@
 let SourceFile = ""
+let SourceFileID = undefined
+let SourceFile_lines = {};
 
 function load_source(fileID)
 {
+    if (fileID == undefined) {
+        fileID = 0;
+    }
+
     if (dbg_files[fileID] == undefined) {
         console.log("unknwon file ID" + fileID);
         return
@@ -11,6 +17,7 @@ function load_source(fileID)
     .then( response => response.text())
     .then( text => {
         SourceFile = text;
+        SourceFileID = fileID;
         display_source(fileID, SourceFile);
     })
 }
@@ -21,8 +28,9 @@ function display_source(fileID, txt)
     let lines = txt.split("\n");
 
     let table=$('<table>');
+    SourceFile_lines = {};
     for (i=0; i<lines.length; i++) {
-        let $tr=$('<tr>');
+        let tr=$('<tr>');
 
         let img = "&nbsp;"
         let addr = ""
@@ -41,20 +49,23 @@ function display_source(fileID, txt)
             else if (Breakpoints[dbg_pc] != undefined) {
                 src = img_brk_on;
             }    
+
+            SourceFile_lines[ dbg_pc ] = i + 1;
+        
             img = "<img id='src"+fileID+dbg_pc+"' src='"+src+"'/ onClick='toggleBreapoint(" + i + "," + dbg_pc + ",0);'>"
             addr = snprintf(dbg_pc,"%04X")
         }
 
-        $tr.append("<td>"+img+"</td><td>"+addr+"</td><td>"+lines[i]+"</td>");
-        table.append($tr);
+        tr.append("<td>"+img+"</td><td>"+addr+"</td><td>"+lines[i]+"</td>");
+        tr.attr("class", "line-number");
+        table.append(tr);
     }
     $('#dock-source')[0].innerHTML = table[0].outerHTML;
-
 }
 
 let prev_source_pc = undefined;
 
-function update_source()
+function source_update(brk)
 {
     let line = dbg_address[currentPC];
     if (line != undefined) {
@@ -92,15 +103,49 @@ function update_source()
             }
             found.attr('src', src);
             prev_source_pc = found;
+
+            // get line number from the memory
+            let lineNumber = SourceFile_lines[currentPC];
+            if (lineNumber != undefined) {
+                // move the scroll position
+                let item = document.getElementById("dock-source");
+                let top = item.scrollTop;
+                let height = item.clientHeight;
+                let pos = 29 * (lineNumber-1);
+                if (pos > top + height) {
+                    item.scrollTop = pos;
+                }
+                else if (pos < top) {
+                    item.scrollTop = pos;
+                }
+            }
         }
-   
-        // move the scroll position
-        let scrollY = $('dock-source').scrollY;
-        console.log(scrollY);
     }
 }
 
-function source_scroll(elm)
+function source_toggleBreakpoint(brk)
 {
-    console.log(elm.scrollTop);    
+    if (brk != undefined && SourceFile_lines[brk] != undefined) {
+        // toggle a breakpoint
+        let id = '#src' + SourceFileID + brk;
+        let item = $(id);
+        let current = item.attr('src');
+        let new_src = undefined;
+        switch (current) {
+            case img_brk_off:
+                new_src = img_brk_on;
+                break;
+            case img_brk_on:
+                new_src = img_brk_off;
+                break;
+            case img_brk_pc:
+                new_src = img_pc;
+                break;
+            case img_pc:
+                new_src = img_brk_pc;
+                break;
+            }
+        item.attr('src', new_src);
+        return;
+    }
 }

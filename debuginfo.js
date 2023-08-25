@@ -76,6 +76,9 @@ function load_debuginfo(file, callback)
                 dbg_files[line.file].lines[line.line] = span;
             }
         }
+
+        files_update();
+
         if (callback) {
             callback();
         }
@@ -83,4 +86,17 @@ function load_debuginfo(file, callback)
     .catch (error => {
         console.log(error);
     })
+}
+
+function files_update()
+{
+    let ul=$('<ul>');
+    for (i in dbg_files) {
+        let li=$('<li>');
+        li.append(dbg_files[i].name);
+        ul.append(li);
+    }
+    let dock=document.getElementById("dock-files");
+    dock.innerHTML = ul[0].outerHTML;
+    $("#dock-files").jstree({ "plugins": ["themes", "html_data", "ui", "crrm", "hotkeys"], "core": {} })
 }

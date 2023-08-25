@@ -36,7 +36,7 @@ function dock_cpu()
                 // move PC on screen
                 dock_disam_refresh();
             }
-            update_source();
+            source_update();
         }
     })
     .catch (error => { 
