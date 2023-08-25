@@ -74,7 +74,7 @@ function dock_disam_refresh()
         }
         let img = "<img id='brk"+addr+"' src='"+src+"'/ onClick='toggleBreapoint(" + i + "," + addr + ",0);'>"
 
-        $tr.append("<td>"+img+"</td><td>"+snprintf(aDisasm[i].addr,"%04X")+"</td><td>"+symbol+"</td><td>"+aDisasm[i].instr)+"</td>";
+        $tr.append("<td>"+img+"</td><td class=\"pc\">"+snprintf(aDisasm[i].addr,"%04X")+"</td><td class=\"source-instr\">"+symbol+"</td><td>"+aDisasm[i].instr)+"</td>";
         table.append($tr);
     }
     $('#disam')[0].innerHTML = table[0].outerHTML;

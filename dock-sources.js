@@ -56,7 +56,7 @@ function display_source(fileID, txt)
             addr = snprintf(dbg_pc,"%04X")
         }
 
-        tr.append("<td>"+img+"</td><td>"+addr+"</td><td>"+lines[i]+"</td>");
+        tr.append("<td>"+img+"</td><td class=\"pc\">"+addr+"</td><td class=\"source-instr\">"+lines[i]+"</td>");
         tr.attr("class", "line-number");
         table.append(tr);
     }
@@ -111,8 +111,9 @@ function source_update(brk)
                 let item = document.getElementById("dock-source");
                 let top = item.scrollTop;
                 let height = item.clientHeight;
-                let pos = 29 * (lineNumber-1);
-                if (pos > top + height) {
+                let bottom = top + height;
+                let pos = 30 * (lineNumber-1);
+                if (pos > bottom) {
                     item.scrollTop = pos;
                 }
                 else if (pos < top) {

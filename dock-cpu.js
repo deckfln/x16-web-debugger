@@ -4,7 +4,7 @@ let currentBank = undefined;
 
 function check_cpu()
 {
-    setInterval(dock_cpu, 500);
+    setInterval(dock_cpu, 250);
 }
 
 function dock_cpu()
