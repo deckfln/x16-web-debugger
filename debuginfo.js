@@ -63,6 +63,16 @@ function load_debuginfo(file, callback)
                         dbg_entry = parseInt(hex, 16);
                     }
                     break;
+                case 'sym':
+                    let addr = attrs.val
+                    if (addr.substring(1,2) == '0x') {
+                        addr = parseInt(addr.substring(3), 16)
+                    }
+                    else {
+                        addr = parseInt(addr)
+                    }
+                    hSymbols[addr] = attrs.name.replaceAll("\"","")
+                    break
             }
         }
 

@@ -3,5 +3,5 @@
     "sources":"src",
     "remote":"http://localhost:9009",
     "debuginfo":"bin/test.dbg",
-    "symbols":"bin/main.sym"
+    "symbols":""
 }
