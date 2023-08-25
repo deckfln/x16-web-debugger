@@ -11,15 +11,18 @@ window.onload = () => {
     let d_cpu = new DockSpawnTS.PanelContainer(document.getElementById("dock-cpu"), dockManager);
     let d_breakpoints = new DockSpawnTS.PanelContainer(document.getElementById("dock-breakpoint"), dockManager);
     let d_files = new DockSpawnTS.PanelContainer(document.getElementById("dock-files"), dockManager);
+    let d_dump = new DockSpawnTS.PanelContainer(document.getElementById("dock-memory"), dockManager);
 
     let documentNode = dockManager.context.model.documentManagerNode;
-    let outputNode = dockManager.dockLeft(documentNode, d_cpu, 0.15);
+    let outputNode = dockManager.dockLeft(documentNode, d_cpu);
         dockManager.dockFill(outputNode, d_cpu);
-        dockManager.dockDown(outputNode, d_breakpoints, 0.5);
+        dockManager.dockDown(outputNode, d_breakpoints);
     dockManager.dockFill(documentNode, d_disasm);
     dockManager.dockFill(documentNode, d_source);
-    dockManager.dockRight(documentNode, d_files, 0.2);
-    dockManager.dockDown(documentNode, d_sprite, 0.2);
+    let divNode = dockManager.dockRight(documentNode, d_files);
+        dockManager.dockFill(divNode, d_files);
+        dockManager.dockDown(divNode, d_dump);
+    dockManager.dockDown(documentNode, d_sprite);
 
     function init1()
     {

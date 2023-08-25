@@ -37,6 +37,7 @@ function dock_cpu()
                 dock_disam_refresh();
             }
             source_update();
+            memory_update();
         }
     })
     .catch (error => { 
