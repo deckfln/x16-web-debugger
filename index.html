@@ -50,6 +50,10 @@
               .memory-changed {
                 color: red;
               }
+
+              .memory-monitor {
+                background-color: #eee;
+              }
         </style>            
         <script src="mnemonics.js"></script>
         <script src="disasm.js"></script>
@@ -62,6 +66,7 @@
         <script src="dock-cpu.js"></script>
         <script src="dock-sources.js"></script>
         <script src="dock-memory.js"></script>
+        <script src="dock-registers.js"></script>
     </head>
     <body style="width: 100%; height: 100%; margin: 0;">
         <div class="demo-header" id="header" style="width:100%">
@@ -74,7 +79,7 @@
         </div>
 
 <div id="dock_div" style="height:calc(100% - 40px); width: 100%; position: absolute; left: 0; top: 40px;">
-    <div id="my_dock_manager" class="my-dock-manager" style="position: relative;"></div>
+    <div id="my_dock_manager" class="my-dock-manager" style="overflow:scrollY;"></div>
     <div id="dock-cpu" data-panel-caption="cpu" class="state-window" hidden>
         <div id="pc"></div>
         <div id="sp"></div>
@@ -82,6 +87,7 @@
         <div id="x"></div>
         <div id="y"></div>
         <div id="status"></div>
+        <div id="registers"></div>
     </div>
     <div id="dock-disam" data-panel-caption="Disassembler" class="editor1-window editor-host">
         <div class="disam-menu">

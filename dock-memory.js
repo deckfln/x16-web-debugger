@@ -63,11 +63,15 @@ function dock_memory(bank, address)
             tr.append("<td class=\"pc\">" + snprintf(addr,"%04X") + "</td>");
 
             for (x=0; x<16; x++) {
-                clss = "class=memory"
+                clss = ""
                 if (prev && memory.prev.bytes[i] != bytes[i]) {
-                    clss = "class=memory-changed"
+                    clss = "memory-changed"
                 }
-                tr.append( "<td " + clss + " onclick=\"memory_toggleWatch(" + (addr + i) + ", 0);\">" + snprintf(bytes[i],"%02X") + "</td>");
+                if (Breakpoints[addr + i] != undefined ) {
+                    clss += " memory-monitor"
+                }
+
+                tr.append( "<td class=\"" + clss + "\" onclick=\"memory_toggleWatch(" + (addr + i) + ", 0);\">" + snprintf(bytes[i],"%02X") + "</td>");
                 i++;
             }
             addr += 16;

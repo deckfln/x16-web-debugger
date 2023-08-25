@@ -47,6 +47,7 @@ function dock_cpu()
             }
             source_update();
             memory_update();
+            dock_registers();
         }
     })
     .catch (error => { 
