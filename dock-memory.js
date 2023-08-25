@@ -7,12 +7,38 @@ function memory_dump(event)
     }
 }
 
-let memory_current = {'bank':0, 'addr': 0}
-let memory_prev = {'bank':0, 'addr':0, 'bytes':undefined};
-
+let memory = {
+    'current' : {
+        'bank': 0,
+        'addr': 0
+    },
+    'prev' : {
+        'bank':0,
+        'addr': 0,
+        'bytes': undefined
+    },
+}
 function memory_update()
 {
-    dock_memory(memory_current.bank, memory_current.addr);
+    dock_memory(memory.current.bank, memory.current.addr);
+}
+
+function memory_toggleWatch(address, bank)
+{
+    let remote = "http://localhost:9009/watch/"+bank+"/"+address;
+    fetch (remote, {
+        method: 'GET',
+        mode: "cors"
+    })
+    .then ( response => response.json())
+    .then ( json => {
+        if (json.status == "ok") {
+            load_breakpoints(dock_disam_refresh);
+        }
+    })
+    .catch (error => { 
+        console.log(error);
+    })       
 }
 
 function dock_memory(bank, address)
@@ -29,7 +55,7 @@ function dock_memory(bank, address)
         let table=$('<table>');
         let addr = address;
         let i = 0;
-        let prev = (bank == memory_current.bank && address == memory_current.addr && memory_prev.bytes != undefined)
+        let prev = (bank == memory.current.bank && address == memory.current.addr && memory.prev.bytes != undefined)
         let clss = undefined
 
         for (y=0; y<16; y++) {
@@ -38,10 +64,10 @@ function dock_memory(bank, address)
 
             for (x=0; x<16; x++) {
                 clss = "class=memory"
-                if (prev && memory_prev.bytes[i] != bytes[i]) {
+                if (prev && memory.prev.bytes[i] != bytes[i]) {
                     clss = "class=memory-changed"
                 }
-                tr.append( "<td " + clss + ">" + snprintf(bytes[i],"%02X") + "</td>");
+                tr.append( "<td " + clss + " onclick=\"memory_toggleWatch(" + (addr + i) + ", 0);\">" + snprintf(bytes[i],"%02X") + "</td>");
                 i++;
             }
             addr += 16;
@@ -49,11 +75,11 @@ function dock_memory(bank, address)
         }
         $('#memory')[0].innerHTML = table[0].outerHTML;
 
-        memory_prev.bank = memory_current.bank
-        memory_prev.addr = memory_current.addr
-        memory_prev.bytes = bytes
+        memory.prev.bank = memory.current.bank
+        memory.prev.addr = memory.current.addr
+        memory.prev.bytes = bytes
          
-        memory_current.bank = bank
-        memory_current.addr = address
+        memory.current.bank = bank
+        memory.current.addr = address
     })
 }

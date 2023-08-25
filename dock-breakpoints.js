@@ -36,11 +36,25 @@ function load_breakpoints(callback)
             let bank = parseInt(json[i].bank);
             Breakpoints[addr] = bank;
         }
-        breakpoints_refresh();
 
-        if (callback) {
-            callback();
-        }
+        let remote = "http://localhost:9009/watch";
+        fetch (remote, {
+            method: 'GET',
+            mode: "cors"
+        })
+        .then ( response => response.json())
+        .then ( json => {
+            for (i in json) {
+                let addr = parseInt(json[i].addr);
+                let bank = parseInt(json[i].bank);
+                Breakpoints[addr] = bank;
+            }
+    
+            breakpoints_refresh();
+            if (callback) {
+                callback();
+            }
+        })
     })
     .catch (error => { 
         console.log(error);

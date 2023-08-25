@@ -21,7 +21,16 @@ function dock_cpu()
         $('#a').html("A : " + snprintf(json.a,"%02X"));
         $('#x').html("X : " + snprintf(json.x,"%02X"));
         $('#y').html("Y : " + snprintf(json.y,"%02X"));
-        $('#status').html("Flags : " + json.flags);
+
+        let n = (json.flags & 0x80) ? "N" : "-";
+        let v = (json.flags & 0x40) ? "V" : "-";
+        let b = (json.flags & 0x10) ? "B" : "-";
+        let d = (json.flags & 0x08) ? "D" : "-";
+        let i = (json.flags & 0x04) ? "I" : "-";
+        let c = (json.flags & 0x02) ? "C" : "-";
+        let z = (json.flags & 0x01) ? "Z" : "-";
+
+        $('#status').html("Flags : " + n+v+"-"+b+d+i+c+z);
 
         if (json.myStatus == 0 && (currentPC != json.pc || currentBank != json.bank)) {            
             currentBank = json.bank;

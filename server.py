@@ -26,7 +26,6 @@ class app(SimpleHTTPRequestHandler):
     global config
     if path[0:6] == "/code/":
        path = path.replace("/code/", config['root']+"/")
-       print(path)
        return path
     return super().translate_path(path)
   
