@@ -1,8 +1,8 @@
-let dbg_files = {};
 let dbg_address = {};
 
 let debug_info = {
-    structures: {}
+    structures: {},
+    files: {}
 }
 
 
@@ -56,7 +56,7 @@ function load_debuginfo(file, callback)
                 case "file":
                     attrs['id']=parseInt(attrs.id);
                     attrs.name = attrs.name.replaceAll("\"","")
-                    dbg_files[attrs.id] = { "name":attrs.name, "lines":{}};
+                    debug_info.files[attrs.id] = { "name":attrs.name, "lines":{}};
                     break;
                 case "seg":
                     if (attrs.name=="\"CODE\"") {
@@ -92,7 +92,7 @@ function load_debuginfo(file, callback)
             let line = dbg_lines[span.id];
             if (line != undefined && dbg_address[span.start] == undefined) {
                 dbg_address[span.start] = line;
-                dbg_files[line.file].lines[line.line] = span;
+                debug_info.files[line.file].lines[line.line] = span;
             }
         }
 
@@ -105,35 +105,4 @@ function load_debuginfo(file, callback)
     .catch (error => {
         console.log(error);
     })
-}
-
-/**
- *  create the list of source files in the PRG 
- */
-function files_update()
-{
-    let ul=$('<ul>');
-    for (i in dbg_files) {
-        let li=$('<li>');
-        li.append(dbg_files[i].name);
-        ul.append(li);
-    }
-    let dock=document.getElementById("dock-files");
-    dock.innerHTML = ul[0].outerHTML;
-    $("#dock-files").jstree({ "plugins": ["themes", "html_data", "ui", "crrm", "hotkeys"], "core": {} })
-
-    $("#dock-files").bind(
-        "select_node.jstree", function(evt, data){
-            let file = data.node.text;
-            let found = undefined;
-            for (id in dbg_files) {
-                if (dbg_files[id].name == file) {
-                    found = id;
-                    break;
-                }
-            }
-            if (found != undefined) {
-                load_source(found)
-            }
-      });    
 }

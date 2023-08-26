@@ -13,11 +13,11 @@ function load_source(fileID)
         fileID = 0;
     }
 
-    if (dbg_files[fileID] == undefined) {
+    if (debug_info.files[fileID] == undefined) {
         console.log("unknwon file ID" + fileID);
         return
     }
-    let local = "/code/" + Config.sources + "/" + dbg_files[fileID].name;
+    let local = "/code/" + Config.sources + "/" + debug_info.files[fileID].name;
     fetch(local)
     .then( response => response.text())
     .then( text => {
@@ -40,7 +40,7 @@ function display_source(fileID, txt)
         let img = "&nbsp;"
         let addr = ""
         let src = img_brk_off;
-        let dbg_line = dbg_files[fileID].lines[i+1];    // in source code lines start at 1
+        let dbg_line = debug_info.files[fileID].lines[i+1];    // in source code lines start at 1
         if (dbg_line != undefined) {
             let dbg_pc = dbg_line.start;
             if (dbg_pc == currentPC) {
@@ -66,12 +66,30 @@ function display_source(fileID, txt)
         tr.attr("class", "line-number");
         table.append(tr);
     }
-    $('#dock-source')[0].innerHTML = table[0].outerHTML;
 
     if (sources.update) {
         sources.previous_pc = $("#src"+fileID+sources.update)
         sources.update = false
     }
+
+    // use an existing panel or create a new one
+    if (panels[debug_info.files[fileID].name] == undefined) {
+        let dockManager = panels.dockManager
+        let divDockManager = panels.divDockManager
+        let documentNode = dockManager.context.model.documentManagerNode;
+
+        let panel = document.createElement('div');
+        panel.id = "file"+fileID;
+        panel.style = "overflow:scroll;"
+        panel.setAttribute("data-panel-caption", debug_info.files[fileID].name)
+        divDockManager.appendChild(panel)
+        let d_panel = new DockSpawnTS.PanelContainer(panel, dockManager)
+        dockManager.dockFill(documentNode, d_panel);
+
+        panels[debug_info.files[fileID].name] = d_panel
+    }
+
+    $('#file'+fileID)[0].innerHTML = table[0].outerHTML;
 }
 
 function source_update(brk)
@@ -117,7 +135,7 @@ function source_update(brk)
             let lineNumber = SourceFile_lines[currentPC];
             if (lineNumber != undefined) {
                 // move the scroll position
-                let item = document.getElementById("dock-source");
+                let item = document.getElementById("file"+fileID);
                 let top = item.scrollTop;
                 let height = item.clientHeight;
                 let bottom = top + height;
