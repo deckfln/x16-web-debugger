@@ -1,6 +1,11 @@
 let dbg_files = {};
 let dbg_address = {};
 
+let debug_info = {
+    structures: {}
+}
+
+
 function load_debuginfo(file, callback)
 {
     let remote = "/code/" + file;
@@ -39,9 +44,6 @@ function load_debuginfo(file, callback)
                         if (dbg_lines[attrs.span] == undefined) {
                             dbg_lines[attrs.span] = attrs;
                         }
-                        else {
-                            console.log("wazup");
-                        }    
                     }
                     break;
                 case "span":
@@ -73,6 +75,13 @@ function load_debuginfo(file, callback)
                     }
                     hSymbols[addr] = attrs.name.replaceAll("\"","")
                     break
+                case "scope":
+                    if (attrs.type == 'structure') {
+                        debug_info.structures[attrs.name.replaceAll("\"","")] = { 
+                            'size': parseInt(attrs.size)
+                        }
+                    }
+                    break;
             }
         }
 
@@ -98,6 +107,9 @@ function load_debuginfo(file, callback)
     })
 }
 
+/**
+ *  create the list of source files in the PRG 
+ */
 function files_update()
 {
     let ul=$('<ul>');

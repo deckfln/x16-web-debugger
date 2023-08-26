@@ -43,7 +43,7 @@ function dock_cpu()
             }
             else {
                 // move PC on screen
-                dock_disam_refresh();
+                dock_disam_update();
             }
             source_update();
             memory_update();

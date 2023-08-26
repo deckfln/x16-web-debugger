@@ -1,6 +1,6 @@
 let Breakpoints={};
 
-function toggleBreapoint(row, addr, bank)
+function toggleBreapoint(addr, bank)
 {
     let remote = "http://localhost:9009/breakpoint/0/"+addr;
     fetch (remote, {
@@ -11,7 +11,7 @@ function toggleBreapoint(row, addr, bank)
     .then ( json => {
         source_toggleBreakpoint(addr);
         if (json.status == "ok") {
-            load_breakpoints(dock_disam_refresh);
+            load_breakpoints(dock_disam_update);
         }
     })
     .catch (error => { 
@@ -21,6 +21,10 @@ function toggleBreapoint(row, addr, bank)
 
 let aBreakpoints = [];
 
+/**
+ * Load both CPU breakpoints and memory watches
+ * @param {*} callback 
+ */
 function load_breakpoints(callback)
 {
     let remote = "http://localhost:9009/breakpoint";
@@ -34,7 +38,7 @@ function load_breakpoints(callback)
         for (i in json) {
             let addr = parseInt(json[i].addr);
             let bank = parseInt(json[i].bank);
-            Breakpoints[addr] = bank;
+            Breakpoints[addr] = { 'type': 'brk', 'bank': bank };
         }
 
         let remote = "http://localhost:9009/watch";
@@ -47,10 +51,11 @@ function load_breakpoints(callback)
             for (i in json) {
                 let addr = parseInt(json[i].addr);
                 let bank = parseInt(json[i].bank);
-                Breakpoints[addr] = bank;
+                let len = parseInt(json[i].len);
+                Breakpoints[addr] = { 'type': 'watch', 'len': len, 'bank': bank };
             }
     
-            breakpoints_refresh();
+            breakpoints_update();
             if (callback) {
                 callback();
             }
@@ -61,16 +66,39 @@ function load_breakpoints(callback)
     })       
 }
 
-function breakpoints_refresh()
+function breakpoints_update()
 {
+    const watchAs = {
+        1: 'byte',
+        2: 'word',
+        4: 'long'
+    }
     let table=$('<table>');
+    let type=undefined
+    let toggle=undefined
+    let clss=undefined
+    let src = "images/breakpoint/on.png";
+    let img = undefined
     for (let addr in Breakpoints) {
         let tr=$('<tr>');
 
-        let src = "images/breakpoint/on.png";
-        let img = "<img id='brk"+addr+"' src='"+src+"'/ onClick='toggleBreapoint(" + i + "," + addr + ",0);'>"
+        switch (Breakpoints[addr].type) {
+            case "brk":
+                type=Breakpoints[addr].type
+                toggle="toggleBreapoint"
+                clss="breakpoint"
+                break
+            case "watch":
+                type=Breakpoints[addr].type+" as " + watchAs[Breakpoints[addr].len]
+                toggle="memory_toggleWatch"
+                clss="watch"
+                break
+        }
+        img = "<img id='brk"+addr+"' src='"+src+"'/ onClick='"+toggle+"(" + addr + ",0);'>"
 
-        tr.append("<td>"+img+"</td><td>"+snprintf(addr,"%04X")+"</td><td>"+Breakpoints[addr])+"</td>";
+        tr.append("<td>"+img+"</td><td>"+Breakpoints[addr].bank + ":" + snprintf(addr,"%04X")+"</td><td>"+type+"</td><td>"+"</td>");
+        tr.attr('class', clss)
+        tr.attr('id', "brk_"+addr)
         table.append(tr);
     }
     document.getElementById("dock-breakpoint").innerHTML = table[0].outerHTML;

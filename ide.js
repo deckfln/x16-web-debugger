@@ -27,6 +27,38 @@ window.onload = () => {
     function init1()
     {
         load_symbols(Config.symbols, init2);
+
+        // activate context menus
+        $(function() {
+            $.contextMenu({
+                selector: '.watch', 
+                callback: function(key, options) {
+                    let addr = parseInt($(this).attr('id').substring(4))
+                    switch (key) {
+                        case 'ubyte':
+                        case 'byte':
+                            memory_toggleWatch(addr, 0, 1)
+                            break;
+                        case 'uword':
+                        case 'word':
+                            memory_toggleWatch(addr, 0, 2)
+                            break;
+                        case 'ulong':
+                        case 'long':
+                            memory_toggleWatch(addr, 0, 4)
+                            break;
+                    }
+                },
+                items: {
+                    "ubyte": {name: "watch as unsigned byte"},
+                    "byte": {name: "watch as signed byte"},
+                    "uword": {name: "watch as unsigned word"},
+                    "word": {name: "watch as word"},
+                    "ulong": {name: "watch as unsigned long"},
+                    "long": {name: "watch as long"}
+                }
+            });
+        });
     }
 
     function init2()

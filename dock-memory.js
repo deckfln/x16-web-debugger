@@ -1,12 +1,3 @@
-function memory_dump(event)
-{
-    if (event.key == "Enter") {
-        let goto = $('#dump').val();
-        goto = parseInt(goto, 16);
-        dock_memory(0, goto);
-    }
-}
-
 let memory = {
     'current' : {
         'bank': 0,
@@ -17,15 +8,30 @@ let memory = {
         'addr': 0,
         'bytes': undefined
     },
+    'start': 0
 }
+
+function memory_dump(event)
+{
+    if (event.key == "Enter") {
+        let goto = $('#dump').val();
+        goto = parseInt(goto, 16);
+        dock_memory(0, goto);
+    }
+}
+
 function memory_update()
 {
     dock_memory(memory.current.bank, memory.current.addr);
 }
 
-function memory_toggleWatch(address, bank)
+function memory_toggleWatch(address, bank, len)
 {
-    let remote = "http://localhost:9009/watch/"+bank+"/"+address;
+    let remote = "http://localhost:9009/watch/"+bank+"/"+address
+    if (len != undefined) {
+        remote += ("/" + len)
+    } 
+
     fetch (remote, {
         method: 'GET',
         mode: "cors"
@@ -33,7 +39,8 @@ function memory_toggleWatch(address, bank)
     .then ( response => response.json())
     .then ( json => {
         if (json.status == "ok") {
-            load_breakpoints(dock_disam_refresh);
+            load_breakpoints(dock_disam_update);
+            memory_update()
         }
     })
     .catch (error => { 
@@ -57,21 +64,27 @@ function dock_memory(bank, address)
         let i = 0;
         let prev = (bank == memory.current.bank && address == memory.current.addr && memory.prev.bytes != undefined)
         let clss = undefined
+        let counter = 0
 
         for (y=0; y<16; y++) {
             let tr=$('<tr>');
             tr.append("<td class=\"pc\">" + snprintf(addr,"%04X") + "</td>");
 
             for (x=0; x<16; x++) {
-                clss = ""
+                clss = "watch"
                 if (prev && memory.prev.bytes[i] != bytes[i]) {
-                    clss = "memory-changed"
+                    clss += " memory-changed"
                 }
-                if (Breakpoints[addr + i] != undefined ) {
-                    clss += " memory-monitor"
+                if (Breakpoints[address + i] != undefined ) {
+                    counter = Breakpoints[address + i].len
                 }
 
-                tr.append( "<td class=\"" + clss + "\" onclick=\"memory_toggleWatch(" + (addr + i) + ", 0);\">" + snprintf(bytes[i],"%02X") + "</td>");
+                if (counter > 0) {
+                    clss += " memory-monitor"
+                    counter--
+                }
+                
+                tr.append( "<td id=\"mem_" + (address + i) + "\" class=\"" + clss + "\">"  + snprintf(bytes[i],"%02X") + "</td>");
                 i++;
             }
             addr += 16;

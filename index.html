@@ -3,11 +3,14 @@
     <link rel="stylesheet" href="lib/css/dock-manager.css">
     <link rel="stylesheet" href="lib/css/dock-manager-style.css">
     <link rel="stylesheet" href="css/demo.css">
-    <link rel="stylesheet" href="./jstree/themes/default/style.min.css">
+    <link rel="stylesheet" href="jstree/themes/default/style.min.css">
+    <link rel="stylesheet" href="contextmenu/jquery.contextMenu.min.css">
 
     <script src="scripts/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="./jstree/jstree.min.js"></script>
-
+    <script src="contextmenu/jquery.contextMenu.min.js"></script>
+    <script src="contextmenu/jquery.ui.position.min.js"></script>
+    
     <script src="lib/es5/dock-spawn-ts.js"></script>
         <style>
             .disasm-menu {
@@ -79,8 +82,8 @@
         </div>
 
 <div id="dock_div" style="height:calc(100% - 40px); width: 100%; position: absolute; left: 0; top: 40px;">
-    <div id="my_dock_manager" class="my-dock-manager" style="overflow:scrollY;"></div>
-    <div id="dock-cpu" data-panel-caption="cpu" class="state-window" hidden>
+    <div id="my_dock_manager" class="my-dock-manager"></div>
+    <div id="dock-cpu" data-panel-caption="cpu" class="state-window" hidden  style="overflow:scroll;">
         <div id="pc"></div>
         <div id="sp"></div>
         <div id="a"></div>
@@ -89,11 +92,11 @@
         <div id="status"></div>
         <div id="registers"></div>
     </div>
-    <div id="dock-disam" data-panel-caption="Disassembler" class="editor1-window editor-host">
+    <div id="dock-disam" data-panel-caption="Disassembler" class="editor1-window editor-host" style="overflow:scroll;">
         <div class="disam-menu">
             <div id="jump"><input type="text" id="goto" name="goto" required minlength="4" maxlength="4" size="10" onkeypress="clickPress(event)"/></div>
         </div>
-        <div id="disam"  style="overflow: scroll;"></div>
+        <div id="disam"></div>
     </div>
     <div id="dock-source" data-panel-caption="source" class="editor1-window editor-host" style="overflow:scroll;">
     </div>

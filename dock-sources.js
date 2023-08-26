@@ -2,6 +2,11 @@ let SourceFile = ""
 let SourceFileID = undefined
 let SourceFile_lines = {};
 
+let sources = {
+    'update': undefined,
+    'previous_pc': undefined
+}
+
 function load_source(fileID)
 {
     if (fileID == undefined) {
@@ -44,7 +49,8 @@ function display_source(fileID, txt)
                 }
                 else {
                     src = img_pc;
-                }                                
+                }
+                sources.update = dbg_pc
             }
             else if (Breakpoints[dbg_pc] != undefined) {
                 src = img_brk_on;
@@ -52,7 +58,7 @@ function display_source(fileID, txt)
 
             SourceFile_lines[ dbg_pc ] = i + 1;
         
-            img = "<img id='src"+fileID+dbg_pc+"' src='"+src+"'/ onClick='toggleBreapoint(" + i + "," + dbg_pc + ",0);'>"
+            img = "<img id='src"+fileID+dbg_pc+"' src='"+src+"'/ onClick='toggleBreapoint(" + dbg_pc + ",0);'>"
             addr = snprintf(dbg_pc,"%04X")
         }
 
@@ -61,9 +67,12 @@ function display_source(fileID, txt)
         table.append(tr);
     }
     $('#dock-source')[0].innerHTML = table[0].outerHTML;
-}
 
-let prev_source_pc = undefined;
+    if (sources.update) {
+        sources.previous_pc = $("#src"+fileID+sources.update)
+        sources.update = false
+    }
+}
 
 function source_update(brk)
 {
@@ -78,8 +87,8 @@ function source_update(brk)
         }
         else {
             // clean previous pointer
-            if (prev_source_pc != undefined) {
-                let src = prev_source_pc.attr('src');
+            if (sources.previous_pc != undefined) {
+                let src = sources.previous_pc.attr('src');
                 switch (src) {
                     case img_pc:
                         src = img_brk_off;
@@ -88,7 +97,7 @@ function source_update(brk)
                         src = img_brk_on;
                         break;
                 }                    
-                prev_source_pc.attr('src', src);
+                sources.previous_pc.attr('src', src);
             }
 
             // activate new pointer
@@ -102,7 +111,7 @@ function source_update(brk)
                     break;
             }
             found.attr('src', src);
-            prev_source_pc = found;
+            sources.previous_pc = found;
 
             // get line number from the memory
             let lineNumber = SourceFile_lines[currentPC];

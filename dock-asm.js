@@ -1,5 +1,10 @@
 let aDisasm = [];
 
+let cpu = {
+    'previous_pc': undefined,
+    'pc': undefined
+}
+
 function dock_disasm(bank, address)
 {
     let remote = "http://localhost:9009/dump/" + bank + "/" + address;
@@ -45,18 +50,18 @@ function dock_disasm(bank, address)
             asm.pc = asm.next;
             i++;
         }
-        dock_disam_refresh();
+        dock_disam_display();
     })
     .catch (error => { 
         console.log(error);
     })       
 }
 
-function dock_disam_refresh()
+function dock_disam_display()
 {
     let table=$('<table>');
     for (i=0; i<32; i++) {
-        let $tr=$('<tr>');
+        let tr=$('<tr>');
 
         let src = "images/breakpoint/off.png";
         let addr = aDisasm[i].addr;
@@ -67,15 +72,59 @@ function dock_disam_refresh()
             }
             else {
                 src = "images/breakpoint/pc.png"
-            }                                
+            }
+            cpu.update = aDisasm[i].addr
         }
         else if (Breakpoints[addr] != undefined) {
             src = "images/breakpoint/on.png"
         }
-        let img = "<img id='brk"+addr+"' src='"+src+"'/ onClick='toggleBreapoint(" + i + "," + addr + ",0);'>"
+        let img = "<img id='brk"+addr+"' src='"+src+"'/ onClick='toggleBreapoint(" + addr + ",0);'>"
 
-        $tr.append("<td>"+img+"</td><td class=\"pc\">"+snprintf(aDisasm[i].addr,"%04X")+"</td><td class=\"source-instr\">"+symbol+"</td><td>"+aDisasm[i].instr)+"</td>";
-        table.append($tr);
+        tr.append("<td>"+img+"</td><td class=\"pc\">"+snprintf(aDisasm[i].addr,"%04X")+"</td><td class=\"source-instr\">"+symbol+"</td><td>"+aDisasm[i].instr)+"</td>";
+        table.append(tr);
     }
     $('#disam')[0].innerHTML = table[0].outerHTML;
+
+    if (cpu.update) {
+        cpu.previous_pc = $("#brk" + cpu.update)
+        cpu.update = false
+    }
+}
+
+function dock_disam_update()
+{
+    let id = '#brk'+currentPC;
+    let found = $(id);   // PC is on screen ?
+    if (found.length == 0) {
+        // jumped page
+        dock_disasm(0, currentPC);
+        return
+    }
+
+    // clean previous pointer
+    if (cpu.previous_pc != undefined) {
+        let src = cpu.previous_pc.attr('src');
+        switch (src) {
+            case img_pc:
+                src = img_brk_off;
+                break;
+            case img_brk_pc:
+                src = img_brk_on;
+                break;
+        }                    
+        cpu.previous_pc.attr('src', src);
+    }
+
+    // activate new pointer
+    let src = found.attr('src');
+    switch (src) {
+        case img_brk_on:
+            src = img_brk_pc;
+            break;
+        case img_brk_off:
+            src = img_pc;
+            break;
+    }
+    found.attr('src', src);
+    cpu.previous_pc = found;
 }
