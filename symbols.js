@@ -18,7 +18,7 @@ function load_symbols(file, callback)
     .then ( response => response.text())
     .then ( text => {
         let symbols = text.split("\n");
-        for (i in symbols) {
+        for (let i in symbols) {
             let symbol = symbols[i];
             let addr = symbol.substring(3, 9);
             let val = symbol.substring(10);

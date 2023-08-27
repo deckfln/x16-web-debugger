@@ -60,7 +60,7 @@ function dock_disasm(bank, address)
 function dock_disam_display()
 {
     let table=$('<table>');
-    for (i=0; i<32; i++) {
+    for (let i=0; i<32; i++) {
         let tr=$('<tr>');
 
         let src = "images/breakpoint/off.png";
@@ -81,6 +81,7 @@ function dock_disam_display()
         let img = "<img id='brk"+addr+"' src='"+src+"'/ onClick='toggleBreapoint(" + addr + ",0);'>"
 
         tr.append("<td>"+img+"</td><td class=\"pc\">"+snprintf(aDisasm[i].addr,"%04X")+"</td><td class=\"source-instr\">"+symbol+"</td><td>"+aDisasm[i].instr)+"</td>";
+        tr.attr('class', 'line-number')
         table.append(tr);
     }
     $('#disam')[0].innerHTML = table[0].outerHTML;

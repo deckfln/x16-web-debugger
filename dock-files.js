@@ -17,7 +17,7 @@ function files_update()
         "select_node.jstree", function(evt, data){
             let file = data.node.text;
             let found = undefined;
-            for (id in debug_info.files) {
+            for (let id in debug_info.files) {
                 if (debug_info.files[id].name == file) {
                     found = id;
                     break;

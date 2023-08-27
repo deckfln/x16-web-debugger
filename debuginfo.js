@@ -1,8 +1,7 @@
-let dbg_address = {};
-
 let debug_info = {
     structures: {},
-    files: {}
+    files: {},
+    address: {}     // map memory addresses to fileID/lineNumber
 }
 
 
@@ -21,7 +20,7 @@ function load_debuginfo(file, callback)
         
         text = text.replaceAll("\r","");
         let lines = text.split("\n");
-        for (i in lines) {
+        for (let i in lines) {
             let cols = lines[i].split("\t");
             if (cols.length < 2) {
                 continue;
@@ -29,9 +28,9 @@ function load_debuginfo(file, callback)
             let type = cols[0];
             let kattrs = cols[1].split(",");
             let attrs = {}
-            for (i in kattrs) {
-                let kv = kattrs[i].split("=");
-                attrs[kv[0]]=kv[1];
+            for (let j in kattrs) {
+                let kv = kattrs[j].split("=");
+                attrs[kv[0]]=kv[j];
             }
             switch (type) {
                 case "line":
@@ -86,12 +85,12 @@ function load_debuginfo(file, callback)
         }
 
         // bind memory addresses to source file/line number
-        for (id in dbg_spans) {
+        for (let id in dbg_spans) {
             let span = dbg_spans[id];
             span.start += dbg_entry;
             let line = dbg_lines[span.id];
-            if (line != undefined && dbg_address[span.start] == undefined) {
-                dbg_address[span.start] = line;
+            if (line != undefined && debug_info.address[span.start] == undefined) {
+                debug_info.address[span.start] = line;
                 debug_info.files[line.file].lines[line.line] = span;
             }
         }

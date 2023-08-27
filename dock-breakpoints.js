@@ -35,7 +35,7 @@ function load_breakpoints(callback)
     .then ( response => response.json())
     .then ( json => {
         Breakpoints = {}
-        for (i in json) {
+        for (let i in json) {
             let addr = parseInt(json[i].addr);
             let bank = parseInt(json[i].bank);
             Breakpoints[addr] = { 'type': 'brk', 'bank': bank };
@@ -48,7 +48,7 @@ function load_breakpoints(callback)
         })
         .then ( response => response.json())
         .then ( json => {
-            for (i in json) {
+            for (let i in json) {
                 let addr = parseInt(json[i].addr);
                 let bank = parseInt(json[i].bank);
                 let len = parseInt(json[i].len);

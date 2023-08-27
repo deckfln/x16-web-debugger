@@ -38,6 +38,7 @@
 
               .line-number {
                 height: 28px;
+                white-space: pre;
               }
 
               .pc {
@@ -56,6 +57,13 @@
 
               .memory-monitor {
                 background-color: #eee;
+              }
+
+              .comment {
+                color: lightslategrey;
+              }
+              .mnemonics {
+                color: lightcoral;
               }
         </style>            
         <script src="mnemonics.js"></script>
@@ -100,7 +108,6 @@
         </div>
         <div id="disam"></div>
     </div>
-    <div id="dock-source" data-panel-caption="source" class="editor1-window editor-host" style="overflow:scroll;">
     </div>
     <div id="dock-sprite" data-panel-caption="Sprite 0">
         <img id="sprite" style="transform-origin: top left; transform: scale(2);"/>

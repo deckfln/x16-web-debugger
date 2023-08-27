@@ -1,13 +1,9 @@
-let SourceFile = ""
-let SourceFileID = undefined
-let SourceFile_lines = {};
-
 let sources = {
     'update': undefined,
     'previous_pc': undefined
 }
 
-function load_source(fileID)
+function load_source(fileID, callback)
 {
     if (fileID == undefined) {
         fileID = 0;
@@ -21,9 +17,11 @@ function load_source(fileID)
     fetch(local)
     .then( response => response.text())
     .then( text => {
-        SourceFile = text;
-        SourceFileID = fileID;
-        display_source(fileID, SourceFile);
+        debug_info.files[fileID].text = text
+        display_source(fileID, text);
+        if (callback) {
+            callback()
+        }
     })
 }
 
@@ -34,7 +32,7 @@ function display_source(fileID, txt)
 
     let table=$('<table>');
     SourceFile_lines = {};
-    for (i=0; i<lines.length; i++) {
+    for (let i=0; i<lines.length; i++) {
         let tr=$('<tr>');
 
         let img = "&nbsp;"
@@ -56,13 +54,11 @@ function display_source(fileID, txt)
                 src = img_brk_on;
             }    
 
-            SourceFile_lines[ dbg_pc ] = i + 1;
-        
             img = "<img id='src"+fileID+dbg_pc+"' src='"+src+"'/ onClick='toggleBreapoint(" + dbg_pc + ",0);'>"
             addr = snprintf(dbg_pc,"%04X")
         }
 
-        tr.append("<td>"+img+"</td><td class=\"pc\">"+addr+"</td><td class=\"source-instr\">"+lines[i]+"</td>");
+        tr.append("<td>"+img+"</td><td class=\"pc\">"+addr+"</td><td class=\"source-instr\">"+source_theme(lines[i])+"</td>");
         tr.attr("class", "line-number");
         table.append(tr);
     }
@@ -84,7 +80,7 @@ function display_source(fileID, txt)
         panel.setAttribute("data-panel-caption", debug_info.files[fileID].name)
         divDockManager.appendChild(panel)
         let d_panel = new DockSpawnTS.PanelContainer(panel, dockManager)
-        dockManager.dockFill(documentNode, d_panel);
+        dockManager.dockFill(documentNode, d_panel)
 
         panels[debug_info.files[fileID].name] = d_panel
     }
@@ -94,59 +90,67 @@ function display_source(fileID, txt)
 
 function source_update(brk)
 {
-    let line = dbg_address[currentPC];
-    if (line != undefined) {
-        let fileID = line.file;
-        let id = '#src'+fileID+currentPC;
-        let found = $(id);   // PC is on screen ?
-        if (found.length == 0) {
-            // jumped page
-            load_source(fileID);
+    let fileLine = debug_info.address[currentPC];
+    if (fileLine == undefined) {
+        return
+    }
+
+    // clean previous pointer
+    if (sources.previous_pc != undefined) {
+        let src = sources.previous_pc.attr('src');
+        switch (src) {
+            case img_pc:
+                src = img_brk_off;
+                break;
+            case img_brk_pc:
+                src = img_brk_on;
+                break;
+        }                    
+        sources.previous_pc.attr('src', src);
+        sources.previous_pc = undefined
+    }
+
+    // load source if needed
+    let fileID = fileLine.file;
+    let id = '#src'+fileID+currentPC;
+    let found = $(id);   // PC is on screen ?
+    if (found.length == 0) {
+        // load the new source and come back later
+        load_source(fileID, source_update);
+        return
+    }
+
+    // activate new pointer
+    let src = found.attr('src');
+    switch (src) {
+        case img_brk_on:
+            src = img_brk_pc;
+            break;
+        case img_brk_off:
+            src = img_pc;
+            break;
+    }
+    found.attr('src', src);
+    sources.previous_pc = found;
+
+    // move the current file on front of files tab
+    let panel = panels[debug_info.files[fileID].name]
+    panel.tabPage.host.setActiveTab(panel);
+    panel.dockManager.activePanel = panel;
+
+    // get line number from the memory
+    if (fileLine != undefined) {
+        // move the scroll position
+        let item = document.getElementById("file"+fileID);
+        let top = item.scrollTop;
+        let height = item.clientHeight;
+        let bottom = top + height;
+        let pos = 30 * (fileLine.line-1);
+        if (pos > bottom) {
+            item.scrollTop = pos;
         }
-        else {
-            // clean previous pointer
-            if (sources.previous_pc != undefined) {
-                let src = sources.previous_pc.attr('src');
-                switch (src) {
-                    case img_pc:
-                        src = img_brk_off;
-                        break;
-                    case img_brk_pc:
-                        src = img_brk_on;
-                        break;
-                }                    
-                sources.previous_pc.attr('src', src);
-            }
-
-            // activate new pointer
-            let src = found.attr('src');
-            switch (src) {
-                case img_brk_on:
-                    src = img_brk_pc;
-                    break;
-                case img_brk_off:
-                    src = img_pc;
-                    break;
-            }
-            found.attr('src', src);
-            sources.previous_pc = found;
-
-            // get line number from the memory
-            let lineNumber = SourceFile_lines[currentPC];
-            if (lineNumber != undefined) {
-                // move the scroll position
-                let item = document.getElementById("file"+fileID);
-                let top = item.scrollTop;
-                let height = item.clientHeight;
-                let bottom = top + height;
-                let pos = 30 * (lineNumber-1);
-                if (pos > bottom) {
-                    item.scrollTop = pos;
-                }
-                else if (pos < top) {
-                    item.scrollTop = pos;
-                }
-            }
+        else if (pos < top) {
+            item.scrollTop = pos;
         }
     }
 }
@@ -176,4 +180,37 @@ function source_toggleBreakpoint(brk)
         item.attr('src', new_src);
         return;
     }
+}
+
+function source_theme(line)
+{
+    let icomment = line.search(";")
+    if (icomment >= 0) {
+        line = line.replace(";", "<span class=\"comment\">;")
+        line += "</span>"
+    }
+    else {
+        icomment = line.length
+    }
+
+    // find the 3 first letters at the beginning of the line
+    let start = -1
+    for (let i=0; i<icomment; i++) {
+        if (line.substr(i, 1) != " " && line.substr(i, 1) != "\t") {
+            start = i
+            break
+        }
+    }
+    if (start >= 0) {
+        let op = line.substr(start, 3)
+        for (let i in mnemonics) {
+            let m = mnemonics[i]
+            if (op == m) {
+                line = line.substr(0, start)+ "<span class=\"mnemonics\">" + m + "</span>" + line.substr(start+3, icomment-start-3)
+                break
+            }
+        }
+    }
+
+    return line
 }
