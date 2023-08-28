@@ -599,3 +599,8 @@ const mnemonics_mode = [
 	/* $FE */ op_mode.MODE_ABSX,
 	/* $FF */ op_mode.MODE_ZPREL
 ];
+
+let hmnemonics = {}
+for (let i in mnemonics) {
+	hmnemonics[mnemonics[i]] = true
+}

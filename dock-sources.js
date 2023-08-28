@@ -57,7 +57,7 @@ function display_source(fileID, txt)
             addr = snprintf(dbg_pc,"%04X")
         }
 
-        tr.append("<td>"+img+"</td><td class=\"pc\">"+addr+"</td><td class=\"source-instr\">"+source_theme(lines[i])+"</td>");
+        tr.append("<td>"+img+"</td><td class=\"pc\">"+addr+"</td><td class=\"source-instr\">" + ca65_syntax(lines[i]) + "</td>");
         tr.attr("class", "line-number");
         table.append(tr);
     }
@@ -87,6 +87,11 @@ function display_source(fileID, txt)
     $('#file'+fileID)[0].innerHTML = table[0].outerHTML;
 }
 
+/**
+ * 
+ * @param {*} brk 
+ * @returns 
+ */
 function source_update(brk)
 {
     let fileLine = debug_info.address[currentPC];
@@ -186,37 +191,4 @@ function source_toggleBreakpoint(brk)
         item.attr('src', new_src);
         return;
     }
-}
-
-function source_theme(line)
-{
-    let icomment = line.search(";")
-    if (icomment >= 0) {
-        line = line.replace(";", "<span class=\"comment\">;")
-        line += "</span>"
-    }
-    else {
-        icomment = line.length
-    }
-
-    // find the 3 first letters at the beginning of the line
-    let start = -1
-    for (let i=0; i<icomment; i++) {
-        if (line.substr(i, 1) != " " && line.substr(i, 1) != "\t") {
-            start = i
-            break
-        }
-    }
-    if (start >= 0) {
-        let op = line.substr(start, 3)
-        for (let i in mnemonics) {
-            let m = mnemonics[i]
-            if (op == m) {
-                line = line.substr(0, start)+ "<span class=\"mnemonics\">" + m + "</span>" + line.substr(start+3, icomment-start-3)
-                break
-            }
-        }
-    }
-
-    return line
 }
