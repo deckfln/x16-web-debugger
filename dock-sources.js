@@ -31,7 +31,6 @@ function display_source(fileID, txt)
     let lines = txt.split("\n");
 
     let table=$('<table>');
-    SourceFile_lines = {};
     for (let i=0; i<lines.length; i++) {
         let tr=$('<tr>');
 
@@ -157,9 +156,16 @@ function source_update(brk)
 
 function source_toggleBreakpoint(brk)
 {
-    if (brk != undefined && SourceFile_lines[brk] != undefined) {
+    if (brk == undefined) {
+        return
+    }
+    let addr = debug_info.address[brk]
+    let fileID = addr.file
+    let lineNumber = addr.line
+
+    if (debug_info.files[fileID].lines[lineNumber] != undefined) {
         // toggle a breakpoint
-        let id = '#src' + SourceFileID + brk;
+        let id = '#src' + fileID + brk;
         let item = $(id);
         let current = item.attr('src');
         let new_src = undefined;

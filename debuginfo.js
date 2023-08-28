@@ -1,7 +1,8 @@
 let debug_info = {
+    start: 0,
     structures: {},
     files: {},
-    address: {}     // map memory addresses to fileID/lineNumber
+    address: {},     // map memory addresses to fileID/lineNumber
 }
 
 
@@ -14,7 +15,6 @@ function load_debuginfo(file, callback)
     })
     .then ( response => response.text())
     .then ( text => {
-        let dbg_entry;
         let dbg_spans = {}
         let dbg_lines = {};
         
@@ -30,7 +30,7 @@ function load_debuginfo(file, callback)
             let attrs = {}
             for (let j in kattrs) {
                 let kv = kattrs[j].split("=");
-                attrs[kv[0]]=kv[j];
+                attrs[kv[0]]=kv[1];
             }
             switch (type) {
                 case "line":
@@ -61,7 +61,7 @@ function load_debuginfo(file, callback)
                     if (attrs.name=="\"CODE\"") {
                         // entry point of the code
                         let hex = attrs.start.substring(2);
-                        dbg_entry = parseInt(hex, 16);
+                        debug_info.start = parseInt(hex, 16);
                     }
                     break;
                 case 'sym':
@@ -87,7 +87,7 @@ function load_debuginfo(file, callback)
         // bind memory addresses to source file/line number
         for (let id in dbg_spans) {
             let span = dbg_spans[id];
-            span.start += dbg_entry;
+            span.start += debug_info.start
             let line = dbg_lines[span.id];
             if (line != undefined && debug_info.address[span.start] == undefined) {
                 debug_info.address[span.start] = line;

@@ -19,8 +19,6 @@ function toggleBreapoint(addr, bank)
     })       
 }
 
-let aBreakpoints = [];
-
 /**
  * Load both CPU breakpoints and memory watches
  * @param {*} callback 
