@@ -75,9 +75,10 @@ function load_debuginfo(file, callback)
                     hSymbols[addr] = attrs.name.replaceAll("\"","")
                     break
                 case "scope":
-                    if (attrs.type == 'structure') {
-                        debug_info.structures[attrs.name.replaceAll("\"","")] = { 
-                            'size': parseInt(attrs.size)
+                    if (attrs.type == 'struct') {
+                        debug_info.structures[attrs.name.replaceAll("\"","").toLowerCase()] = { 
+                            'size': parseInt(attrs.size),
+                            "attributes": []
                         }
                     }
                     break;
@@ -95,7 +96,11 @@ function load_debuginfo(file, callback)
             }
         }
 
-        files_update();
+        // display file names
+        files_update()
+
+        // load all files & prepare structure mapping
+        load_nextfile(0, structures_map)
 
         if (callback) {
             callback();

@@ -3,32 +3,9 @@ let sources = {
     'previous_pc': undefined
 }
 
-function load_source(fileID, callback)
+function display_source(fileID)
 {
-    if (fileID == undefined) {
-        fileID = 0;
-    }
-
-    if (debug_info.files[fileID] == undefined) {
-        console.log("unknwon file ID" + fileID);
-        return
-    }
-    let local = "/code/" + Config.sources + "/" + debug_info.files[fileID].name;
-    fetch(local)
-    .then( response => response.text())
-    .then( text => {
-        debug_info.files[fileID].text = text
-        display_source(fileID, text);
-        if (callback) {
-            callback()
-        }
-    })
-}
-
-function display_source(fileID, txt)
-{
-    txt = txt.replaceAll("\r","");
-    let lines = txt.split("\n");
+    let lines = debug_info.files[fileID].text
 
     let table=$('<table>');
     for (let i=0; i<lines.length; i++) {
@@ -120,8 +97,7 @@ function source_update(brk)
     let found = $(id);   // PC is on screen ?
     if (found.length == 0) {
         // load the new source and come back later
-        load_source(fileID, source_update);
-        return
+        display_source(fileID)
     }
 
     // activate new pointer

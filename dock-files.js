@@ -24,7 +24,31 @@ function files_update()
                 }
             }
             if (found != undefined) {
-                load_source(found)
+                display_source(found)
             }
       });    
+}
+
+/**
+ * load all files sequentially
+ * @param {*} id 
+ * @param {*} callback 
+ */
+function load_nextfile(id, callback) 
+{
+    let local = "/code/" + Config.sources + "/" + debug_info.files[id].name;
+    fetch(local)
+    .then( response => response.text())
+    .then( text => {
+        debug_info.files[id].text = text.replaceAll("\r","").split("\n");
+
+        let k = Object.keys(debug_info.files).length - 1
+        if (id < k) {
+            load_nextfile(id + 1, callback)
+        }
+        else {
+            callback()
+        }
+    })
+
 }

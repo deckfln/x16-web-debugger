@@ -36,11 +36,11 @@ window.onload = () => {
     dockManager.dockDown(documentNode, d_sprite, 0.1);
 
     // dynamically created panel
-    let variables = document.createElement('div');
-    variables.id = 'variables';
-    variables.setAttribute("data-panel-caption","Variables")
-    divDockManager.appendChild(variables)
-    let d_variables = new DockSpawnTS.PanelContainer(variables, dockManager)
+    let watch = document.createElement('div');
+    watch.id = 'watch';
+    watch.setAttribute("data-panel-caption","Watch")
+    divDockManager.appendChild(watch)
+    let d_variables = new DockSpawnTS.PanelContainer(watch, dockManager)
     dockManager.dockRight(documentNode, d_variables);
 
     panels["disasm"] = d_disasm
@@ -49,7 +49,7 @@ window.onload = () => {
     panels["breakpoints"] = d_breakpoints
     panels["files"] = d_files
     panels["dump"] = d_dump
-    panels["variables"] = d_variables
+    panels["watch"] = d_variables
 
     function init1()
     {
@@ -91,7 +91,7 @@ window.onload = () => {
     function init2()
     {
         dock_sprite("http://localhost:9009/vera/sprite/0")
-        load_breakpoints(load_source);
+        load_breakpoints();
         dock_disasm(0, 0);
         check_cpu();    // start CPU monitoring
     }

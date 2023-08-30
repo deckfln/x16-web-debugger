@@ -48,6 +48,7 @@ function dock_cpu()
             source_update();
             memory_update();
             dock_registers();
+            watches_update()
         }
     })
     .catch (error => { 
