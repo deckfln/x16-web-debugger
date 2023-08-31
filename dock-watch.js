@@ -14,7 +14,7 @@ function display_struct(memory, struct, index, table)
                 break
             case ".word":
             case ".addr":
-                v = ((memory[index++] & 0xFF) << 8) | (memory[index++] & 0xFF);
+                v = (memory[index++] & 0xFF) | ((memory[index++] & 0xFF) << 8);
                 table.html += attr.name + "=" + parseInt(v)
                 break
             case ".res":
@@ -62,7 +62,7 @@ function update_watch(index, struct, memory)
                 break
             case ".word":
             case ".addr":
-                v = ((memory[index++] & 0xFF) << 8) | (memory[index++] & 0xFF);
+                v = (memory[index++] & 0xFF) | ((memory[index++] & 0xFF) << 8);
                 dom.text = attr.name + "=" + parseInt(v)
                 break
             case ".res":
