@@ -100,7 +100,7 @@ function load_debuginfo(file, callback)
         files_update()
 
         // load all files & prepare structure mapping
-        load_nextfile(0, structures_map)
+        load_allFiles(structures_map)
 
         if (callback) {
             callback();

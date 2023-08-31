@@ -29,26 +29,20 @@ function files_update()
       });    
 }
 
-/**
- * load all files sequentially
- * @param {*} id 
- * @param {*} callback 
- */
-function load_nextfile(id, callback) 
+function load_allFiles(callback)
 {
-    let local = "/code/" + Config.sources + "/" + debug_info.files[id].name;
-    fetch(local)
-    .then( response => response.text())
-    .then( text => {
-        debug_info.files[id].text = text.replaceAll("\r","").split("\n");
+    let promises = [];
+    for (let id in debug_info.files) {
+        let local = "/code/" + Config.sources + "/" + debug_info.files[id].name;
+        let promise = fetch(local)
+        .then( response => response.text())
+        .then( text => {
+            debug_info.files[id].text = text.replaceAll("\r","").split("\n");
+        })   
 
-        let k = Object.keys(debug_info.files).length - 1
-        if (id < k) {
-            load_nextfile(id + 1, callback)
-        }
-        else {
-            callback()
-        }
-    })
-
+        promises.push(promise);
+    }
+    Promise.all(promises).then(fileContents => {
+        callback()
+    });
 }
