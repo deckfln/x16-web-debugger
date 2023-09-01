@@ -1,6 +1,6 @@
 function debug_run()
 {
-    let remote = "http://localhost:9009/run/" + debug_info.start
+    let remote = "http://localhost:9009/restart/" + debug_info.start
     fetch (remote, {
         method: 'GET',
         mode: "cors"

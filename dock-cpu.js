@@ -39,16 +39,33 @@ function dock_cpu()
 
         if (json.myStatus != cpu.status) {
             if (json.myStatus == 0) {
+                // debug buttons are visible
                 $("#continue").removeClass("disabled-link")
                 $("#stepinto").removeClass("disabled-link")
                 $("#stepover").removeClass("disabled-link")
                 $("#stepout").removeClass("disabled-link")   
+
+                // intercept debug keys
+                document.onkeydown = function(evt) {
+                    switch (evt.key) {
+                        case 'F10':
+                            debug_stepover()
+                            return false;
+                        case 'F11':
+                            debug_stepinto()
+                            return false;
+                    }
+                };        
             }
             else {
+                // debug buttons are hidden
                 $("#continue").addClass("disabled-link")
                 $("#stepinto").addClass("disabled-link")
                 $("#stepover").addClass("disabled-link")
                 $("#stepout").addClass("disabled-link")
+
+                // release debug keys
+                document.onkeydown = undefined
             }
             cpu.status = json.mystatus
         }
