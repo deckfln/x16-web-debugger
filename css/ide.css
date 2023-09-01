@@ -1,0 +1,49 @@
+.disasm-menu {
+    width: 100%;
+}
+.debug-bar {
+    width: 160px; /* Set a specific width */
+    background-color: #eee; /* Dark-grey background */
+    height: 40px;
+  }
+  
+  .debug-bar a {
+    float: left; /* Float links side by side */
+    text-align: center; /* Center-align text */
+    width: 32px; /* Equal width (5 icons with 20% width each = 100%) */
+    padding: 12px 0; /* Some top and bottom padding */
+    color: white; /* White text color */
+    font-size: 36px; /* Increased font size */
+  }
+  
+  .debug-bar a:hover {
+    background-color: #999; /* Add a hover color */
+  }
+
+  .disabled-link {
+    pointer-events: none;
+    opacity: 0.25;
+  }
+
+  .line-number {
+    height: 28px;
+    white-space: pre;
+  }
+
+  .pc {
+    border-right-style: solid;
+    border-right-color: ccc;
+    padding-right: 10px;
+  }
+
+  .source-instr {
+    padding-left: 10px;
+  }
+
+  .memory-changed {
+    color: red;
+  }
+
+  .memory-monitor {
+    background-color: #eee;
+  }

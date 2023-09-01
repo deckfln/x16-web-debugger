@@ -1,10 +1,5 @@
 let aDisasm = [];
 
-let cpu = {
-    'previous_pc': undefined,
-    'pc': undefined
-}
-
 function dock_disasm(bank, address)
 {
     let remote = "http://localhost:9009/dump/" + bank + "/" + address;

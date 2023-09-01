@@ -6,6 +6,10 @@ let sources = {
 function display_source(fileID)
 {
     let lines = debug_info.files[fileID].text
+    if (lines == undefined) {
+        // source code is not yet loaded
+        return
+    }
 
     let table=$('<table>');
     for (let i=0; i<lines.length; i++) {
@@ -65,18 +69,10 @@ function display_source(fileID)
 }
 
 /**
- * 
- * @param {*} brk 
- * @returns 
+ * remove the PC pointer from the previous address
  */
-function source_update(brk)
+function source_removePC()
 {
-    let fileLine = debug_info.address[currentPC];
-    if (fileLine == undefined) {
-        return
-    }
-
-    // clean previous pointer
     if (sources.previous_pc != undefined) {
         let src = sources.previous_pc.attr('src');
         switch (src) {
@@ -90,18 +86,14 @@ function source_update(brk)
         sources.previous_pc.attr('src', src);
         sources.previous_pc = undefined
     }
+}
 
-    // load source if needed
-    let fileID = fileLine.file;
-    let id = '#src'+fileID+currentPC;
-    let found = $(id);   // PC is on screen ?
-    if (found.length == 0) {
-        // load the new source and come back later
-        display_source(fileID)
-    }
-
-    // activate new pointer
-    let src = found.attr('src');
+/**
+ * set the PC pointer
+ */
+function source_setPC(node)
+{
+    let src = node.attr('src');
     switch (src) {
         case img_brk_on:
             src = img_brk_pc;
@@ -110,8 +102,37 @@ function source_update(brk)
             src = img_pc;
             break;
     }
-    found.attr('src', src);
+    node.attr('src', src);
     sources.previous_pc = found;
+}
+
+/**
+ * 
+ * @param {*} brk 
+ * @returns 
+ */
+function source_update(brk)
+{
+    let fileLine = debug_info.address[currentPC];
+    if (fileLine == undefined) {
+        return
+    }
+
+    // clean previous pointer
+    source_removePC()
+
+    // load source if needed
+    let fileID = fileLine.file;
+    let id = '#src'+fileID+currentPC;
+    let line = $(id);   // PC is on screen ?
+    if (line.length == 0) {
+        // load the new source 
+        display_source(fileID)
+        return
+    }
+
+    // activate new pointer
+    source_setPC(line)
 
     // move the current file on front of files tab
     let panel = panels[debug_info.files[fileID].name]

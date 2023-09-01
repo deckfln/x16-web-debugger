@@ -25,6 +25,7 @@ function debug_continue()
     .then ( response => response.json())
     .then ( json => {
         if (json.status == "ok") {
+            source_removePC()       // erase the current PC pointer
         }
     })
     .catch (error => { 

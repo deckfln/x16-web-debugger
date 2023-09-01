@@ -1,93 +1,47 @@
 <html>
-    <head>
-    <link rel="stylesheet" href="lib/css/dock-manager.css">
-    <link rel="stylesheet" href="lib/css/dock-manager-style.css">
-    <link rel="stylesheet" href="css/demo.css">
-    <link rel="stylesheet" href="jstree/themes/default/style.min.css">
-    <link rel="stylesheet" href="contextmenu/jquery.contextMenu.min.css">
-    <link rel="stylesheet" href="css/ca65.css">
+<head>
+  <link rel="stylesheet" href="lib/css/dock-manager.css">
+  <link rel="stylesheet" href="lib/css/dock-manager-style.css">
+  <link rel="stylesheet" href="css/demo.css">
+  <link rel="stylesheet" href="jstree/themes/default/style.min.css">
+  <link rel="stylesheet" href="contextmenu/jquery.contextMenu.min.css">
+  <link rel="stylesheet" href="css/ca65.css">
+  <link rel="stylesheet" href="css/ide.css">
 
-    <script src="scripts/jquery-1.11.1.min.js"></script>
-    <script type="text/javascript" src="./jstree/jstree.min.js"></script>
-    <script src="contextmenu/jquery.contextMenu.min.js"></script>
-    <script src="contextmenu/jquery.ui.position.min.js"></script>
-    
-    <script src="lib/es5/dock-spawn-ts.js"></script>
-        <style>
-            .disasm-menu {
-                width: 100%;
-            }
-            .debug-bar {
-                width: 90px; /* Set a specific width */
-                background-color: #eee; /* Dark-grey background */
-                height: 40px;
-              }
-              
-              .debug-bar a {
-                float: left; /* Float links side by side */
-                text-align: center; /* Center-align text */
-                width: 20%; /* Equal width (5 icons with 20% width each = 100%) */
-                padding: 12px 0; /* Some top and bottom padding */
-                transition: all 0.3s ease; /* Add transition for hover effects */
-                color: white; /* White text color */
-                font-size: 36px; /* Increased font size */
-              }
-              
-              .debug-bar a:hover {
-                background-color: #eee; /* Add a hover color */
-              }
-
-              .line-number {
-                height: 28px;
-                white-space: pre;
-              }
-
-              .pc {
-                border-right-style: solid;
-                border-right-color: ccc;
-                padding-right: 10px;
-              }
-
-              .source-instr {
-                padding-left: 10px;
-              }
-
-              .memory-changed {
-                color: red;
-              }
-
-              .memory-monitor {
-                background-color: #eee;
-              }
-        </style>            
-        <script src="mnemonics.js"></script>
-        <script src="disasm.js"></script>
-        <script src="debug.js"></script>
-        <script src="symbols.js"></script>
-        <script src="debuginfo.js"></script>
-        <script src="ca65.js"></script>
-        <script src="structures.js"></script>
-        <script src="dock-asm.js"></script>
-        <script src="dock-sprite.js"></script>
-        <script src="dock-breakpoints.js"></script>
-        <script src="dock-cpu.js"></script>
-        <script src="dock-sources.js"></script>
-        <script src="dock-memory.js"></script>
-        <script src="dock-registers.js"></script>
-        <script src="dock-files.js"></script>
-        <script src="dock-watch.js"></script>
-        <script src="ide.js"></script>
-      </head>
-    <body style="width: 100%; height: 100%; margin: 0;">
-        <div class="demo-header" id="header" style="width:100%">
-            <div class="debug-bar">
-                <a href="#" onclick="debug_run();"><img height="16px" src="images/breakpoint/debug-start.196x256.png"></a>
-                <a href="#" onclick="debug_continue();"><img height="16px" src="images/breakpoint/debug-continue.256x246.png"></a>
-                <a href="#" onclick="debug_stepover();"><img height="16px" src="images/breakpoint/debug-step-over.256x251.png"></a>
-                <a href="#" onclick="debug_stepinto();"><img height="16px" src="images/breakpoint/debug-step-into.163x256.png"></a>
-                <a href="#" onclick="debug_stepout();"><img height="16px" src="images/breakpoint/debug_step_out_icon_138699.png"></a>
-            </div>
-        </div>
+  <script src="scripts/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="./jstree/jstree.min.js"></script>
+  <script src="contextmenu/jquery.contextMenu.min.js"></script>
+  <script src="contextmenu/jquery.ui.position.min.js"></script>
+  
+  <script src="lib/es5/dock-spawn-ts.js"></script>
+  <script src="mnemonics.js"></script>
+  <script src="disasm.js"></script>
+  <script src="debug.js"></script>
+  <script src="symbols.js"></script>
+  <script src="debuginfo.js"></script>
+  <script src="ca65.js"></script>
+  <script src="structures.js"></script>
+  <script src="dock-asm.js"></script>
+  <script src="dock-sprite.js"></script>
+  <script src="dock-breakpoints.js"></script>
+  <script src="dock-cpu.js"></script>
+  <script src="dock-sources.js"></script>
+  <script src="dock-memory.js"></script>
+  <script src="dock-registers.js"></script>
+  <script src="dock-files.js"></script>
+  <script src="dock-watch.js"></script>
+  <script src="ide.js"></script>
+</head>
+<body style="width: 100%; height: 100%; margin: 0;">
+  <div class="demo-header" id="header" style="width:100%">
+      <div class="debug-bar">
+          <a href="#" onclick="debug_run();"><img height="16px" src="images/breakpoint/debug-start.196x256.png"></a>
+          <a id="continue" title="Continue" href="#" onclick="debug_continue();"><img height="16px" src="images/breakpoint/debug-continue.256x246.png"></a>
+          <a id="stepover" title="Step Over" href="#" onclick="debug_stepover();"><img height="16px" src="images/breakpoint/debug-step-over.256x251.png"></a>
+          <a id="stepinto" title="Step Into" href="#" onclick="debug_stepinto();"><img height="16px" src="images/breakpoint/debug-step-into.163x256.png"></a>
+          <a id="stepout" title="Step Out" href="#" onclick="debug_stepout();"><img height="16px" src="images/breakpoint/debug_step_out_icon_138699.png"></a>
+      </div>
+  </div>
 
 <div id="dock_div" style="height:calc(100% - 40px); width: 100%; position: absolute; left: 0; top: 40px;">
     <div id="my_dock_manager" class="my-dock-manager"></div>

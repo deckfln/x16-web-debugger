@@ -2,6 +2,12 @@ let currentPC = undefined;
 let currentStatus = undefined;
 let currentBank = undefined;
 
+let cpu = {
+    'status': 1,
+    'previous_pc': undefined,
+    'pc': undefined
+}
+
 function check_cpu()
 {
     setInterval(dock_cpu, 250);
@@ -31,6 +37,22 @@ function dock_cpu()
         let z = (json.flags & 0x01) ? "Z" : "-";
 
         $('#status').html("Flags : " + n+v+"-"+b+d+i+c+z);
+
+        if (json.myStatus != cpu.status) {
+            if (json.myStatus == 0) {
+                $("#continue").removeClass("disabled-link")
+                $("#stepinto").removeClass("disabled-link")
+                $("#stepover").removeClass("disabled-link")
+                $("#stepout").removeClass("disabled-link")   
+            }
+            else {
+                $("#continue").addClass("disabled-link")
+                $("#stepinto").addClass("disabled-link")
+                $("#stepover").addClass("disabled-link")
+                $("#stepout").addClass("disabled-link")
+            }
+            cpu.status = json.mystatus
+        }
 
         if (json.myStatus == 0 && (currentPC != json.pc || currentBank != json.bank)) {            
             currentBank = json.bank;
