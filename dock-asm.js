@@ -61,7 +61,7 @@ function dock_disam_display()
         let src = "images/breakpoint/off.png";
         let addr = aDisasm[i].addr;
         let symbol = aDisasm[i].symbol; if (symbol == undefined) symbol = "";
-        if (addr == currentPC) {
+        if (addr == cpu.pc) {
             if (Breakpoints[addr] != undefined) {
                 src = "images/breakpoint/brk_pc.png"
             }
@@ -89,11 +89,11 @@ function dock_disam_display()
 
 function dock_disam_update()
 {
-    let id = '#brk'+currentPC;
+    let id = '#brk'+cpu.pc;
     let found = $(id);   // PC is on screen ?
     if (found.length == 0) {
         // jumped page
-        dock_disasm(0, currentPC);
+        dock_disasm(0, cpu.pc);
         return
     }
 

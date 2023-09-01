@@ -5,10 +5,15 @@ let sources = {
 
 function display_source(fileID)
 {
+    if (panels[debug_info.files[fileID].name] != undefined) {
+        // source is already displayed
+        return true
+    }
+
     let lines = debug_info.files[fileID].text
     if (lines == undefined) {
         // source code is not yet loaded
-        return
+        return false
     }
 
     let table=$('<table>');
@@ -21,16 +26,7 @@ function display_source(fileID)
         let dbg_line = debug_info.files[fileID].lines[i+1];    // in source code lines start at 1
         if (dbg_line != undefined) {
             let dbg_pc = dbg_line.start;
-            if (dbg_pc == currentPC) {
-                if (Breakpoints[dbg_pc] != undefined) {
-                    src = img_brk_pc;
-                }
-                else {
-                    src = img_pc;
-                }
-                sources.update = dbg_pc
-            }
-            else if (Breakpoints[dbg_pc] != undefined) {
+            if (Breakpoints[dbg_pc] != undefined) {
                 src = img_brk_on;
             }    
 
@@ -66,6 +62,8 @@ function display_source(fileID)
     }
 
     $('#file'+fileID)[0].innerHTML = table[0].outerHTML;
+
+    return true
 }
 
 /**
@@ -103,7 +101,7 @@ function source_setPC(node)
             break;
     }
     node.attr('src', src);
-    sources.previous_pc = found;
+    sources.previous_pc = node;
 }
 
 /**
@@ -113,7 +111,7 @@ function source_setPC(node)
  */
 function source_update(brk)
 {
-    let fileLine = debug_info.address[currentPC];
+    let fileLine = debug_info.address[cpu.pc];
     if (fileLine == undefined) {
         return
     }
@@ -123,21 +121,24 @@ function source_update(brk)
 
     // load source if needed
     let fileID = fileLine.file;
-    let id = '#src'+fileID+currentPC;
+    let id = '#src'+fileID+cpu.pc;
     let line = $(id);   // PC is on screen ?
     if (line.length == 0) {
-        // load the new source 
-        display_source(fileID)
-        return
+        // display the new source 
+        if (!display_source(fileID)) {
+            // not yet loaded
+            return
+        }
+        line = $(id);   // PC is on screen ?
     }
-
-    // activate new pointer
-    source_setPC(line)
 
     // move the current file on front of files tab
     let panel = panels[debug_info.files[fileID].name]
     panel.tabPage.host.setActiveTab(panel);
     panel.dockManager.activePanel = panel;
+
+    // activate new pointer
+    source_setPC(line)
 
     // get line number from the memory
     if (fileLine != undefined) {
@@ -146,7 +147,7 @@ function source_update(brk)
         let top = item.scrollTop;
         let height = item.clientHeight;
         let bottom = top + height;
-        let pos = 30 * (fileLine.line-1);
+        let pos = 28 * (fileLine.line-1);
         if (pos > bottom) {
             item.scrollTop = pos;
         }

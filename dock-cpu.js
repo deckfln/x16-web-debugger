@@ -1,4 +1,3 @@
-let currentPC = undefined;
 let currentStatus = undefined;
 let currentBank = undefined;
 
@@ -10,7 +9,7 @@ let cpu = {
 
 function check_cpu()
 {
-    setInterval(dock_cpu, 250);
+    setInterval(dock_cpu, 100);
 }
 
 function dock_cpu()
@@ -54,14 +53,14 @@ function dock_cpu()
             cpu.status = json.mystatus
         }
 
-        if (json.myStatus == 0 && (currentPC != json.pc || currentBank != json.bank)) {            
+        if (json.myStatus == 0 && (cpu.pc != json.pc || currentBank != json.bank)) {            
             currentBank = json.bank;
-            currentPC = json.pc;
+            cpu.pc = json.pc;
 
-            let found = $('#brk'+currentPC);   // PC is on screen ?
+            let found = $('#brk' + cpu.pc);   // PC is on screen ?
             if (found.length == 0) {
                 // jumped page
-                dock_disasm(currentBank, currentPC);
+                dock_disasm(currentBank, cpu.pc);
             }
             else {
                 // move PC on screen
