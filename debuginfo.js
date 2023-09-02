@@ -17,6 +17,8 @@ function load_debuginfo(file)
     .then ( text => {
         let dbg_spans = {}
         let dbg_lines = {};
+        let dbg_lineID = {};
+        let dbg_sym = {};
         
         text = text.replaceAll("\r","");
         let lines = text.split("\n");
@@ -44,6 +46,10 @@ function load_debuginfo(file)
                             dbg_lines[attrs.span] = attrs;
                         }
                     }
+                    dbg_lineID[parseInt(attrs.id)] = {
+                        file: parseInt(attrs.file),
+                        line: parseInt(attrs.line)
+                    }
                     break;
                 case "span":
                     attrs['id']=parseInt(attrs.id);
@@ -55,7 +61,7 @@ function load_debuginfo(file)
                 case "file":
                     attrs['id']=parseInt(attrs.id);
                     attrs.name = attrs.name.replaceAll("\"","")
-                    debug_info.files[attrs.id] = { "name":attrs.name, "lines":{}};
+                    debug_info.files[attrs.id] = { "name":attrs.name, "lines":{}, symbols:[]};
                     break;
                 case "seg":
                     if (attrs.name=="\"CODE\"") {
@@ -72,7 +78,14 @@ function load_debuginfo(file)
                     else {
                         addr = parseInt(addr)
                     }
-                    hSymbols[addr] = attrs.name.replaceAll("\"","")
+
+                    let name = attrs.name.replaceAll("\"","")
+                    hSymbols[addr] = name
+
+                    // record the symbol location in the source code
+                    let def = parseInt(attrs.def)
+                    let line = dbg_lineID[def]
+                    debug_info.files[line.file].symbols[name] = line.line
                     break
                 case "scope":
                     if (attrs.type == 'struct') {

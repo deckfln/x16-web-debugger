@@ -4,9 +4,19 @@
 function files_update()
 {
     let ul=$('<ul>');
-    for (i in debug_info.files) {
-        let li=$('<li>');
-        li.append(debug_info.files[i].name);
+    for (let fileID in debug_info.files) {
+        let file = debug_info.files[fileID] 
+        let li=$('<li id="f' + fileID + '">');
+        li.append(file.name);
+            let ul1=$('<ul>');
+            for (let symbol in file.symbols) {
+                if (symbol.substring(0,1) != '@') {
+                    let li1=$('<li id="f' + fileID + '#' + symbol + '">');
+                    li1.append(symbol);
+                    ul1.append(li1);    
+                }
+            }
+        li.append(ul1)
         ul.append(li);
     }
     let dock=document.getElementById("dock-files");
@@ -15,16 +25,24 @@ function files_update()
 
     $("#dock-files").bind(
         "select_node.jstree", function(evt, data){
-            let file = data.node.text;
-            let found = undefined;
-            for (let id in debug_info.files) {
-                if (debug_info.files[id].name == file) {
-                    found = id;
-                    break;
-                }
+            let id = data.node.id.substr(1)
+            // check if we clicked on the file or a symbol in the file
+            let sym
+            let hash = id.indexOf("#")
+            if ( hash > 0) {
+                sym = id.substring(hash +1)
+                id = id.substring(0,hash)
             }
-            if (found != undefined) {
-                display_source(found)
+            let fileID = parseInt(id)
+
+            // seach only for the file
+            display_source(fileID)
+
+            // if clicked on a symbol, move the code to the line of the symbol
+            if (sym != undefined) {
+                let line = debug_info.files[fileID].symbols[sym]
+
+                source_set(fileID, line)
             }
       });    
 }

@@ -105,6 +105,24 @@ function source_setPC(node)
 }
 
 /**
+ * Move the code to s specific line
+ */
+function source_set(fileID, line)
+{
+    let item = document.getElementById("file"+fileID);
+    let top = item.scrollTop;
+    let height = item.clientHeight;
+    let bottom = top + height;
+    let pos = 28 * (line-1);
+    if (pos > bottom) {
+        item.scrollTop = pos;
+    }
+    else if (pos < top) {
+        item.scrollTop = pos;
+    }    
+}
+
+/**
  * 
  * @param {*} brk 
  * @returns 

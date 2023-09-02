@@ -29,11 +29,11 @@ window.onload = () => {
     let d_watch = new DockSpawnTS.PanelContainer(document.getElementById("dock-watch"), dockManager);
 
     let documentNode = dockManager.context.model.documentManagerNode;
-    let outputNode = dockManager.dockLeft(documentNode, d_cpu, 0.3);
+    let outputNode = dockManager.dockLeft(documentNode, d_cpu, 0.1);
         dockManager.dockDown(outputNode, d_breakpoints, 0.2);
     dockManager.dockFill(documentNode, d_disasm);
     let divNode = dockManager.dockRight(documentNode, d_files, 0.2);
-        dockManager.dockDown(divNode, d_dump,0.3);
+        dockManager.dockDown(divNode, d_dump,0.4);
     dockManager.dockDown(documentNode, d_sprite, 0.1);
     dockManager.dockRight(documentNode, d_watch);
 
