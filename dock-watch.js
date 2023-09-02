@@ -1,10 +1,4 @@
-let Watches = [
-    {
-        bank: 0,
-        address: 0x500,
-        type: "player",
-    }
-]
+let Watches = []
 
 /**
  * Display a memory watch was a new structure
@@ -43,6 +37,25 @@ function watch_bindStructures()
             items: menu
         });
     });
+
+    $(function() {
+        $.contextMenu({
+            selector: '.addwatch', 
+            trigger: 'left',
+            callback: function(key, options) {
+                let addr = $('#gowatch').val()
+                let add = parseInt(addr, 16)
+                Watches.push({
+                    bank: 0,
+                    address: add,
+                    type: key
+                })
+                display_watch(Watches[Watches.length - 1])
+            },
+            items: menu
+        });
+    });
+
 }
 
 /**
@@ -108,13 +121,10 @@ function add_watch(bank, address, type, bytes)
     let jstree = $('#watch_root').jstree(true)
     
     let node = jstree.create_node("#", {
-        text: address + " as "+ type, 
+        text: "$" + address.toString(16) + " as "+ type, 
         id: 'watch_' + address,
         class:'watch'
     })
-    let table = {
-        "html": ""
-    }
     display_struct(bytes, type, 0, jstree, node)
 }
 

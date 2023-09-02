@@ -26,6 +26,7 @@ window.onload = () => {
     let d_breakpoints = new DockSpawnTS.PanelContainer(document.getElementById("dock-breakpoint"), dockManager);
     let d_files = new DockSpawnTS.PanelContainer(document.getElementById("dock-files"), dockManager);
     let d_dump = new DockSpawnTS.PanelContainer(document.getElementById("dock-memory"), dockManager);
+    let d_watch = new DockSpawnTS.PanelContainer(document.getElementById("dock-watch"), dockManager);
 
     let documentNode = dockManager.context.model.documentManagerNode;
     let outputNode = dockManager.dockLeft(documentNode, d_cpu, 0.3);
@@ -34,18 +35,7 @@ window.onload = () => {
     let divNode = dockManager.dockRight(documentNode, d_files, 0.2);
         dockManager.dockDown(divNode, d_dump,0.3);
     dockManager.dockDown(documentNode, d_sprite, 0.1);
-
-    // dynamically created panel
-    let watch = document.createElement('div');
-    watch.id = 'watch';
-    watch.setAttribute("data-panel-caption","Watch")
-    let jst = document.createElement('div');
-    jst.setAttribute("id", "watch_root")
-    watch.appendChild(jst)
-
-    divDockManager.appendChild(watch)
-    let d_variables = new DockSpawnTS.PanelContainer(watch, dockManager)
-    dockManager.dockRight(documentNode, d_variables);
+    dockManager.dockRight(documentNode, d_watch);
 
     $('#watch_root').jstree({
         'core' : {
@@ -59,7 +49,7 @@ window.onload = () => {
     panels["breakpoints"] = d_breakpoints
     panels["files"] = d_files
     panels["dump"] = d_dump
-    panels["watch"] = d_variables
+    panels["watch"] = d_watch
 
     let promises = [];
 
