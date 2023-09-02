@@ -42,16 +42,7 @@ function watch_bindStructures()
         $.contextMenu({
             selector: '.addwatch', 
             trigger: 'left',
-            callback: function(key, options) {
-                let addr = $('#gowatch').val()
-                let add = parseInt(addr, 16)
-                Watches.push({
-                    bank: 0,
-                    address: add,
-                    type: key
-                })
-                display_watch(Watches[Watches.length - 1])
-            },
+            callback: watch_new,
             items: menu
         });
     });
@@ -166,12 +157,11 @@ function update_watch(index, struct, memory)
 }
 
 /**
- * add or update a watch
- * @param {*} watch 
+ *
  */
-function display_watch(watch)
+function _display_memory(watch, realaddress)
 {
-    let remote = "http://localhost:9009/dump/" + watch.bank + "/" + watch.address + "/" + debug_info.structures[watch.type].size
+    let remote = "http://localhost:9009/dump/" + watch.bank + "/" + realaddress + "/" + debug_info.structures[watch.type].size
     fetch (remote, {
         method: 'GET',
         mode: "cors"
@@ -195,11 +185,95 @@ function display_watch(watch)
 }
 
 /**
+ * add or update a watch
+ * @param {*} watch 
+ */
+function display_watch(watch)
+{
+    if (watch.access == 'indirect') {
+        // extrat the index from the emulator
+        let index = watch.address   // memory based index ?
+
+        if (typeof index === 'string' ) {
+            // register based
+            index = watch.address.substring(1,2)   // register index (starting at 0)
+            index = index*2 + 2                     // register memory address
+        }
+            
+        let remote = "http://localhost:9009/dump/0/" + index + "/2"
+        fetch (remote, {
+            method: 'GET',
+            mode: "cors"
+        })
+        .then ( response => response.arrayBuffer())
+        .then ( buffer => {
+            let words = new Uint16Array( buffer )
+            _display_memory(watch, words[0])    // get memory from the address hosted in the index
+        })
+    }
+    else {
+        _display_memory(watch, watch.addres)    // get the direct memory
+    }
+}
+
+/**
  * refresh all watches
  */
 function watches_update()
 {
     for (let i in Watches) {
         display_watch(Watches[i])
+    }
+}
+
+/**
+ * Add a new watch from the menu
+ */
+function watch_new(key, options)
+{
+    let addr = $('#gowatch').val() 
+    let access
+
+    // check if indirect memory
+    if (addr.substring(0, 1) == "(") {
+        const re = /\((.*)\)/
+        const matches = addr.match(re)
+        if (matches.length > 0) {
+            access = "indirect"
+            addr = matches[1]
+            if (addr.substring[0,1] != "r") {
+                // hexa memory based
+                addr = parseInt(addr, 16)
+            }
+        }
+        else {
+            alert("Incorrect expression")
+            return    
+        }
+    }
+    else {
+        access = "direct"
+        addr = parseInt(addr, 16)
+    }
+
+
+    // check if the watch has already been added
+    let found = false
+    for (let i in Watches) {
+        if (Watches[i].address == addr) {
+            found = true
+            alert("Watch already on the list")
+            break
+        }
+    }
+
+    if (!found) {
+        Watches.push({
+            bank: 0,
+            address: addr,
+            type: key,
+            access: access
+        })
+        display_watch(Watches[Watches.length - 1])    
     }
 }

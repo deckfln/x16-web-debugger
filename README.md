@@ -31,5 +31,5 @@ Memory breakpoints
 Memory watches
 --------------
 * Display memory as a structure defined in the source code (.STRUCTURE / .ENDSTRUCTURE)
-* _(todo) register indirect access (r0),y_
-* _(todo) memory indirect access ($800),y_
+* indirect access register base (r0),y
+* memory indirect access ($0002),y
