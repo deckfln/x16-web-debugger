@@ -38,11 +38,17 @@ function load_allFiles(callback)
         .then( response => response.text())
         .then( text => {
             debug_info.files[id].text = text.replaceAll("\r","").split("\n");
+            return "ok"
         })   
 
         promises.push(promise);
     }
-    Promise.all(promises).then(fileContents => {
-        callback()
-    });
+
+    let p = new Promise(resolve => {
+        Promise.all(promises).then(fileContents => {
+           resolve("OK")
+        });   
+    })
+
+    return p
 }

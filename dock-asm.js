@@ -3,7 +3,7 @@ let aDisasm = [];
 function dock_disasm(bank, address)
 {
     let remote = "http://localhost:9009/dump/" + bank + "/" + address;
-    fetch (remote, {
+    let p = fetch (remote, {
         method: 'GET',
         mode: "cors"
     })
@@ -46,10 +46,13 @@ function dock_disasm(bank, address)
             i++;
         }
         dock_disam_display();
+
+        return "ok"
     })
     .catch (error => { 
         console.log(error);
-    })       
+    })      
+    return p 
 }
 
 function dock_disam_display()

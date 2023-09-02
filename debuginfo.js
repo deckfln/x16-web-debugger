@@ -6,7 +6,7 @@ let debug_info = {
 }
 
 
-function load_debuginfo(file, callback)
+function load_debuginfo(file)
 {
     let remote = "/code/" + file;
     let f = fetch (remote, {
@@ -99,14 +99,11 @@ function load_debuginfo(file, callback)
         // display file names
         files_update()
 
-        // load all files & prepare structure mapping
-        load_allFiles(structures_map)
-
-        if (callback) {
-            callback();
-        }
+        return "ok"
     })
     .catch (error => {
         console.log(error);
     })
+
+    return f
 }

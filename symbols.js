@@ -3,15 +3,14 @@
  */
 let hSymbols = {}
 
-function load_symbols(file, callback)
+function load_symbols(file)
 {
     if (file == undefined || file =="") {
-        if (callback) { callback();}
-        return;
+        return undefined;
     }
 
     let local = "/code/"+file;
-    fetch (local, {
+    let p = fetch (local, {
         method: 'GET',
         mode: "cors"
     })
@@ -25,11 +24,11 @@ function load_symbols(file, callback)
             let daddr = parseInt(addr, 16);
             hSymbols[daddr]=val;
         }
-        if (callback) {
-            callback();
-        }
+        return "ok";
     })
     .catch (error => {
         console.log(error);
     })
+
+    return p
 }

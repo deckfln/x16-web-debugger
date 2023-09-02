@@ -26,7 +26,7 @@ function toggleBreapoint(addr, bank)
 function load_breakpoints(callback)
 {
     let remote = "http://localhost:9009/breakpoint";
-    fetch (remote, {
+    let p = fetch (remote, {
         method: 'GET',
         mode: "cors"
     })
@@ -57,11 +57,15 @@ function load_breakpoints(callback)
             if (callback) {
                 callback();
             }
+
+            return "ok"
         })
     })
     .catch (error => { 
         console.log(error);
-    })       
+    })
+
+    return p
 }
 
 function breakpoints_update()

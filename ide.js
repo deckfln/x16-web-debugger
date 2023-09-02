@@ -51,56 +51,64 @@ window.onload = () => {
     panels["dump"] = d_dump
     panels["watch"] = d_variables
 
-    function init1()
-    {
-        load_symbols(Config.symbols, init2);
+    let promises = [];
 
-        // activate context menus
-        $(function() {
-            $.contextMenu({
-                selector: '.watch', 
-                callback: function(key, options) {
-                    let addr = parseInt($(this).attr('id').substring(4))
-                    switch (key) {
-                        case 'ubyte':
-                        case 'byte':
-                            memory_toggleWatch(addr, 0, 1)
-                            break;
-                        case 'uword':
-                        case 'word':
-                            memory_toggleWatch(addr, 0, 2)
-                            break;
-                        case 'ulong':
-                        case 'long':
-                            memory_toggleWatch(addr, 0, 4)
-                            break;
-                    }
-                },
-                items: {
-                    "ubyte": {name: "watch as unsigned byte"},
-                    "byte": {name: "watch as signed byte"},
-                    "uword": {name: "watch as unsigned word"},
-                    "word": {name: "watch as word"},
-                    "ulong": {name: "watch as unsigned long"},
-                    "long": {name: "watch as long"}
-                }
-            });
-        });
-    }
-
-    function init2()
-    {
-        dock_sprite("http://localhost:9009/vera/sprite/0")
-        load_breakpoints();
-        dock_disasm(0, 0);
-        check_cpu();    // start CPU monitoring
-    }
-
-    fetch("config.json")
+    let p = fetch("config.json")
     .then ( response => response.json())
     .then ( json => {
         Config = json;
-        load_debuginfo(Config.debuginfo, init1);
+        load_debuginfo(Config.debuginfo)
+        .then (ok => {
+            // load all files & prepare structure mapping
+            load_allFiles()
+            .then(ok => {
+                structures_map()
+                p = load_symbols(Config.symbols)
+                dock_sprite("http://localhost:9009/vera/sprite/0")
+                load_breakpoints()
+                .then(ok => {
+                    dock_disasm(0, 0)
+                    .then(ok => {
+                        check_cpu()    // start CPU monitoring       
+                    })
+                })
+                return "ok"
+            })
+
+            return "OK"
+        });
     })
-            
+
+    // activate context menus
+    $(function() {
+        $.contextMenu({
+            selector: '.watch', 
+            callback: function(key, options) {
+                let addr = parseInt($(this).attr('id').substring(4))
+                switch (key) {
+                    case 'ubyte':
+                    case 'byte':
+                        memory_toggleWatch(addr, 0, 1)
+                        break;
+                    case 'uword':
+                    case 'word':
+                        memory_toggleWatch(addr, 0, 2)
+                        break;
+                    case 'ulong':
+                    case 'long':
+                        memory_toggleWatch(addr, 0, 4)
+                        break;
+                }
+            },
+            items: {
+                "ubyte": {name: "watch as unsigned byte"},
+                "byte": {name: "watch as signed byte"},
+                "uword": {name: "watch as unsigned word"},
+                "word": {name: "watch as word"},
+                "ulong": {name: "watch as unsigned long"},
+                "long": {name: "watch as long"}
+            }
+        });
+    });
+
 };

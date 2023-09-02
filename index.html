@@ -46,12 +46,14 @@
 <div id="dock_div" style="height:calc(100% - 40px); width: 100%; position: absolute; left: 0; top: 40px;">
     <div id="my_dock_manager" class="my-dock-manager"></div>
     <div id="dock-cpu" data-panel-caption="cpu" class="state-window" hidden  style="overflow:scroll;">
-        <div id="pc"></div>
-        <div id="sp"></div>
-        <div id="a"></div>
-        <div id="x"></div>
-        <div id="y"></div>
-        <div id="status"></div>
+        <table>
+            <tr><td>PC</td><td id="pc"></td></tr>
+            <tr><td>SP</td><td id="sp"></td></tr>
+            <tr><td>A</td><td id="a"></td></tr>
+            <tr><td>X</td><td id="x"></td></tr>
+            <tr><td>Y</td><td id="y"></td></tr>
+            <tr><td>Flags</td><td id="status"></td></tr>
+        </table>
         <div id="registers"></div>
     </div>
     <div id="dock-disam" data-panel-caption="Disassembler" class="editor1-window editor-host" style="overflow:scroll;">

@@ -21,11 +21,11 @@ function dock_cpu()
     })
     .then ( response => response.json())
     .then ( json => {
-        $('#pc').html("PC : " + snprintf(json.pc,"%04X"));
-        $('#sp').html("sp : " + snprintf(json.sp,"%02X"));
-        $('#a').html("A : " + snprintf(json.a,"%02X"));
-        $('#x').html("X : " + snprintf(json.x,"%02X"));
-        $('#y').html("Y : " + snprintf(json.y,"%02X"));
+        $('#pc').html(snprintf(json.pc,"%04X"));
+        $('#sp').html(snprintf(json.sp,"%02X"));
+        $('#a').html(snprintf(json.a,"%02X"));
+        $('#x').html(snprintf(json.x,"%02X"));
+        $('#y').html(snprintf(json.y,"%02X"));
 
         let n = (json.flags & 0x80) ? "N" : "-";
         let v = (json.flags & 0x40) ? "V" : "-";
@@ -35,7 +35,7 @@ function dock_cpu()
         let c = (json.flags & 0x02) ? "C" : "-";
         let z = (json.flags & 0x01) ? "Z" : "-";
 
-        $('#status').html("Flags : " + n+v+"-"+b+d+i+c+z);
+        $('#status').html(n+v+"-"+b+d+i+c+z);
 
         if (json.myStatus != cpu.status) {
             if (json.myStatus == 0) {
