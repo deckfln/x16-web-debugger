@@ -1,51 +1,130 @@
-function display_struct(memory, struct, index, table)
+let Watches = [
+    {
+        bank: 0,
+        address: 0x500,
+        type: "player",
+    }
+]
+
+/**
+ * Display a memory watch was a new structure
+ * @param {*} this 
+ * @param {*} key 
+ */
+function watch_changeStructure(elem, type)
+{
+    let addr = elem.attr('id').replace("watch_", "")
+    for (let i in Watches) {
+        if (Watches[i].address == addr) {
+            Watches[i].type = type
+        }
+    }
+    console.log(addr)
+}
+
+/**
+ *bind watch as structure to watches class
+ *activate context menus
+ */
+function watch_bindStructures()
+{
+    let menu = {}
+    for (let i in debug_info.structures) {
+        menu[i] = {name: "Watch as " + i}
+
+    }
+
+    $(function() {
+        $.contextMenu({
+            selector: '.watch', 
+            callback: function(key, options) {
+                watch_changeStructure(this, key)
+            },
+            items: menu
+        });
+    });
+}
+
+/**
+ * create a jsTree node to show all attributes of the structure
+ * @param {*} memory 
+ * @param {*} struct 
+ * @param {*} index 
+ * @param {*} jstree 
+ * @param {*} parent 
+ * @returns 
+ */
+function display_struct(memory, struct, index, jstree, parent)
 {
     let structure = debug_info.structures[struct]
+    let substruct = false
 
     for( let i in structure.attributes ) {
         let attr = structure.attributes[i]
         let type = attr.size.toLowerCase()
-        let v
+        let text
 
-        table.html += "<li id='"+ struct + "_" + attr.name + "'>"
         switch (type) {
             case ".byte":
-                table.html += attr.name + "=" + parseInt(memory[index++])
+                text = attr.name + "=" + parseInt(memory[index++])
                 break
             case ".word":
             case ".addr":
                 v = (memory[index++] & 0xFF) | ((memory[index++] & 0xFF) << 8);
-                table.html += attr.name + "=" + parseInt(v)
+                text = attr.name + "=" + parseInt(v)
                 break
             case ".res":
-                table.html += attr.name + "= .RES"
+                text = attr.name + "= .RES"
                 console.log("not implemented .RES")
                 break
-            default:
-                table.html += attr.name
-                table.html += "<ul>"
-                index = display_struct(memory, type, index, table)
-                table.html += "</ul>"
+            default:            
+                text = attr.name
+                substruct = true   // defere creation of the sub-structure
             }
-        table.html +=  "</li>"
+
+        let node = jstree.create_node(parent, {
+            text: text,
+            id: struct + "_" + attr.name
+        })
+
+        if (substruct) {
+            substruct = false
+            index = display_struct(memory, type, index, jstree, node)
+        }
     }
 
     return index
 }
 
-function add_watch(bank, address, struct, bytes)
+/**
+ * Add a memory watch to the list
+ * @param {*} bank 
+ * @param {*} address 
+ * @param {*} type 
+ * @param {*} bytes 
+ */
+function add_watch(bank, address, type, bytes)
 {
+    let jstree = $('#watch_root').jstree(true)
+    
+    let node = jstree.create_node("#", {
+        text: address + " as "+ type, 
+        id: 'watch_' + address,
+        class:'watch'
+    })
     let table = {
-        "html": "<ul><li  id='watch_"+address+"'>" + address + "<ul>"
+        "html": ""
     }
-    display_struct(bytes, struct, 0, table)
-    let dock=document.getElementById("watch");
-    table.html += "</ul></li></ul>"
-    dock.innerHTML = table.html;
-    //dock.innerHTML = '<ul><li>Root node 1<ul><li>Child node 1</li><li><a href="#">Child node 2</a></li></ul></li></ul>'
-    $("#watch").jstree()
+    display_struct(bytes, type, 0, jstree, node)
 }
 
+/**
+ * Ipdate content of existing variable
+ * @param {*} index 
+ * @param {*} struct 
+ * @param {*} memory 
+ * @returns 
+ */
 function update_watch(index, struct, memory)
 {
     const structure = debug_info.structures[struct]
@@ -55,7 +134,7 @@ function update_watch(index, struct, memory)
         const type = attr.size.toLowerCase()
         const id = struct + "_" + attr.name
 
-        let dom = $('#watch').jstree(true).get_node(id)
+        let dom = $('#watch_root').jstree(true).get_node(id)
         switch (type) {
             case ".byte":
                 dom.text = attr.name + "=" + parseInt(memory[index++])
@@ -76,9 +155,13 @@ function update_watch(index, struct, memory)
     return index
 }
 
-function display_watch(bank, address, struct)
+/**
+ * add or update a watch
+ * @param {*} watch 
+ */
+function display_watch(watch)
 {
-    let remote = "http://localhost:9009/dump/" + bank + "/" + address + "/" + debug_info.structures[struct].size
+    let remote = "http://localhost:9009/dump/" + watch.bank + "/" + watch.address + "/" + debug_info.structures[watch.type].size
     fetch (remote, {
         method: 'GET',
         mode: "cors"
@@ -87,13 +170,13 @@ function display_watch(bank, address, struct)
     .then ( buffer => {
         let bytes = new Uint8Array( buffer );
 
-        let watch = $('#watch_'+address)
-        if (watch.length == 0) {
-            add_watch(bank, address, struct, bytes)
+        let elm = $('#watch_' + watch.address)
+        if (elm.length == 0) {
+            add_watch(watch.bank, watch.address, watch.type, bytes)
         }
         else {
-            update_watch(0, struct, bytes)
-            $('#watch').jstree(true).redraw(true)
+            update_watch(0, watch.type, bytes)
+            $('#watch_root').jstree(true).redraw(true)
         }
     })
     .catch (error => { 
@@ -101,7 +184,12 @@ function display_watch(bank, address, struct)
     })       
 }
 
+/**
+ * refresh all watches
+ */
 function watches_update()
 {
-    display_watch(0, "0x500", "player")
+    for (let i in Watches) {
+        display_watch(Watches[i])
+    }
 }

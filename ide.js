@@ -39,9 +39,19 @@ window.onload = () => {
     let watch = document.createElement('div');
     watch.id = 'watch';
     watch.setAttribute("data-panel-caption","Watch")
+    let jst = document.createElement('div');
+    jst.setAttribute("id", "watch_root")
+    watch.appendChild(jst)
+
     divDockManager.appendChild(watch)
     let d_variables = new DockSpawnTS.PanelContainer(watch, dockManager)
     dockManager.dockRight(documentNode, d_variables);
+
+    $('#watch_root').jstree({
+        'core' : {
+            'check_callback' : true // allow create_node/delete_node operations
+        }
+    })
 
     panels["disasm"] = d_disasm
     panels["sprite"] = d_sprite
@@ -63,6 +73,7 @@ window.onload = () => {
             load_allFiles()
             .then(ok => {
                 structures_map()
+                watch_bindStructures()
                 p = load_symbols(Config.symbols)
                 dock_sprite("http://localhost:9009/vera/sprite/0")
                 load_breakpoints()
@@ -82,7 +93,7 @@ window.onload = () => {
     // activate context menus
     $(function() {
         $.contextMenu({
-            selector: '.watch', 
+            selector: '.brk_memory', 
             callback: function(key, options) {
                 let addr = parseInt($(this).attr('id').substring(4))
                 switch (key) {
@@ -101,12 +112,9 @@ window.onload = () => {
                 }
             },
             items: {
-                "ubyte": {name: "watch as unsigned byte"},
-                "byte": {name: "watch as signed byte"},
-                "uword": {name: "watch as unsigned word"},
-                "word": {name: "watch as word"},
-                "ulong": {name: "watch as unsigned long"},
-                "long": {name: "watch as long"}
+                "ubyte": {name: "Monitor as byte"},
+                "uword": {name: "Monitor as word"},
+                "ulong": {name: "Monitor as long"},
             }
         });
     });

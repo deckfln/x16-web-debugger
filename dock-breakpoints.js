@@ -93,7 +93,7 @@ function breakpoints_update()
             case "watch":
                 type=Breakpoints[addr].type+" as " + watchAs[Breakpoints[addr].len]
                 toggle="memory_toggleWatch"
-                clss="watch"
+                clss="brk_memory"
                 break
         }
         img = "<img id='brk"+addr+"' src='"+src+"'/ onClick='"+toggle+"(" + addr + ",0);'>"
