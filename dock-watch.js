@@ -1,19 +1,89 @@
 let Watches = []
 
 /**
+ * Add a new watch from the menu
+ */
+function watch_new(key, options)
+{
+    let addr = $('#gowatch').val() 
+    let access
+
+    // check if indirect memory
+    if (addr.substring(0, 1) == "(") {
+        const re = /\((.*)\)/
+        const matches = addr.match(re)
+        if (matches.length > 0) {
+            access = "indirect"
+            addr = matches[1]
+            if (addr.substring[0,1] != "r") {
+                // hexa memory based
+                addr = parseInt(addr, 16)
+            }
+        }
+        else {
+            alert("Incorrect expression")
+            return    
+        }
+    }
+    else {
+        access = "direct"
+        addr = parseInt(addr, 16)
+    }
+
+
+    // check if the watch has already been added
+    let found = false
+    for (let i in Watches) {
+        if (Watches[i].address == addr) {
+            found = true
+            alert("Watch already on the list")
+            break
+        }
+    }
+
+    if (!found) {
+        Watches.push({
+            bank: 0,
+            address: addr,
+            type: key,
+            access: access
+        })
+        display_watch(Watches[Watches.length - 1])    
+    }
+}
+
+/**
  * Display a memory watch was a new structure
  * @param {*} this 
  * @param {*} key 
  */
-function watch_changeStructure(elem, type)
+function watch_change(elem, type)
 {
     let addr = elem.attr('id').replace("watch_", "")
+    let found = -1
     for (let i in Watches) {
         if (Watches[i].address == addr) {
-            Watches[i].type = type
+            found = i
+            break
         }
     }
-    console.log(addr)
+    if (found < 0) {
+        alert("Missing watch "+addr)
+        return
+    }
+
+    // whatever delete the node
+    let jstree = $('#watch_root').jstree(true)
+    let node = jstree.get_node(elem.attr('id'))
+    jstree.delete_node(node)  
+
+    if (type == "remove") {
+        Watches.splice(found, 1)
+    }
+    else {
+        Watches[i].type = type
+        display_watch(Watches[i])
+    }
 }
 
 /**
@@ -27,17 +97,7 @@ function watch_bindStructures()
         menu[i] = {name: "Watch as " + i}
 
     }
-
-    $(function() {
-        $.contextMenu({
-            selector: '.watch', 
-            callback: function(key, options) {
-                watch_changeStructure(this, key)
-            },
-            items: menu
-        });
-    });
-
+    
     $(function() {
         $.contextMenu({
             selector: '.addwatch', 
@@ -47,6 +107,16 @@ function watch_bindStructures()
         });
     });
 
+    $(function() {
+        menu['remove'] = {name: "Remove"}
+        $.contextMenu({
+            selector: '.watch', 
+            callback: function(key, options) {
+                watch_change(this, key)
+            },
+            items: menu
+        });
+    });
 }
 
 /**
@@ -114,7 +184,7 @@ function add_watch(bank, address, type, bytes)
     let node = jstree.create_node("#", {
         text: "$" + address.toString(16) + " as "+ type, 
         id: 'watch_' + address,
-        class:'watch'
+        li_attr: { class: 'watch'}
     })
     display_struct(bytes, type, 0, jstree, node)
 }
@@ -134,16 +204,17 @@ function update_watch(index, struct, memory)
         const attr = structure.attributes[i]
         const type = attr.size.toLowerCase()
         const id = struct + "_" + attr.name
+        let text
 
         let dom = $('#watch_root').jstree(true).get_node(id)
         switch (type) {
             case ".byte":
-                dom.text = attr.name + "=" + parseInt(memory[index++])
+                text = attr.name + "=" + parseInt(memory[index++])
                 break
             case ".word":
             case ".addr":
                 v = (memory[index++] & 0xFF) | ((memory[index++] & 0xFF) << 8);
-                dom.text = attr.name + "=" + parseInt(v)
+                text = attr.name + "=" + parseInt(v)
                 break
             case ".res":
                 dom.text = attr.name + "= .RES"
@@ -151,6 +222,16 @@ function update_watch(index, struct, memory)
             default:
                 index = update_watch(index, type, memory)
             }
+
+        if (text != undefined) {
+            if (dom.text != text) {
+                dom.text = text
+                dom.li_attr.class = "watch_changed"
+            }
+            else {
+                dom.li_attr.class = "watch_unchanged"
+            }
+        }
     }
 
     return index
@@ -212,7 +293,7 @@ function display_watch(watch)
         })
     }
     else {
-        _display_memory(watch, watch.addres)    // get the direct memory
+        _display_memory(watch, watch.address)    // get the direct memory
     }
 }
 
@@ -226,54 +307,3 @@ function watches_update()
     }
 }
 
-/**
- * Add a new watch from the menu
- */
-function watch_new(key, options)
-{
-    let addr = $('#gowatch').val() 
-    let access
-
-    // check if indirect memory
-    if (addr.substring(0, 1) == "(") {
-        const re = /\((.*)\)/
-        const matches = addr.match(re)
-        if (matches.length > 0) {
-            access = "indirect"
-            addr = matches[1]
-            if (addr.substring[0,1] != "r") {
-                // hexa memory based
-                addr = parseInt(addr, 16)
-            }
-        }
-        else {
-            alert("Incorrect expression")
-            return    
-        }
-    }
-    else {
-        access = "direct"
-        addr = parseInt(addr, 16)
-    }
-
-
-    // check if the watch has already been added
-    let found = false
-    for (let i in Watches) {
-        if (Watches[i].address == addr) {
-            found = true
-            alert("Watch already on the list")
-            break
-        }
-    }
-
-    if (!found) {
-        Watches.push({
-            bank: 0,
-            address: addr,
-            type: key,
-            access: access
-        })
-        display_watch(Watches[Watches.length - 1])    
-    }
-}

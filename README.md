@@ -33,3 +33,22 @@ Memory watches
 * Display memory as a structure defined in the source code (.STRUCTURE / .ENDSTRUCTURE)
 * indirect access register base (r0),y
 * memory indirect access ($0002),y
+
+ca65 parameters
+---------------
+RemoteD needs ca65 debug info. In order to generate the proper data ca65 needs the following options
+
+ca65 --debug-info -t cx16 main.asm -o main.o
+cl65 -t cx16 -o test.prg main.o -Wl --dbgfile,test.dbg
+
+Configuration
+-------------
+Update config.json to point to the source code folder and the debug files
+
+{
+    "root":"d:/dev/x16/x16-uncharted",
+    "sources":"/src",
+    "remote":"http://localhost:9009",
+    "debuginfo":"/bin/test.dbg",
+    "symbols":""
+}

@@ -47,3 +47,10 @@
   .memory-monitor {
     background-color: #eee;
   }
+
+  .watch_changed {
+    color: red;
+  }
+
+  .watch_unchanged {
+  }
