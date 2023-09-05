@@ -15,7 +15,8 @@ function watch_new(key, options)
         if (matches.length > 0) {
             access = "indirect"
             addr = matches[1]
-            if (addr.substring[0,1] != "r") {
+            let f=addr.substring(0,1)
+            if (f != "r") {
                 // hexa memory based
                 addr = parseInt(addr, 16)
             }
@@ -177,16 +178,23 @@ function display_struct(memory, struct, index, jstree, parent)
  * @param {*} type 
  * @param {*} bytes 
  */
-function add_watch(bank, address, type, bytes)
+function add_watch(watch, bytes)
 {
     let jstree = $('#watch_root').jstree(true)
+    let text
     
+    if (watch.access == "indirect")  {
+        text = "(" + watch.address + ") as "+ watch.type
+    }
+    else {
+        text = "$" + watch.address.toString(16) + " as "+ watch.type
+    }
     let node = jstree.create_node("#", {
-        text: "$" + address.toString(16) + " as "+ type, 
-        id: 'watch_' + address,
+        text: text, 
+        id: 'watch_' + watch.address,
         li_attr: { class: 'watch'}
     })
-    display_struct(bytes, type, 0, jstree, node)
+    display_struct(bytes, watch.type, 0, jstree, node)
 }
 
 /**
@@ -253,7 +261,7 @@ function _display_memory(watch, realaddress)
 
         let elm = $('#watch_' + watch.address)
         if (elm.length == 0) {
-            add_watch(watch.bank, watch.address, watch.type, bytes)
+            add_watch(watch, bytes)
         }
         else {
             update_watch(0, watch.type, bytes)

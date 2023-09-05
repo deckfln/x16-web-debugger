@@ -71,7 +71,7 @@ function dock_memory(bank, address)
             tr.append("<td class=\"pc\">" + snprintf(addr,"%04X") + "</td>");
 
             for (x=0; x<16; x++) {
-                clss = "watch"
+                clss = "brk_memory"
                 if (prev && memory.prev.bytes[i] != bytes[i]) {
                     clss += " memory-changed"
                 }
