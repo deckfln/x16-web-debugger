@@ -1,5 +1,23 @@
 function debug_run()
 {
+    let remote = "http://localhost:9009/run"
+    fetch (remote, {
+        method: 'GET',
+        mode: "cors"
+    })
+    .then ( response => response.json())
+    .then ( json => {
+        if (json.status == "ok") {
+            $("#run").addClass("disabled-link")
+        }
+    })
+    .catch (error => { 
+        console.log(error);
+    })       
+}
+
+function debug_restart()
+{
     let remote = "http://localhost:9009/restart/" + debug_info.start
     fetch (remote, {
         method: 'GET',
