@@ -11,7 +11,7 @@ window.onload = () => {
     // record panels that are closed
     dockManager.addLayoutListener({
         onClosePanel: (dockManager, panel) => {
-            panel[panel.title] = undefined
+            delete panels[panel.title]
         },
     })
 

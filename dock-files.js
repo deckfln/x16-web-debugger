@@ -24,7 +24,7 @@ function files_update()
     $("#dock-files").jstree({ "plugins": ["themes", "html_data", "ui", "crrm", "hotkeys"], "core": {} })
 
     $("#dock-files").bind(
-        "select_node.jstree", function(evt, data){
+        "activate_node.jstree", function(evt, data){
             let id = data.node.id.substr(1)
             // check if we clicked on the file or a symbol in the file
             let sym
