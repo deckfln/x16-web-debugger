@@ -2,7 +2,7 @@
     width: 100%;
 }
 .debug-bar {
-    width: 160px; /* Set a specific width */
+    width: 200px; /* Set a specific width */
     background-color: #eee; /* Dark-grey background */
     height: 40px;
   }

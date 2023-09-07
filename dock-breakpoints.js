@@ -1,6 +1,6 @@
 let Breakpoints={};
 
-function toggleBreapoint(addr, bank)
+function toggleBreapoint(addr, bank, upload)
 {
     let remote = "http://localhost:9009/breakpoint/0/"+addr;
     fetch (remote, {
@@ -9,8 +9,8 @@ function toggleBreapoint(addr, bank)
     })
     .then ( response => response.json())
     .then ( json => {
-        source_toggleBreakpoint(addr);
-        if (json.status == "ok") {
+        if (json.status == "ok" && upload == undefined) {
+            source_toggleBreakpoint(addr);
             load_breakpoints(dock_disam_update);
         }
     })
@@ -104,4 +104,19 @@ function breakpoints_update()
         table.append(tr);
     }
     document.getElementById("dock-breakpoint").innerHTML = table[0].outerHTML;
+}
+
+/**
+ * upload the breakpoints to the emulator
+ */
+function breakpoints_upload()
+{
+    for (let addr in Breakpoints) {
+        if (Breakpoints[addr].type == 'brk') {
+            toggleBreapoint(addr, Breakpoints[addr].bank, "upload")
+        }
+        else {
+            memory_toggleWatch(addr, Breakpoints[addr].bank, Breakpoints[addr].len, "upload")
+        }
+    } 
 }

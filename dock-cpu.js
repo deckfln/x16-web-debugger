@@ -2,6 +2,7 @@ let currentStatus = undefined;
 let currentBank = undefined;
 
 let cpu = {
+    'pid': -1,                      // emulator pid
     'status': 1,
     'previous_pc': undefined,
     'pc': undefined
@@ -21,6 +22,20 @@ function dock_cpu()
     })
     .then ( response => response.json())
     .then ( json => {
+
+        // reactive run & restart after a network disconnection
+        if (cpu.status < 0) {
+            $("#run").removeClass("disabled-link")
+            $("#restart").removeClass("disabled-link")
+        }
+
+        // we are speaking to a new emulator, 
+        if (json.pid != cpu.pid) {
+            cpu.pid = json.pid
+            breakpoints_upload()    //upload breakpoints to a new emulator
+            debug_restart()         //and restart the prg
+        }
+
         $('#pc').html(snprintf(json.pc,"%04X"));
         $('#sp').html(snprintf(json.sp,"%02X"));
         $('#a').html(snprintf(json.a,"%02X"));
@@ -36,6 +51,15 @@ function dock_cpu()
         let z = (json.flags & 0x01) ? "Z" : "-";
 
         $('#status').html(n+v+"-"+b+d+i+c+z);
+
+        switch (json.myStatus) {
+            case 0: 
+                $("#emu").html("Paused")
+                break
+            case 3: 
+                $("#emu").html("Running")
+                break
+        } 
 
         if (json.myStatus != cpu.status) {
             if (json.myStatus == 0) {
@@ -67,6 +91,7 @@ function dock_cpu()
                 // release debug keys
                 document.onkeydown = undefined
             }
+
             cpu.status = json.mystatus
         }
 
@@ -90,8 +115,15 @@ function dock_cpu()
         }
     })
     .catch (error => { 
-        console.log(error);
-    })       
+        $("#run").addClass("disabled-link")
+        $("#restart").addClass("disabled-link")
+        $("#continue").addClass("disabled-link")
+        $("#stepinto").addClass("disabled-link")
+        $("#stepover").addClass("disabled-link")
+        $("#stepout").addClass("disabled-link")
+        $("#emu").html("Disconnected")
+        cpu.status = -1
+    })
 }
 
 function clickPress(event)

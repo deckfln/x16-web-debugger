@@ -25,7 +25,7 @@ function memory_update()
     dock_memory(memory.current.bank, memory.current.addr);
 }
 
-function memory_toggleWatch(address, bank, len)
+function memory_toggleWatch(address, bank, len, upload)
 {
     let remote = "http://localhost:9009/watch/"+bank+"/"+address
     if (len != undefined) {
@@ -38,7 +38,7 @@ function memory_toggleWatch(address, bank, len)
     })
     .then ( response => response.json())
     .then ( json => {
-        if (json.status == "ok") {
+        if (json.status == "ok" && upload != undefined) {
             load_breakpoints(dock_disam_update);
             memory_update()
         }
