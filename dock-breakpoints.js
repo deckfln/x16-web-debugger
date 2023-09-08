@@ -1,5 +1,14 @@
 let Breakpoints={};
 
+/**
+ * create a new dock
+ */
+function new_dock_breakpoints()
+{
+    dock_new("breakpoints", "dock-breakpoint")
+    load_breakpoints()
+}
+
 function toggleBreapoint(addr, bank, upload)
 {
     let remote = "http://localhost:9009/breakpoint/0/"+addr;

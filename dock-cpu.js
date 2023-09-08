@@ -13,6 +13,19 @@ function check_cpu()
     setInterval(dock_cpu, 100);
 }
 
+
+/**
+ * create a new dock
+ */
+function new_dock_cpu()
+{
+    const cpuHTML='<table><tr><td>Emu</td><td id="emu">Disconnected</td></tr><tr><td>PC</td><td id="pc"></td></tr><tr><td>SP</td><td id="sp"></td></tr><tr><td>A</td><td id="a"></td></tr><tr><td>X</td><td id="x"></td></tr><tr><td>Y</td><td id="y"></td></tr><tr><td>Flags</td><td id="status"></td></tr></table><div id="registers"></div>'
+
+    dock_new("cpu", "dock-cpu")
+    let div = $("#dock-cpu")
+    div.html(cpuHTML)
+}
+
 function dock_cpu()
 {
     let remote = "http://localhost:9009/cpu";

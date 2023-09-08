@@ -1,6 +1,15 @@
 let Watches = []
 
 /**
+ * create a new dock
+ */
+function new_dock_watch()
+{
+    dock_new("watch", "dock-watch")
+    watches_update()
+}
+
+/**
  * Add a new watch from the menu
  */
 function watch_new(key, options)

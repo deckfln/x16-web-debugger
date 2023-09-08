@@ -7,11 +7,13 @@
   <link rel="stylesheet" href="contextmenu/jquery.contextMenu.min.css">
   <link rel="stylesheet" href="css/ca65.css">
   <link rel="stylesheet" href="css/ide.css">
+  <link rel="stylesheet" href="css/menu.css">
 
   <script src="scripts/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="./jstree/jstree.min.js"></script>
   <script src="contextmenu/jquery.contextMenu.min.js"></script>
   <script src="contextmenu/jquery.ui.position.min.js"></script>
+  <script src="scripts/menu.js"></script>
   
   <script src="lib/es5/dock-spawn-ts.js"></script>
   <script src="mnemonics.js"></script>
@@ -42,7 +44,26 @@
         <a id="stepout" title="Step Out" href="#" onclick="debug_stepout();"><img height="16px" src="images/breakpoint/debug-step-out.163x256.png"></a>
         <a id="restart" title="Restart" href="#" onclick="debug_restart();"><img height="16px" src="images/breakpoint/debug-restart.256x251.png"></a>
       </div>
-  </div>
+      <nav>
+        <div>
+            <i class="material-icons">menu</i>
+        </div>
+        <ul>
+            <li>
+                <a href="#">View</a>
+                <ul>
+                    <li><a href="#" id="menuBRK">&#10003;Breakpoints</a></li>
+                    <li><a href="#" id="menuCPU">&#10003;CPU</a></li>
+                    <li><a href="#" id="menuASM">&#10003;Disassembler</a></li>
+                    <li><a href="#" id="menuDUMP">&#10003;Dump</a></li>
+                    <li><a href="#" id="menuFiles">&#10003;Files</a></li>
+                    <li><a href="#" id="menuWatch">&#10003;Watch</a></li>
+                </ul>
+            
+            </li>
+            <li><a href="#">About</a></li>
+        </ul>        
+    </nav>
 
 <div id="dock_div" style="height:calc(100% - 40px); width: 100%; position: absolute; left: 0; top: 40px;">
     <div id="my_dock_manager" class="my-dock-manager"></div>
@@ -58,7 +79,7 @@
         </table>
         <div id="registers"></div>
     </div>
-    <div id="dock-disam" data-panel-caption="Disassembler" class="editor1-window editor-host" style="overflow:scroll;">
+    <div id="dock-disam" data-panel-caption="disassembler" class="editor1-window editor-host" style="overflow:scroll;">
         <div class="disam-menu">
             <div id="jump"><input type="text" id="goto" name="goto" required minlength="4" maxlength="4" size="10" onkeypress="clickPress(event)"/></div>
         </div>
@@ -68,16 +89,16 @@
     <div id="dock-sprite" data-panel-caption="Sprite 0">
         <img id="sprite" style="transform-origin: top left; transform: scale(2);"/>
     </div>
-    <div id="dock-breakpoint" data-panel-caption="Breakpoints">
+    <div id="dock-breakpoint" data-panel-caption="breakpoints">
     </div>
-    <div id="dock-files" data-panel-caption="Files" style="overflow:scroll;"></div>
-    <div id="dock-memory" data-panel-caption="Dump">
+    <div id="dock-files" data-panel-caption="files" style="overflow:scroll;"></div>
+    <div id="dock-memory" data-panel-caption="dump">
         <div class="disam-menu">
             <input type="text" id="dump" name="dmp" required minlength="4" maxlength="4" size="10" onkeypress="memory_dump(event)"/>
         </div>
         <div id="memory" style="overflow:scroll;"></div>
     </div>
-    <div id="dock-watch" data-panel-caption="Watch">
+    <div id="dock-watch" data-panel-caption="watch">
         <div class="disam-menu">
             <input type="text" id="gowatch" name="godmp" required minlength="4" maxlength="8" size="10"/>
             <button class="addwatch">Add</button>

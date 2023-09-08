@@ -11,6 +11,7 @@ window.onload = () => {
     // record panels that are closed
     dockManager.addLayoutListener({
         onClosePanel: (dockManager, panel) => {
+            menu_uncheck(panel.title)
             delete panels[panel.title]
         },
     })
@@ -110,3 +111,33 @@ window.onload = () => {
     });
 
 };
+
+function dock_new(title, id)
+{
+    let dockManager = panels.dockManager
+    let divDockManager = panels.divDockManager
+    let documentNode = dockManager.context.model.documentManagerNode;
+
+    let panel = document.createElement('div');
+    panel.id = id;
+    panel.style = "overflow:scroll;"
+    panel.setAttribute("data-panel-caption", title)
+    divDockManager.appendChild(panel)
+    let d_panel = new DockSpawnTS.PanelContainer(panel, dockManager)
+    dockManager.dockFill(documentNode, d_panel)
+
+    panels[title] = d_panel
+
+    return d_panel
+}
+
+function dock_delete(title)
+{
+    panels[title].close()
+    delete panels[title]
+}
+
+function dock_exists(title)
+{
+    return panels[title] != undefined
+}

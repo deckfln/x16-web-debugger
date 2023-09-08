@@ -3,6 +3,7 @@
     color: #888;
     width: 100%;
     height: 47px;
+    display: flex;
   }
   
   .demo-header-title {

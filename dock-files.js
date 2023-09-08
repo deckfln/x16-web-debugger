@@ -1,4 +1,13 @@
 /**
+ * create a new dock
+ */
+function new_dock_files()
+{
+    dock_new("files", "dock-files")
+    files_update()
+}
+
+/**
  *  create the list of source files in the PRG 
  */
 function files_update()
