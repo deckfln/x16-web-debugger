@@ -3,7 +3,7 @@
  */
 function new_dock_files()
 {
-    dock_new("files", "dock-files")
+    dock_new("Files", "dock-files")
     files_update()
 }
 

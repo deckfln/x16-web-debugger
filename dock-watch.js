@@ -5,7 +5,15 @@ let Watches = []
  */
 function new_dock_watch()
 {
-    dock_new("watch", "dock-watch")
+    const html='<div class="disam-menu"><input type="text" id="gowatch" name="godmp" required minlength="4" maxlength="8" size="10"/><button class="addwatch">Add</button></div><div id="watch_root" style="overflow:scroll;"></div>'
+    dock_new("Watch", "dock-watch")
+    let node = $('#dock-watch')
+    node.html(html)
+    $('#watch_root').jstree({
+        'core' : {
+            'check_callback' : true // allow create_node/delete_node operations
+        }
+    })
     watches_update()
 }
 

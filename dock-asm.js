@@ -6,7 +6,7 @@ let aDisasm = [];
 function new_dock_disam()
 {
     const html='<div class="disam-menu"><div id="jump"><input type="text" id="goto" name="goto" required minlength="4" maxlength="4" size="10" onkeypress="clickPress(event)"/></div></div><div id="disam"></div>'
-    dock_new("disassembler", "dock-disam")
+    dock_new("Disassembler", "dock-disam")
     let node = $('#dock-disam')
     node.html(html)
     dock_disam_display()

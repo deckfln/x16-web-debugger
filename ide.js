@@ -1,5 +1,5 @@
 // list of open panels
-let panels = {
+let Panels = {
 }
 
 window.onload = () => {
@@ -11,13 +11,14 @@ window.onload = () => {
     // record panels that are closed
     dockManager.addLayoutListener({
         onClosePanel: (dockManager, panel) => {
-            menu_uncheck(panel.title)
-            delete panels[panel.title]
+            const id = panel.elementContent.id
+            menu_uncheck(id)
+            delete Panels[id]
         },
     })
 
-    panels["dockManager"] = dockManager
-    panels["divDockManager"] = divDockManager
+    Panels["dockManager"] = dockManager
+    Panels["divDockManager"] = divDockManager
 
     window.onresize = () => dockManager.resize(divDockContainer.clientWidth, divDockContainer.clientHeight);
     window.onresize(null);
@@ -44,13 +45,13 @@ window.onload = () => {
         }
     })
 
-    panels["disasm"] = d_disasm
-    panels["sprite"] = d_sprite
-    panels["cpu"] = d_cpu
-    panels["breakpoints"] = d_breakpoints
-    panels["files"] = d_files
-    panels["dump"] = d_dump
-    panels["watch"] = d_watch
+    Panels["dock-disam"] = d_disasm
+    Panels["dock-sprite"] = d_sprite
+    Panels["dock-cpu"] = d_cpu
+    Panels["dock-breakpoint"] = d_breakpoints
+    Panels["dock-files"] = d_files
+    Panels["dock-memory"] = d_dump
+    Panels["dock-watch"] = d_watch
 
     let promises = [];
 
@@ -114,8 +115,8 @@ window.onload = () => {
 
 function dock_new(title, id)
 {
-    let dockManager = panels.dockManager
-    let divDockManager = panels.divDockManager
+    let dockManager = Panels.dockManager
+    let divDockManager = Panels.divDockManager
     let documentNode = dockManager.context.model.documentManagerNode;
 
     let panel = document.createElement('div');
@@ -126,18 +127,29 @@ function dock_new(title, id)
     let d_panel = new DockSpawnTS.PanelContainer(panel, dockManager)
     dockManager.dockFill(documentNode, d_panel)
 
-    panels[title] = d_panel
+    Panels[id] = d_panel
 
     return d_panel
 }
 
-function dock_delete(title)
+function dock_delete(id)
 {
-    panels[title].close()
-    delete panels[title]
+    Panels[id].close()
+    delete Panels[id]
 }
 
-function dock_exists(title)
+function dock_exists(id)
 {
-    return panels[title] != undefined
+    return Panels[id] != undefined
+}
+
+function dock_setActive(id)
+{
+    let panel = Panels[id]
+    if (panel == undefined) {
+        return
+    }
+    
+    panel.tabPage.host.setActiveTab(panel);
+    panel.dockManager.activePanel = panel;
 }

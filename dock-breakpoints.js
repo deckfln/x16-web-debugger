@@ -5,7 +5,7 @@ let Breakpoints={};
  */
 function new_dock_breakpoints()
 {
-    dock_new("breakpoints", "dock-breakpoint")
+    dock_new("Breakpoints", "dock-breakpoint")
     load_breakpoints()
 }
 

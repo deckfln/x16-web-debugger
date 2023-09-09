@@ -5,7 +5,10 @@ let sources = {
 
 function display_source(fileID)
 {
-    if (panels[debug_info.files[fileID].name] != undefined) {
+    const id = "file"+fileID
+    const name = debug_info.files[fileID].name
+
+    if (dock_exists(id)) {
         // source is already displayed
         return true
     }
@@ -44,24 +47,8 @@ function display_source(fileID)
         sources.update = false
     }
 
-    // use an existing panel or create a new one
-    if (panels[debug_info.files[fileID].name] == undefined) {
-        let dockManager = panels.dockManager
-        let divDockManager = panels.divDockManager
-        let documentNode = dockManager.context.model.documentManagerNode;
-
-        let panel = document.createElement('div');
-        panel.id = "file"+fileID;
-        panel.style = "overflow:scroll;"
-        panel.setAttribute("data-panel-caption", debug_info.files[fileID].name)
-        divDockManager.appendChild(panel)
-        let d_panel = new DockSpawnTS.PanelContainer(panel, dockManager)
-        dockManager.dockFill(documentNode, d_panel)
-
-        panels[debug_info.files[fileID].name] = d_panel
-    }
-
-    $('#file'+fileID)[0].innerHTML = table[0].outerHTML;
+    dock_new(name, id)
+    $("#"+id)[0].innerHTML = table[0].outerHTML;
 
     return true
 }
@@ -151,9 +138,8 @@ function source_update(brk)
     }
 
     // move the current file on front of files tab
-    let panel = panels[debug_info.files[fileID].name]
-    panel.tabPage.host.setActiveTab(panel);
-    panel.dockManager.activePanel = panel;
+    const fid = "file"+fileID
+    dock_setActive(fid)
 
     // activate new pointer
     source_setPC(line)

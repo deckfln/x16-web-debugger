@@ -17,7 +17,7 @@ let memory = {
 function new_dock_memory()
 {
     const html='<div class="disam-menu"><input type="text" id="dump" name="dmp" required minlength="4" maxlength="4" size="10" onkeypress="memory_dump(event)"/></div><div id="memory" style="overflow:scroll;"></div>'
-    dock_new("dump", "dock-memory")
+    dock_new("Dump", "dock-memory")
     let node = $('#dock-memory')
     node.html(html)
     memory_update()
