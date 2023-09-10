@@ -4,6 +4,7 @@ This is an experimental remote debugger for the Commander X16 emulator. It is ta
 
 Design
 ------
+```
           http://*:9000            http://localhost:3000           http://*:3000
 +---------+----------+                +---------+                  +-----------+
 |         |MicroHTTP | <------------> | Browser | <--------------> | server.py |
@@ -15,6 +16,7 @@ Design
 |         |
 +---------+
   x16-emulator
+```
 
 Features
 --------
@@ -53,9 +55,9 @@ Memory watches
 
 Todo
 ----
-[ ] Display memory as byte, word, long
-[ ] Conditional code breakpoint
-[ ] Trigger a breakpoint when the memory content reaches a predefined value_
+* [ ] Display memory as byte, word, long
+* [ ] Conditional code breakpoint
+* [ ] Trigger a breakpoint when the memory content reaches a predefined value_
 
 Configuration
 -------------
@@ -71,15 +73,15 @@ Update config.json to point to the source code folder and the debug files
 Usage
 -----
 * Compile the source code with debug options
-	ca65 __--debug-info__ -t cx16 main.asm -o main.o
-	cl65 -t cx16 -o ../bin/test.prg main.o __-Wl --dbgfile,../bin/test.dbg__
+ * ca65 __--debug-info__ -t cx16 main.asm -o main.o
+ * cl65 -t cx16 -o ../bin/test.prg main.o __-Wl --dbgfile,../bin/test.dbg__
 
 * Start the debugger server
-    __cd x16-web-debugger__
-    __python server.py__
+ * __cd x16-web-debugger__
+ * __python server.py__
 
 * Start the emulator in remote debug mode
-    x16-emulator.exe -rom rom.bin __-remote-debugger__ -prg test.prg
+ * x16-emulator.exe -rom rom.bin __-remote-debugger__ -prg test.prg
 
 * point your web browser to the remote debugger
-    http://localhost:3000
+ * http://localhost:3000
