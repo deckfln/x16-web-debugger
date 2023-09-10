@@ -1,3 +1,21 @@
+/* dark mode */
+.comment {
+    color: rgb(82,153,73);
+}
+
+.mnemonics {
+    color: rgb(62,156,202);
+}
+
+.control {
+    color: lightblue
+}
+
+.code {
+    color: white;
+}
+
+/* light mode
 .comment {
     color: lightslategrey;
 }
@@ -9,3 +27,4 @@
 .control {
     color: #855
 }
+*/

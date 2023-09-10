@@ -1,4 +1,4 @@
-<html>
+<html class="dark-theme">
 <head>
   <link rel="stylesheet" href="lib/css/dock-manager.css">
   <link rel="stylesheet" href="lib/css/dock-manager-style.css">
@@ -34,7 +34,7 @@
   <script src="dock-watch.js"></script>
   <script src="ide.js"></script>
 </head>
-<body style="width: 100%; height: 100%; margin: 0;">
+<body style="width: 100%; height: 100%; margin: 0;" class="dark-theme">
   <div class="demo-header" id="header" style="width:100%">
       <div class="debug-bar">
         <a id="run" title="Run" href="#" onclick="debug_run();"><img height="16px" src="images/breakpoint/debug-start.196x256.png"></a>
@@ -67,7 +67,7 @@
 
 <div id="dock_div" style="height:calc(100% - 40px); width: 100%; position: absolute; left: 0; top: 40px;">
     <div id="my_dock_manager" class="my-dock-manager"></div>
-    <div id="dock-cpu" data-panel-caption="cpu" class="state-window" hidden  style="overflow:scroll;">
+    <div id="dock-cpu" data-panel-caption="CPU" style="overflow:scroll;">
         <table>
             <tr><td>Emu</td><td id="emu">Disconnected</td></tr>
             <tr><td>PC</td><td id="pc"></td></tr>
@@ -79,7 +79,7 @@
         </table>
         <div id="registers"></div>
     </div>
-    <div id="dock-disam" data-panel-caption="disassembler" class="editor1-window editor-host" style="overflow:scroll;">
+    <div id="dock-disam" data-panel-caption="Disassembler" style="overflow:scroll;">
         <div class="disam-menu">
             <div id="jump"><input type="text" id="goto" name="goto" required minlength="4" maxlength="4" size="10" onkeypress="clickPress(event)"/></div>
         </div>
@@ -89,16 +89,16 @@
     <div id="dock-sprite" data-panel-caption="Sprite 0">
         <img id="sprite" style="transform-origin: top left; transform: scale(2);"/>
     </div>
-    <div id="dock-breakpoint" data-panel-caption="breakpoints">
+    <div id="dock-breakpoint" data-panel-caption="Breakpoints">
     </div>
-    <div id="dock-files" data-panel-caption="files" style="overflow:scroll;"></div>
-    <div id="dock-memory" data-panel-caption="dump">
+    <div id="dock-files" data-panel-caption="Explorer" style="overflow:scroll;"></div>
+    <div id="dock-memory" data-panel-caption="Dump">
         <div class="disam-menu">
             <input type="text" id="dump" name="dmp" required minlength="4" maxlength="4" size="10" onkeypress="memory_dump(event)"/>
         </div>
         <div id="memory" style="overflow:scroll;"></div>
     </div>
-    <div id="dock-watch" data-panel-caption="watch">
+    <div id="dock-watch" data-panel-caption="Watch">
         <div class="disam-menu">
             <input type="text" id="gowatch" name="godmp" required minlength="4" maxlength="8" size="10"/>
             <button class="addwatch">Add</button>

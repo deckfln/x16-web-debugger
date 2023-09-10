@@ -1,3 +1,40 @@
+/* Light Mode styles */
+body {
+  color: #222;
+  background: #fff;
+}
+a {
+  color: #0033cc;
+}
+
+/* Dark Mode styles */
+body.dark-theme {
+  color: #eee;
+  background: rgb(37,37,37)
+}
+body.dark-theme a {
+  color: #030303;
+}
+
+html.dark-theme {
+  scrollbar-face-color: #646464;
+  scrollbar-base-color: #646464;
+  scrollbar-3dlight-color: #646464;
+  scrollbar-highlight-color: #646464;
+  scrollbar-track-color: #000;
+  scrollbar-arrow-color: #000;
+  scrollbar-shadow-color: #646464;
+  scrollbar-dark-shadow-color: #646464;
+
+  ::-webkit-scrollbar { width: 12px; height: 3px;}
+  ::-webkit-scrollbar-button {  background-color: rgb(66,66,66); }
+  ::-webkit-scrollbar-track {  background-color: red;}
+  ::-webkit-scrollbar-track-piece { background-color: rgb(30,30,30);}
+  ::-webkit-scrollbar-thumb { height: 50px; background-color: rgb(66,66,66); border-radius: 3px;}
+  ::-webkit-scrollbar-corner { background-color: rgb(66,66,66);}
+  ::-webkit-resizer { background-color: red;} 
+}
+
 .disasm-menu {
     width: 100%;
 }
@@ -25,8 +62,12 @@
     opacity: 0.25;
   }
 
-  .line-number {
-    height: 26px;
+  .code {
+    border-collapse:collapse;
+  }
+
+  .code tr {
+    height: 20px;
     white-space: pre;
   }
 

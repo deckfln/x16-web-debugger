@@ -3,6 +3,8 @@ let sources = {
     'previous_pc': undefined
 }
 
+const line_height = 20
+
 function display_source(fileID)
 {
     const id = "file"+fileID
@@ -38,9 +40,9 @@ function display_source(fileID)
         }
 
         tr.append("<td>"+img+"</td><td class=\"pc\">"+addr+"</td><td class=\"source-instr\">" + ca65_syntax(lines[i]) + "</td>");
-        tr.attr("class", "line-number");
         table.append(tr);
     }
+    table.attr("class", "code");
 
     if (sources.update) {
         sources.previous_pc = $("#src"+fileID+sources.update)
@@ -100,7 +102,7 @@ function source_set(fileID, line)
     let top = item.scrollTop;
     let height = item.clientHeight;
     let bottom = top + height;
-    let pos = 28 * (line-1);
+    let pos = line_height * (line-1);
     if (pos > bottom) {
         item.scrollTop = pos;
     }
@@ -151,7 +153,7 @@ function source_update(brk)
         let top = item.scrollTop;
         let height = item.clientHeight;
         let bottom = top + height;
-        let pos = 28 * (fileLine.line-1);
+        let pos = line_height * (fileLine.line-1);
         if (pos > bottom) {
             item.scrollTop = pos;
         }

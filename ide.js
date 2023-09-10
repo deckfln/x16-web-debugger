@@ -22,8 +22,8 @@ window.onload = () => {
 
     window.onresize = () => dockManager.resize(divDockContainer.clientWidth, divDockContainer.clientHeight);
     window.onresize(null);
-    let d_disasm = new DockSpawnTS.PanelContainer(document.getElementById("dock-disam"), dockManager, null, "document");
-    let d_sprite = new DockSpawnTS.PanelContainer(document.getElementById("dock-sprite"), dockManager, null, "document");
+    let d_disasm = new DockSpawnTS.PanelContainer(document.getElementById("dock-disam"), dockManager);
+    let d_sprite = new DockSpawnTS.PanelContainer(document.getElementById("dock-sprite"), dockManager);
     let d_cpu = new DockSpawnTS.PanelContainer(document.getElementById("dock-cpu"), dockManager);
     let d_breakpoints = new DockSpawnTS.PanelContainer(document.getElementById("dock-breakpoint"), dockManager);
     let d_files = new DockSpawnTS.PanelContainer(document.getElementById("dock-files"), dockManager);

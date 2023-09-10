@@ -1,5 +1,5 @@
   .demo-header {
-    background-color: #000;
+    background-color: rgb(60,60,60);
     color: #888;
     width: 100%;
     height: 47px;
@@ -23,20 +23,20 @@
   }
   
   .my-dock-manager {
-    background-color: #F8F8F8;
+    /* background-color: #F8F8F8; */
     clear: both;
   }
   
   .solution-window {
       width: 300px;
       height: 200px;
-      background-color: #eee;
+      /*background-color: #eee;*/
   }
   
   .output-window {
       width: 300px;
       height: 200px;
-      background-color: #eee;
+      /*background-color: #eee;*/
   }
   
   .properties-window {
@@ -48,25 +48,25 @@
   .toolbox-window {
       width: 300px;
       height: 200px;
-      background-color: #eee;
+      /* background-color: #eee;*/
   }
   
   .editor1-window {
       width: 300px;
       height: 200px;
-      background-color: #fff;
+      /*background-color: #fff;*/
   }
   
   .editor2-window {
       width: 300px;
       height: 200px;
-      background-color: #fff;
+      /*background-color: #fff;*/
   }
   
   .outline-window {
       width: 300px;
       height: 200px;
-      background-color: #ddd;
+      /* background-color: #ddd;*/
   }
   
   .state-window {
