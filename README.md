@@ -85,3 +85,7 @@ Usage
 
 * point your web browser to the remote debugger
  * http://localhost:3000
+
+ Mandatory screenshot
+ --------------------
+ ![IDE screenshot](/.gh/ide.jpg)
