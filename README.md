@@ -86,6 +86,12 @@ Usage
 * point your web browser to the remote debugger
  * http://localhost:3000
 
+Used libraries
+--------------
+* jquery : https://jquery.com/
+* jstree : https://github.com/vakata/jstree
+* dock-spawn-ts : https://github.com/node-projects/dock-spawn-ts
+
  Mandatory screenshot
  --------------------
  ![IDE screenshot](/.gh/ide.jpg)

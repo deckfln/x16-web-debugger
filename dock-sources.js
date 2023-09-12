@@ -25,21 +25,22 @@ function display_source(fileID)
     for (let i=0; i<lines.length; i++) {
         let tr=$('<tr>');
 
-        let img = "&nbsp;"
+        let clss = "nobrk"
         let addr = ""
-        let src = img_brk_off;
+        let onclick=""
         let dbg_line = debug_info.files[fileID].lines[i+1];    // in source code lines start at 1
         if (dbg_line != undefined) {
             let dbg_pc = dbg_line.start;
             if (Breakpoints[dbg_pc] != undefined) {
-                src = img_brk_on;
+                clss += "breakpoint";
             }    
 
-            img = "<img id='src"+fileID+dbg_pc+"' src='"+src+"'/ onClick='toggleBreapoint(" + dbg_pc + ",0);'>"
             addr = snprintf(dbg_pc,"%04X")
+            onclick = "onClick='toggleBreapoint(" + dbg_pc + ",0);'"
+            tr.attr('id', "src" + fileID + "-" + dbg_line.start)
         }
 
-        tr.append("<td>"+img+"</td><td class=\"pc\">"+addr+"</td><td class=\"source-instr\">" + ca65_syntax(lines[i]) + "</td>");
+        tr.append("<td class=\""+ clss + "\" " + onclick + ">&nbsp;</td><td class=\"addr\">"+addr+"</td><td class=\"source-instr\">" + ca65_syntax(lines[i]) + "</td>");
         table.append(tr);
     }
     table.attr("class", "code");
@@ -61,16 +62,20 @@ function display_source(fileID)
 function source_removePC()
 {
     if (sources.previous_pc != undefined) {
-        let src = sources.previous_pc.attr('src');
-        switch (src) {
-            case img_pc:
-                src = img_brk_off;
+        sources.previous_pc.removeClass("pc")
+
+        let td = sources.previous_pc.find("td:first-child")
+        let clss = td.attr("class")
+        switch (clss) {
+            case "exec":
+                td.removeClass(clss);
+                td.addClass("nobrk");
                 break;
-            case img_brk_pc:
-                src = img_brk_on;
+            case "exec-breakpoint":
+                td.removeClass(clss);
+                td.addClass("breakpoint")
                 break;
-        }                    
-        sources.previous_pc.attr('src', src);
+        }
         sources.previous_pc = undefined
     }
 }
@@ -80,21 +85,26 @@ function source_removePC()
  */
 function source_setPC(node)
 {
-    let src = node.attr('src');
-    switch (src) {
-        case img_brk_on:
-            src = img_brk_pc;
+    node.addClass("pc")
+
+    let td = node.find("td:first-child")
+    let clss = td.attr("class")
+
+    switch (clss) {
+        case "breakpoint":
+            td.removeClass(clss);
+            td.addClass("exec-breakpoint");
             break;
-        case img_brk_off:
-            src = img_pc;
+        default:
+            td.removeClass(clss);
+            td.addClass("exec");
             break;
     }
-    node.attr('src', src);
     sources.previous_pc = node;
 }
 
 /**
- * Move the code to s specific line
+ * Move the code to a specific line
  */
 function source_set(fileID, line)
 {
@@ -128,7 +138,7 @@ function source_update(brk)
 
     // load source if needed
     let fileID = fileLine.file;
-    let id = '#src'+fileID+cpu.pc;
+    let id = '#src' + fileID + "-" + cpu.pc;
     let line = $(id);   // PC is on screen ?
     if (line.length == 0) {
         // display the new source 
@@ -163,6 +173,11 @@ function source_update(brk)
     }
 }
 
+/**
+ * Add a cpu breakpoint on that instruction
+ * @param {*} brk 
+ * @returns 
+ */
 function source_toggleBreakpoint(brk)
 {
     if (brk == undefined) {
@@ -174,25 +189,31 @@ function source_toggleBreakpoint(brk)
 
     if (debug_info.files[fileID].lines[lineNumber] != undefined) {
         // toggle a breakpoint
-        let id = '#src' + fileID + brk;
-        let item = $(id);
-        let current = item.attr('src');
+        let id = '#src' + fileID + "-" + brk;
+        let line = $(id);
+
+        let td = line.find("td:first-child")
+        let clss = td.attr("class") 
         let new_src = undefined;
-        switch (current) {
-            case img_brk_off:
-                new_src = img_brk_on;
+
+        switch (clss) {
+            case "breakpoint":
+                td.removeClass(clss);
+                td.addClass("nobrk");
                 break;
-            case img_brk_on:
-                new_src = img_brk_off;
+            case "exec-breakpoint":
+                td.removeClass(clss);
+                td.addClass("exec");
                 break;
-            case img_brk_pc:
-                new_src = img_pc;
+            case "exec":
+                td.removeClass(clss);
+                td.addClass("exec-breakpoint");
                 break;
-            case img_pc:
-                new_src = img_brk_pc;
+            default:
+                td.removeClass(clss);
+                td.addClass("breakpoint");
                 break;
-            }
-        item.attr('src', new_src);
+        }
         return;
     }
 }

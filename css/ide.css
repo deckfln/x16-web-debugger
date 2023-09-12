@@ -71,9 +71,38 @@ html.dark-theme {
     white-space: pre;
   }
 
-  .pc {
+  /* execute icon */
+  .code .nobrk {
+    min-width: 18px;
+  }
+
+  /* breakpoint icon */
+  .code .breakpoint {
+    min-width: 18px;
+    background-image: url("/images/breakpoint/on.png");
+  }
+
+  /* breakpoint exxecuted icon */
+  .code .exec-breakpoint {
+    min-width: 18px;
+    background-image: url("/images/breakpoint/brk_pc.png");
+  }
+
+  /* execute icon */
+  .code .exec {
+    min-width: 18px;
+    background-image: url("/images/breakpoint/pc.png");
+  }
+  
+  /* current instruction */
+  .code .pc {
+    background: rgb(75,75,24);
+  }
+
+  .addr {
     border-right-style: solid;
     border-right-color: ccc;
+    border-right-width: 1px;
     padding-right: 10px;
   }
 

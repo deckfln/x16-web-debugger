@@ -73,24 +73,25 @@ function dock_disam_display()
     for (let i=0; i<32; i++) {
         let tr=$('<tr>');
 
-        let src = "images/breakpoint/off.png";
+        let clss = "nobrk";
         let addr = aDisasm[i].addr;
         let symbol = aDisasm[i].symbol; if (symbol == undefined) symbol = "";
         if (addr == cpu.pc) {
             if (Breakpoints[addr] != undefined) {
-                src = "images/breakpoint/brk_pc.png"
+                clss = "exec-breakpoint"
             }
             else {
-                src = "images/breakpoint/pc.png"
+                clss = "exec"
             }
             cpu.update = aDisasm[i].addr
         }
         else if (Breakpoints[addr] != undefined) {
-            src = "images/breakpoint/on.png"
+            clss = "breakpoint"
         }
-        let img = "<img id='brk"+addr+"' src='"+src+"'/ onClick='toggleBreapoint(" + addr + ",0);'>"
+        let onclick = "onClick='toggleBreapoint(" + addr + ",0);'"
 
-        tr.append("<td>"+img+"</td><td class=\"pc\">"+snprintf(aDisasm[i].addr,"%04X")+"</td><td class=\"source-instr\">"+symbol+"</td><td>"+aDisasm[i].instr)+"</td>";
+        tr.append("<td class=\""+ clss + "\" " + onclick + ">&nbsp;</td><td class=\"addr\">"+snprintf(aDisasm[i].addr,"%04X")+"</td><td class=\"source-instr\">"+symbol+"</td><td>"+aDisasm[i].instr)+"</td>";
+        tr.attr("id", "brk" + addr)
         table.append(tr);
     }
     table.attr("class", "code")
@@ -114,28 +115,35 @@ function dock_disam_update()
 
     // clean previous pointer
     if (cpu.previous_pc != undefined) {
-        let src = cpu.previous_pc.attr('src');
-        switch (src) {
-            case img_pc:
-                src = img_brk_off;
+        cpu.previous_pc.removeClass("pc")
+
+        let td = cpu.previous_pc.find("td:first-child")
+        let clss = td.attr("class")
+        switch (clss) {
+            case "exec":
+                td.removeClass(clss);
+                td.addClass("nobrk");
                 break;
-            case img_brk_pc:
-                src = img_brk_on;
+            case "exec-breakpoint":
+                td.removeClass(clss);
+                td.addClass("breakpoint");
                 break;
         }                    
-        cpu.previous_pc.attr('src', src);
     }
 
     // activate new pointer
-    let src = found.attr('src');
-    switch (src) {
-        case img_brk_on:
-            src = img_brk_pc;
-            break;
-        case img_brk_off:
-            src = img_pc;
+    let td = found.find("td:first-child")
+    let clss = td.attr("class")
+    switch (clss) {
+        case "breakpoint":
+            td.removeClass(clss);
+            td.addClass("exec-breakpoint");
+        break;
+        case "nobrk":
+            td.removeClass(clss);
+            td.addClass("exec");
             break;
     }
-    found.attr('src', src);
+    found.addClass("pc")
     cpu.previous_pc = found;
 }
