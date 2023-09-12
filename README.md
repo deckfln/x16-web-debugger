@@ -5,7 +5,7 @@ This is an experimental remote debugger for the Commander X16 emulator. It is ta
 Design
 ------
 ```
-          http://*:9000            http://localhost:3000           http://*:3000
+          http://*:9009            http://localhost:3000           http://*:8000
 +---------+----------+                +---------+                  +-----------+
 |         |MicroHTTP | <------------> | Browser | <--------------> | server.py |
 |         |----------+                |         |                  +-----------+
@@ -84,7 +84,7 @@ Usage
  * x16-emulator.exe -rom rom.bin __-remote-debugger__ -prg test.prg
 
 * point your web browser to the remote debugger
- * http://localhost:3000
+ * http://localhost:8000
 
 Used libraries
 --------------

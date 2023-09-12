@@ -150,6 +150,9 @@ function dock_setActive(id)
         return
     }
     
-    panel.tabPage.host.setActiveTab(panel);
+    if (panel.tabPage) {
+        // if the target dock is currently tabed , force the active tab
+        panel.tabPage.host.setActiveTab(panel);
+    }
     panel.dockManager.activePanel = panel;
 }
