@@ -12,6 +12,12 @@ function new_dock_disam()
     dock_disam_display()
 }
 
+/**
+ * download and disassemble a memory block 
+ * @param {*} bank 
+ * @param {*} address 
+ * @returns 
+ */
 function dock_disasm(bank, address)
 {
     let remote = "http://localhost:9009/dump/" + bank + "/" + address;
@@ -67,6 +73,9 @@ function dock_disasm(bank, address)
     return p 
 }
 
+/**
+ * disassemble the memory block
+ */
 function dock_disam_display()
 {
     let table=$('<table>');
@@ -103,6 +112,10 @@ function dock_disam_display()
     }
 }
 
+/**
+ * update PC during debugging
+ * @returns 
+ */
 function dock_disam_update()
 {
     let id = '#brk'+cpu.pc;
@@ -146,4 +159,30 @@ function dock_disam_update()
     }
     found.addClass("pc")
     cpu.previous_pc = found;
+}
+
+/**
+ * Toggle the breakpoint
+ * @param {*} brk 
+ */
+function disasm_toggleBreakpoint(addr)
+{
+    let id = '#brk' + addr;
+    let found = $(id);   // PC is on screen ?
+    if (found.length == 0) {
+        return
+    }
+
+    let td = found.find("td:first-child")
+    let clss = td.attr("class")
+    switch (clss) {
+        case "breakpoint":
+            td.removeClass(clss);
+            td.addClass("nobrk");
+        break;
+        case "nobrk":
+            td.removeClass(clss);
+            td.addClass("breakpoint");
+            break;
+    }
 }

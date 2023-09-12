@@ -20,7 +20,8 @@ function toggleBreapoint(addr, bank, upload)
     .then ( json => {
         if (json.status == "ok" && upload == undefined) {
             source_toggleBreakpoint(addr);
-            load_breakpoints(dock_disam_update);
+            disasm_toggleBreakpoint(addr);
+            load_breakpoints();
         }
     })
     .catch (error => { 
@@ -88,8 +89,6 @@ function breakpoints_update()
     let type=undefined
     let toggle=undefined
     let clss=undefined
-    let src = "images/breakpoint/on.png";
-    let img = undefined
     for (let addr in Breakpoints) {
         let tr=$('<tr>');
 
@@ -97,7 +96,7 @@ function breakpoints_update()
             case "brk":
                 type=Breakpoints[addr].type
                 toggle="toggleBreapoint"
-                clss="breakpoint"
+                clss="brk_cpu"
                 break
             case "watch":
                 type=Breakpoints[addr].type+" as " + watchAs[Breakpoints[addr].len]
@@ -105,13 +104,14 @@ function breakpoints_update()
                 clss="brk_memory"
                 break
         }
-        img = "<img id='brk"+addr+"' src='"+src+"'/ onClick='"+toggle+"(" + addr + ",0);'>"
+        let onclick = "onClick='"+toggle+"(" + addr + ",0);'"
 
-        tr.append("<td>"+img+"</td><td>"+Breakpoints[addr].bank + ":" + snprintf(addr,"%04X")+"</td><td>"+type+"</td><td>"+"</td>");
+        tr.append('<td class="breakpoint"' + onclick + '></td><td>' + Breakpoints[addr].bank + ":" + snprintf(addr,"%04X")+"</td><td>"+type+"</td><td>"+"</td>");
         tr.attr('class', clss)
         tr.attr('id', "brk_"+addr)
         table.append(tr);
     }
+    table.attr("class", "code")
     document.getElementById("dock-breakpoint").innerHTML = table[0].outerHTML;
 }
 

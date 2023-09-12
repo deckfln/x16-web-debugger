@@ -31,8 +31,16 @@ function display_source(fileID)
         let dbg_line = debug_info.files[fileID].lines[i+1];    // in source code lines start at 1
         if (dbg_line != undefined) {
             let dbg_pc = dbg_line.start;
-            if (Breakpoints[dbg_pc] != undefined) {
-                clss += "breakpoint";
+            if (dbg_pc == cpu.pc) {
+                if (Breakpoints[dbg_pc] != undefined) {
+                    clss = "exec-breakpoint";
+                }
+                else {
+                    clss = "exec";
+                }    
+            }
+            else if (Breakpoints[dbg_pc] != undefined) {
+                clss = "breakpoint";
             }    
 
             addr = snprintf(dbg_pc,"%04X")
@@ -214,6 +222,5 @@ function source_toggleBreakpoint(brk)
                 td.addClass("breakpoint");
                 break;
         }
-        return;
     }
 }
