@@ -42,8 +42,13 @@ function dock_cpu()
             $("#restart").removeClass("disabled-link")
         }
 
-        // we are speaking to a new emulator, 
-        if (json.pid != cpu.pid) {
+        if (cpu.pid < 0) {
+            // we are just starting, download breakpoints from the emulator
+            cpu.pid = json.pid
+            breakpoints_load()
+        }
+        else if (json.pid != cpu.pid) {
+            // we are speaking to a new emulator, prabably the user closed the emulator
             cpu.pid = json.pid
             breakpoints_upload()    //upload breakpoints to a new emulator
             debug_restart()         //and restart the prg

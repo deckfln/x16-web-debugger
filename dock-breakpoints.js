@@ -21,7 +21,7 @@ function toggleBreapoint(addr, bank, upload)
         if (json.status == "ok" && upload == undefined) {
             source_toggleBreakpoint(addr);
             disasm_toggleBreakpoint(addr);
-            load_breakpoints();
+            breakpoints_load();
         }
     })
     .catch (error => { 
@@ -33,7 +33,7 @@ function toggleBreapoint(addr, bank, upload)
  * Load both CPU breakpoints and memory watches
  * @param {*} callback 
  */
-function load_breakpoints(callback)
+function breakpoints_load(callback)
 {
     let remote = "http://localhost:9009/breakpoint";
     let p = fetch (remote, {

@@ -68,7 +68,7 @@ window.onload = () => {
                 watch_bindStructures()
                 p = load_symbols(Config.symbols)
                 dock_sprite("http://localhost:9009/vera/sprite/0")
-                load_breakpoints()
+                breakpoints_load()
                 .then(ok => {
                     dock_disasm(0, 0)
                     .then(ok => {
