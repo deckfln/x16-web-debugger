@@ -136,6 +136,13 @@ const _pseudof = [
  */
 function ca65_syntax(line)
 {
+    // escape special characters to HTML, but forget the ; (comment in ca65)
+    line = line.replace(/&/g, "&amp")
+        .replace(/</g, "&lt")
+        .replace(/>/g, "&gt")
+        .replace(/"/g, "&quot")
+        .replace(/'/g, "&#39");  
+
     let icomment = line.indexOf(";")
     if (icomment >= 0) {
         line = line.replace(";", "<span class=\"comment\">;")
@@ -179,6 +186,13 @@ function ca65_syntax(line)
             }
         }
     }
+
+    // finish escaping special characters to HTML
+    line = line.replaceAll("&amp", "&amp;")
+        .replaceAll("&lt", "&lt;")
+        .replaceAll("&gt", "&gt;")
+        .replaceAll("&quot", "&quot;")
+        .replaceAll("&#39", "&#39;");  
 
     return line
 }
