@@ -80,7 +80,7 @@ function dock_memory(bank, address)
 
         for (y=0; y<16; y++) {
             let tr=$('<tr>');
-            tr.append("<td class=\"pc\">" + snprintf(addr,"%04X") + "</td>");
+            tr.append("<td class=\"addr\">" + snprintf(addr,"%04X") + "</td>");
 
             for (x=0; x<16; x++) {
                 clss = "brk_memory"
