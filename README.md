@@ -5,7 +5,7 @@ This is an experimental remote debugger for the Commander X16 emulator. It is ta
 Design
 ------
 ```
-          http://*:9009            http://localhost:3000           http://*:8000
+          http://*:9009            http://localhost:8000           http://*:8000
 +---------+----------+                +---------+                  +-----------+
 |         |MicroHTTP | <------------> | Browser | <--------------> | server.py |
 |         |----------+                |         |                  +-----------+
@@ -62,6 +62,7 @@ Todo
 Configuration
 -------------
 Update config.json to point to the source code folder and the debug files
+```
 {
     "root":"d:/dev/x16/x16-uncharted",      // home folder of the project
     "sources":"/src",                       // sub folder with sources
@@ -69,24 +70,29 @@ Update config.json to point to the source code folder and the debug files
     "debuginfo":"/bin/test.dbg",            // local path of the debug info file
     "symbols":""                            // local path of the symbol files (if there is no debuginfo)
 }
+```
 
 Usage
 -----
 * Compile the source code with debug options
- * ca65 __--debug-info__ -t cx16 main.asm -o main.o
- * cl65 -t cx16 -o ../bin/test.prg main.o __-Wl --dbgfile,../bin/test.dbg__
+  * ca65 __--debug-info__ -t cx16 main.asm -o main.o
+  * cl65 -t cx16 -o ../bin/test.prg main.o __-Wl --dbgfile,../bin/test.dbg__
 
 * Start the debugger server
- * __cd x16-web-debugger__
- * __python server.py__
+  * __cd x16-web-debugger__
+  * __python server.py__
 
 * Start the emulator in remote debug mode
- * x16-emulator.exe -rom rom.bin __-remote-debugger__ -prg test.prg
+  * x16-emulator.exe -rom rom.bin __-remote-debugger__ -prg test.prg
 
 * point your web browser to the remote debugger
- * http://localhost:8000
+  * http://localhost:8000
 
-Used libraries
+A word about security
+---------------------
+There is none ! Communications are in clear text over HTTP, there is no credentials to log in. 
+
+External libraries
 --------------
 * jquery : https://jquery.com/
 * jstree : https://github.com/vakata/jstree
