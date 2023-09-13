@@ -65,8 +65,8 @@ function dock_cpu()
         let b = (json.flags & 0x10) ? "B" : "-";
         let d = (json.flags & 0x08) ? "D" : "-";
         let i = (json.flags & 0x04) ? "I" : "-";
-        let c = (json.flags & 0x02) ? "C" : "-";
-        let z = (json.flags & 0x01) ? "Z" : "-";
+        let c = (json.flags & 0x02) ? "Z" : "-";
+        let z = (json.flags & 0x01) ? "C" : "-";
 
         $('#status').html(n+v+"-"+b+d+i+c+z);
 
