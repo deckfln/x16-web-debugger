@@ -4,7 +4,47 @@
 function new_dock_files()
 {
     dock_new("Files", "dock-files")
+    dock_files_jstree()
     files_update()
+}
+
+function dock_files_jstree()
+{
+    // activate jstree of files
+    $("#dock-files").jstree({ 
+        "plugins": [
+            "themes", 
+            "html_data", 
+            "ui", 
+            "crrm", 
+            "hotkeys"
+        ], 
+        "core": {
+            'check_callback' : true // allow create_node/delete_node operations
+        }})
+    
+        $("#dock-files").bind(
+            "activate_node.jstree", function(evt, data){
+                let id = data.node.id.substr(1)
+                // check if we clicked on the file or a symbol in the file
+                let sym
+                let hash = id.indexOf("#")
+                if ( hash > 0) {
+                    sym = id.substring(hash +1)
+                    id = id.substring(0,hash)
+                }
+                let fileID = parseInt(id)
+    
+                // seach only for the file
+                source_open(fileID)
+    
+                // if clicked on a symbol, move the code to the line of the symbol
+                if (sym != undefined) {
+                    let line = debug_info.files[fileID].symbols[sym]
+    
+                    source_set(fileID, line)
+                }
+          });       
 }
 
 /**
@@ -12,51 +52,34 @@ function new_dock_files()
  */
 function files_update()
 {
-    let ul=$('<ul>');
+    // clear the tree
+    let jstree = $('#dock-files').jstree(true)
+    let root = jstree.get_node("#")
+    jstree.delete_node(root.children)
+
     for (let fileID in debug_info.files) {
         let file = debug_info.files[fileID] 
-        let li=$('<li id="f' + fileID + '">');
-        li.append(file.name);
-            let ul1=$('<ul>');
-            for (let symbol in file.symbols) {
-                if (symbol.substring(0,1) != '@') {
-                    let li1=$('<li id="f' + fileID + '#' + symbol + '">');
-                    li1.append(symbol);
-                    ul1.append(li1);    
-                }
+        let node = jstree.create_node(root, {
+            text: file.name,
+            id: 'f' + fileID,
+        })
+
+        for (let symbol in file.symbols) {
+            if (symbol.substring(0,1) != '@') {
+                let sym = jstree.create_node(node, {
+                    text: symbol,
+                    id: "f" + fileID + "#" + symbol
+                })        
             }
-        li.append(ul1)
-        ul.append(li);
+        }
     }
-    let dock=document.getElementById("dock-files");
-    dock.innerHTML = ul[0].outerHTML;
-    $("#dock-files").jstree({ "plugins": ["themes", "html_data", "ui", "crrm", "hotkeys"], "core": {} })
-
-    $("#dock-files").bind(
-        "activate_node.jstree", function(evt, data){
-            let id = data.node.id.substr(1)
-            // check if we clicked on the file or a symbol in the file
-            let sym
-            let hash = id.indexOf("#")
-            if ( hash > 0) {
-                sym = id.substring(hash +1)
-                id = id.substring(0,hash)
-            }
-            let fileID = parseInt(id)
-
-            // seach only for the file
-            display_source(fileID)
-
-            // if clicked on a symbol, move the code to the line of the symbol
-            if (sym != undefined) {
-                let line = debug_info.files[fileID].symbols[sym]
-
-                source_set(fileID, line)
-            }
-      });    
 }
 
-function load_allFiles(callback)
+/**
+ * load all files in memory and refresh displayed source code
+ * @returns 
+ */
+function load_allFiles()
 {
     let promises = [];
     for (let id in debug_info.files) {
@@ -65,6 +88,11 @@ function load_allFiles(callback)
         .then( response => response.text())
         .then( text => {
             debug_info.files[id].text = text.replaceAll("\r","").split("\n");
+
+            // refresh source on screen if needed
+            if (dock_exists("file"+id)) {
+                source_display(id)
+            }
             return "ok"
         })   
 

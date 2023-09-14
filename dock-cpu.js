@@ -126,7 +126,7 @@ function dock_cpu()
                 // move PC on screen
                 dock_disam_update();
             }
-            source_update();
+            source_update_pc();
             memory_update();
             dock_registers();
             watches_update()

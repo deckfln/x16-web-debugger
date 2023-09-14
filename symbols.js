@@ -3,8 +3,11 @@
  */
 let hSymbols = {}
 
-function load_symbols(file)
+function symbols_load(file)
 {
+    // reinit all data
+    hSymbols = {}
+
     if (file == undefined || file =="") {
         return undefined;
     }

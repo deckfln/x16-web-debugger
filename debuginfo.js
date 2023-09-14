@@ -6,8 +6,16 @@ let debug_info = {
 }
 
 
-function load_debuginfo(file)
+function debuginfo_load(file)
 {
+    // reinit all data
+    debug_info = {
+        start: 0,
+        structures: {},
+        files: {},
+        address: {}
+    }
+
     let remote = "/code/" + file;
     let f = fetch (remote, {
         method: 'GET',
@@ -18,7 +26,6 @@ function load_debuginfo(file)
         let dbg_spans = {}
         let dbg_lines = {};
         let dbg_lineID = {};
-        let dbg_sym = {};
         
         text = text.replaceAll("\r","");
         let lines = text.split("\n");

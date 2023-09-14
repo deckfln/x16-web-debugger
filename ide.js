@@ -55,31 +55,14 @@ window.onload = () => {
 
     let promises = [];
 
+    // activate jstree for files
+    dock_files_jstree()
+
     let p = fetch("config.json")
     .then ( response => response.json())
     .then ( json => {
         Config = json;
-        load_debuginfo(Config.debuginfo)
-        .then (ok => {
-            // load all files & prepare structure mapping
-            load_allFiles()
-            .then(ok => {
-                structures_map()
-                watch_bindStructures()
-                p = load_symbols(Config.symbols)
-                dock_sprite("http://localhost:9009/vera/sprite/0")
-                breakpoints_load()
-                .then(ok => {
-                    dock_disasm(0, 0)
-                    .then(ok => {
-                        check_cpu()    // start CPU monitoring       
-                    })
-                })
-                return "ok"
-            })
-
-            return "OK"
-        });
+        ide_restart()
     })
 
     // activate context menus
@@ -113,6 +96,45 @@ window.onload = () => {
 
 };
 
+/**
+ * load the debug info file, process source files and kickstart the pulling loops
+ */
+let first_init = true
+
+function ide_restart()
+{
+    debuginfo_load(Config.debuginfo)
+    .then (ok => {
+        // load all files & prepare structure mapping
+        load_allFiles()
+        .then(ok => {
+            structures_map()
+            watch_bindStructures()
+            p = symbols_load(Config.symbols)
+            dock_sprite("http://localhost:9009/vera/sprite/0")
+            breakpoints_load()
+            .then(ok => {
+                dock_disasm(0, 0)
+                .then(ok => {
+                    if (first_init) {
+                        check_cpu()    // start CPU monitoring
+                        binary_monitor()  // start binary monitoring    
+                        first_init = false
+                    }
+                })
+            })
+            return "ok"
+        })
+        return "OK"
+    });
+}
+
+/**
+ * Docks functions
+ * @param {*} title 
+ * @param {*} id 
+ * @returns 
+ */
 function dock_new(title, id)
 {
     let dockManager = Panels.dockManager

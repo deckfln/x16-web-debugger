@@ -5,7 +5,12 @@ let sources = {
 
 const line_height = 20
 
-function display_source(fileID)
+/**
+ * open source from the explorer
+ * @param {*} fileID 
+ * @returns 
+ */
+function source_open(fileID)
 {
     const id = "file"+fileID
     const name = debug_info.files[fileID].name
@@ -14,6 +19,19 @@ function display_source(fileID)
         // source is already displayed
         return true
     }
+
+    dock_new(name, id)
+    source_display(fileID)
+}
+
+/**
+ * display or refresh source in a tab
+ * @param {*} fileID 
+ * @returns 
+ */
+function source_display(fileID)
+{
+    const id = "file"+fileID
 
     let lines = debug_info.files[fileID].text
     if (lines == undefined) {
@@ -58,8 +76,10 @@ function display_source(fileID)
         sources.update = false
     }
 
-    dock_new(name, id)
+    let item = document.getElementById("file"+fileID);
+    let top = item.scrollTop;
     $("#"+id)[0].innerHTML = table[0].outerHTML;
+    item.scrollTop = top
 
     return true
 }
@@ -130,11 +150,10 @@ function source_set(fileID, line)
 }
 
 /**
- * 
- * @param {*} brk 
+ * Move PC on the correct source code
  * @returns 
  */
-function source_update(brk)
+function source_update_pc()
 {
     let fileLine = debug_info.address[cpu.pc];
     if (fileLine == undefined) {

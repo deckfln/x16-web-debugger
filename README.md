@@ -1,4 +1,5 @@
-[![License: BSD-Clause](https://img.shields.io/github/license/x16community/x16-emulator)](./LICENSE)
+[![Release](https://img.shields.io/github/v/release/deckfln/x16-web-debugger)](https://github.com/deckfln/x16-web-debugger/releases)
+[![License: BSD-Clause](https://img.shields.io/github/license/deckfln/x16-web-debugger)](./LICENSE)
 
 This is an experimental remote debugger for the Commander X16 emulator. It is tailored for CA65 assembler code and needs a patched version of the emulator available here
 
@@ -68,7 +69,8 @@ Update config.json to point to the source code folder and the debug files
     "sources":"/src",                       // sub folder with sources
     "remote":"http://localhost:9009",       // address of the emulator
     "debuginfo":"/bin/test.dbg",            // local path of the debug info file
-    "symbols":""                            // local path of the symbol files (if there is no debuginfo)
+    "symbols":"",                           // local path of the symbol files (if there is no debuginfo)
+    "binary":"bin/test.prg"                // local path for the binary
 }
 ```
 
@@ -87,6 +89,11 @@ Usage
 
 * point your web browser to the remote debugger
   * http://localhost:8000
+
+* Detect bug
+* Fix the bug in your editor
+* Compile
+* The debugger will detect the new version and propose to load source (on the debugger) and PRG (on the emulator)
 
 A word about security
 ---------------------

@@ -2,6 +2,7 @@
     "root":"d:/dev/x16/x16-uncharted",
     "sources":"src",
     "remote":"http://localhost:9009",
+    "binary":"bin/test.prg",
     "debuginfo":"bin/test.dbg",
     "symbols":""
 }
