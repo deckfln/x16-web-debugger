@@ -15,6 +15,15 @@
     color: white;
 }
 
+.hlhex {
+    color: rgb(181,192,119);
+}
+.hlbin {
+    color: rgb(181,192,119);
+}
+.hldec {
+    color: rgb(181,192,119);
+}
 /* light mode
 .comment {
     color: lightslategrey;
