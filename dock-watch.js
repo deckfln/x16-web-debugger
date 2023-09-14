@@ -99,7 +99,7 @@ function watch_change(elem, type)
         Watches.splice(found, 1)
     }
     else {
-        Watches[i].type = type
+        Watches[found].type = type
         display_watch(Watches[i])
     }
 }

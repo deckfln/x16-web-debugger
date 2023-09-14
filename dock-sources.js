@@ -169,7 +169,7 @@ function source_update_pc()
     let line = $(id);   // PC is on screen ?
     if (line.length == 0) {
         // display the new source 
-        if (!display_source(fileID)) {
+        if (!source_open(fileID)) {
             // not yet loaded
             return
         }
