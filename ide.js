@@ -117,7 +117,7 @@ function ide_restart()
                 dock_disasm(0, 0)
                 .then(ok => {
                     if (first_init) {
-                        check_cpu()    // start CPU monitoring
+                        cpu_run()    // start CPU monitoring
                         binary_monitor()  // start binary monitoring    
                         first_init = false
                     }

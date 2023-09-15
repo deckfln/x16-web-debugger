@@ -251,7 +251,7 @@ function update_watch(index, struct, memory)
         if (text != undefined) {
             if (dom.text != text) {
                 dom.text = text
-                dom.li_attr.class = "watch_changed"
+                dom.li_attr.class = "updated"
             }
             else {
                 dom.li_attr.class = "watch_unchanged"

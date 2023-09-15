@@ -1,5 +1,6 @@
 function debug_run()
 {
+    cpu_run()
     let remote = "http://localhost:9009/run"
     fetch (remote, {
         method: 'GET',
@@ -18,6 +19,7 @@ function debug_run()
 
 function debug_restart()
 {
+    cpu_run()
     let remote = "http://localhost:9009/restart"
     fetch (remote, {
         method: 'GET',
@@ -35,6 +37,7 @@ function debug_restart()
 
 function debug_continue()
 {
+    cpu_run()
     let remote = "http://localhost:9009/debug/continue";
     fetch (remote, {
         method: 'GET',
@@ -53,6 +56,7 @@ function debug_continue()
 
 function debug_stepinto()
 {
+    cpu_run()
     let remote = "http://localhost:9009/debug/stepinto";
     fetch (remote, {
         method: 'GET',
@@ -70,6 +74,7 @@ function debug_stepinto()
 
 function debug_stepover()
 {
+    cpu_run()
     let remote = "http://localhost:9009/debug/stepover";
     fetch (remote, {
         method: 'GET',
@@ -87,6 +92,7 @@ function debug_stepover()
 
 function debug_stepout()
 {
+    cpu_run()
     let remote = "http://localhost:9009/debug/stepout";
     fetch (remote, {
         method: 'GET',

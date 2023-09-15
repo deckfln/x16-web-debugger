@@ -11,8 +11,15 @@ function dock_registers(bank, address)
 
         let table=$('<table>');
         for (r = 0; r < 16; r++) {
+            let c = snprintf(words[r],"%04X")
+            let clss = ''
+
+            if (cpu.registers[r] != c) {
+                clss = ' class="updated"'
+                cpu.registers[r] = c
+            }
             let tr=$('<tr>');
-            tr.append("<td>R"+r+"</td><td>" + snprintf(words[r],"%04X") + "</td>")
+            tr.append("<td>R" + r + "</td><td" + clss + ">" + c + "</td>")
             table.append(tr);
         }
         $('#registers')[0].innerHTML = table[0].outerHTML;

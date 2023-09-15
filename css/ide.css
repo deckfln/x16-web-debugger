@@ -122,5 +122,9 @@ html.dark-theme {
     color: red;
   }
 
+  .updated {
+    color: rgb(238, 196, 10);
+  }
+
   .watch_unchanged {
   }

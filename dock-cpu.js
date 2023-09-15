@@ -5,14 +5,34 @@ let cpu = {
     'pid': -1,                      // emulator pid
     'status': 1,
     'previous_pc': undefined,
-    'pc': undefined
+    'pc': undefined,
+    'a': undefined,
+    'x': undefined,
+    'y': undefined,
+    'timer': undefined,
+    'registers': Array(5)
 }
 
-function check_cpu()
+/**
+ * Emulator is running, so monitor
+ */
+function cpu_run()
 {
-    setInterval(dock_cpu, 100);
+    if (cpu.timer == undefined) {
+        $("#emu").html("Running")
+        cpu.timer = setInterval(cpu_check, 100)    
+    }
 }
 
+/**
+ * Emulator is paused, stop monitoring
+ */
+function cpu_pause()
+{
+    $("#emu").html("Paused")
+    clearInterval(cpu.timer)
+    cpu.timer = undefined
+}
 
 /**
  * create a new dock
@@ -26,7 +46,10 @@ function new_dock_cpu()
     div.html(cpuHTML)
 }
 
-function dock_cpu()
+/**
+ * check the status of the emulator
+ */
+function cpu_check()
 {
     let remote = "http://localhost:9009/cpu";
     fetch (remote, {
@@ -56,9 +79,31 @@ function dock_cpu()
 
         $('#pc').html(snprintf(json.pc,"%04X"));
         $('#sp').html(snprintf(json.sp,"%02X"));
-        $('#a').html(snprintf(json.a,"%02X"));
-        $('#x').html(snprintf(json.x,"%02X"));
-        $('#y').html(snprintf(json.y,"%02X"));
+
+        if (json.a != cpu.a) {
+            $('#a').html(snprintf(json.a,"%02X"));
+            $('#a').addClass("updated")
+            cpu.a = json.a
+        }
+        else {
+            $('#a').removeClass("updated")
+        }
+        if (json.x != cpu.x) {
+            $('#x').html(snprintf(json.x,"%02X"));
+            $('#x').addClass("updated")
+            cpu.x = json.x
+        }
+        else {
+            $('#x').removeClass("updated")
+        }
+        if (json.y != cpu.y) {
+            $('#y').html(snprintf(json.y,"%02X"));
+            $('#y').addClass("updated")
+            cpu.y = json.y
+        }
+        else {
+            $('#y').removeClass("updated")
+        }
 
         let n = (json.flags & 0x80) ? "N" : "-";
         let v = (json.flags & 0x40) ? "V" : "-";
@@ -70,14 +115,10 @@ function dock_cpu()
 
         $('#status').html(n+v+"-"+b+d+i+c+z);
 
-        switch (json.myStatus) {
-            case 0: 
-                $("#emu").html("Paused")
-                break
-            case 3: 
-                $("#emu").html("Running")
-                break
-        } 
+        if (json.myStatus == 0) {
+            // the emulator entered suspended mode
+            cpu_pause()
+        }
 
         if (json.myStatus != cpu.status) {
             if (json.myStatus == 0) {

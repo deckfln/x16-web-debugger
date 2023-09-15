@@ -85,7 +85,7 @@ function dock_memory(bank, address)
             for (x=0; x<16; x++) {
                 clss = "brk_memory"
                 if (prev && memory.prev.bytes[i] != bytes[i]) {
-                    clss += " memory-changed"
+                    clss += " updated"
                 }
                 if (Breakpoints[address + i] != undefined ) {
                     counter = Breakpoints[address + i].len
