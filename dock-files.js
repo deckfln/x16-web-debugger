@@ -17,10 +17,25 @@ function dock_files_jstree()
             "html_data", 
             "ui", 
             "crrm", 
-            "hotkeys"
+            "hotkeys",
+            "types"
         ], 
         "core": {
-            'check_callback' : true // allow create_node/delete_node operations
+            'check_callback' : true  // allow create_node/delete_node operations
+        },
+        "themes": {
+                "name": 'default-dark',
+                "dots" : true,
+                "responsive" : true,
+                "stripes": false
+        },
+        "types": {
+            'label' : {
+                'icon' : false
+            },
+            'file' : {
+                'icon' : "jstree-icon jstree-file"
+            }
         }})
     
         $("#dock-files").bind(
@@ -62,14 +77,16 @@ function files_update()
         let node = jstree.create_node(root, {
             text: file.name,
             id: 'f' + fileID,
+            type: "file"
         })
 
         for (let symbol in file.symbols) {
             if (symbol.substring(0,1) != '@') {
                 let sym = jstree.create_node(node, {
                     text: symbol,
-                    id: "f" + fileID + "#" + symbol
-                })        
+                    id: "f" + fileID + "#" + symbol,
+                    type: "label"
+                })
             }
         }
     }

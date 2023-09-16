@@ -128,3 +128,7 @@ html.dark-theme {
 
   .watch_unchanged {
   }
+
+  .jstree-default-dark {
+    background: inherit;
+  }

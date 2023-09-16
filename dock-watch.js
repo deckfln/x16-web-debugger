@@ -12,6 +12,12 @@ function new_dock_watch()
     $('#watch_root').jstree({
         'core' : {
             'check_callback' : true // allow create_node/delete_node operations
+        },
+        "themes": {
+            "name": 'default-dark',
+            "dots" : true,
+            "responsive" : true,
+            "stripes": false
         }
     })
     watches_update()
