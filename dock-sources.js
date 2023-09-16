@@ -21,7 +21,7 @@ function source_open(fileID)
     }
 
     dock_new(name, id)
-    source_display(fileID)
+    return source_display(fileID)
 }
 
 /**
@@ -169,7 +169,7 @@ function source_update_pc()
     let line = $(id);   // PC is on screen ?
     if (line.length == 0) {
         // display the new source 
-        if (!source_open(fileID)) {
+        if (source_open(fileID) == false) {
             // not yet loaded
             return
         }
