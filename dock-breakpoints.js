@@ -30,7 +30,7 @@ function toggleBreapoint(addr, bank, upload)
 }
 
 /**
- * Load both CPU breakpoints and memory watches
+ * Load both CPU breakpoints and memory watches and VRAM breakpoint
  * @param {*} callback 
  */
 function breakpoints_load(callback)
@@ -60,7 +60,16 @@ function breakpoints_load(callback)
                 let addr = parseInt(json[i].addr);
                 let bank = parseInt(json[i].bank);
                 let len = parseInt(json[i].len);
-                Breakpoints[addr] = { 'type': 'watch', 'len': len, 'bank': bank };
+                let status = parseInt(json[i].status);
+
+                if ((status & 0x80) == 0x80) {
+                    // VRAM break
+                    Breakpoints[addr] = { 'type': 'vwatch', 'len': len, 'bank': bank };
+                }
+                else {
+                    // RAM break
+                    Breakpoints[addr] = { 'type': 'watch', 'len': len, 'bank': bank };
+                }
             }
     
             breakpoints_update();
@@ -103,7 +112,12 @@ function breakpoints_update()
                 toggle="memory_toggleWatch"
                 clss="brk_memory"
                 break
-        }
+            case "vwatch":
+                type=Breakpoints[addr].type+" as " + watchAs[Breakpoints[addr].len]
+                toggle="vram_toggleWatch"
+                clss="brk_vmemory"
+                break
+            }
         let onclick = "onClick='"+toggle+"(" + addr + ",0);'"
 
         tr.append('<td class="breakpoint"' + onclick + '></td><td>' + Breakpoints[addr].bank + ":" + snprintf(addr,"%04X")+"</td><td>"+type+"</td><td>"+"</td>");

@@ -92,6 +92,15 @@ window.onload = () => {
                 "ulong": {name: "Monitor as long"},
             }
         });
+
+        $.contextMenu({
+            selector: '.source-instr', 
+            items: {
+                "brk": {name: "Toggle breakpoint"},
+                "cursor": {name: "Run ro cursor"},
+            }
+        })
+        
     });
 
 };
