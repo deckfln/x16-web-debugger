@@ -10,14 +10,16 @@ nav div {
 nav ul {
   margin: 0px;
   padding: 0px;
-  background: #e3e3e3;
+  /*background: #e3e3e3;*/
   list-style-type: none;
   position: relative;
   z-index: 100;
+  width:200px;
 }
 
 nav ul li {
   display: inline-block;
+  background: #e3e3e3;
 }
 
 nav ul li a {
