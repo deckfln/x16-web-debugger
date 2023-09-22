@@ -52,7 +52,7 @@ function memory_toggleWatch(address, bank, len, upload)
     .then ( json => {
         if (json.status == "ok" && upload == undefined) {
             // only download the breakpointIF we are not uploading the current breakpoint
-            load_breakpoints();
+            breakpoints_load()
             memory_update()
         }
     })
@@ -88,8 +88,8 @@ function dock_memory(bank, address)
                 if (prev && memory.prev.bytes[i] != bytes[i]) {
                     clss += " updated"
                 }
-                if (Breakpoints[address + i] != undefined && Breakpoints[address].type == "watch") {
-                    counter = Breakpoints[address + i].len
+                if (Breakpoints[address + i] != undefined && Breakpoints[address + i].type == "watch") {
+                     counter = Breakpoints[address + i].len
                 }
 
                 if (counter > 0) {

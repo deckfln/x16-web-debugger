@@ -93,7 +93,7 @@ function vram_toggleWatch(address, len, upload)
     .then ( json => {
         if (json.status == "ok" && upload == undefined) {
             // only download the breakpointIF we are not uploading the current breakpoint
-            load_breakpoints();
+            breakpoints_load()
             vram_update()
         }
     })

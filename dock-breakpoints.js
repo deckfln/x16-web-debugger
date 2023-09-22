@@ -100,27 +100,33 @@ function breakpoints_update()
     let clss=undefined
     for (let addr in Breakpoints) {
         let tr=$('<tr>');
-
+        let adr
         switch (Breakpoints[addr].type) {
             case "brk":
-                type=Breakpoints[addr].type
+                type = "break"
                 toggle="toggleBreapoint"
                 clss="brk_cpu"
+                // mark the bank
+                adr = Breakpoints[addr].bank + ":" + snprintf(addr,"%04X")
                 break
             case "watch":
-                type=Breakpoints[addr].type+" as " + watchAs[Breakpoints[addr].len]
+                type="monitor as " + watchAs[Breakpoints[addr].len]
                 toggle="memory_toggleWatch"
                 clss="brk_memory"
+                // mark the bank
+                adr = Breakpoints[addr].bank + ":" + snprintf(addr,"%04X")
                 break
             case "vwatch":
-                type=Breakpoints[addr].type+" as " + watchAs[Breakpoints[addr].len]
+                type="monitor as " + watchAs[Breakpoints[addr].len]
                 toggle="vram_toggleWatch"
                 clss="brk_vmemory"
+                // display VRAM as a single block
+                adr = Breakpoints[addr].bank + snprintf(addr,"%04X")
                 break
             }
         let onclick = "onClick='"+toggle+"(" + addr + ",0);'"
 
-        tr.append('<td class="breakpoint"' + onclick + '></td><td>' + Breakpoints[addr].bank + ":" + snprintf(addr,"%04X")+"</td><td>"+type+"</td><td>"+"</td>");
+        tr.append('<td class="breakpoint"' + onclick + '></td><td>' + adr + "</td><td>" + type + "</td><td>"+"</td>")
         tr.attr('class', clss)
         tr.attr('id', "brk_"+addr)
         table.append(tr);
