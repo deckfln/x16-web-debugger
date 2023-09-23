@@ -60,9 +60,10 @@
                     <li><a href="#" id="mdock-cpu">&#x2611; CPU</a></li>
                     <li><a href="#" id="mdock-disam">&#x2611; Disassembler</a></li>
                     <li><a href="#" id="mdock-memory">&#x2611; MEM Dump</a></li>
-                    <li><a href="#" id="mdock-vram">&#x2610; VRAM Dump</a></li>
                     <li><a href="#" id="mdock-files">&#x2611; Files</a></li>
                     <li><a href="#" id="mdock-watch">&#x2611; Watch</a></li>
+                    <li><a href="#" id="mdock-watch">&#x2611; VERA registers</a></li>
+                    <li><a href="#" id="mdock-vram">&#x2610; VERA Dump</a></li>
                 </ul>
             
             </li>
@@ -83,8 +84,8 @@
             <tr><td>Flags</td><td id="status"></td></tr>
         </table>
         <div id="registers"></div>
-        <div id="vera"></div>        
     </div>
+    <div id="dock-vera" data-panel-caption="VERA registers" style="overflow:scroll;"></div>
     <div id="dock-disam" data-panel-caption="Disassembler" style="overflow:scroll;">
         <div class="disam-menu">
             <div id="jump"><input type="text" id="goto" name="goto" required minlength="4" maxlength="4" size="10" onkeypress="clickPress(event)"/></div>

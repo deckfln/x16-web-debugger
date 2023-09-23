@@ -154,7 +154,7 @@ function cpu_check()
             cpu.status = json.mystatus
         }
 
-        if (json.myStatus == 0 && (cpu.pc != json.pc || currentBank != json.bank)) {            
+        if (json.myStatus == 0) {            
             currentBank = json.bank;
             cpu.pc = json.pc;
 

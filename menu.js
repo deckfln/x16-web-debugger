@@ -9,6 +9,7 @@ $(document).ready(function(){
   Menus["dock-breakpoint"] = new_dock_breakpoints
   Menus["dock-files"] = new_dock_files
   Menus["dock-vram"] = new_dock_vram
+  Menus["dock-vera"] = new_dock_vera
 
   $("nav div").click(function(){
           $("ul").slideToggle();
