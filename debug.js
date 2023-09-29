@@ -1,6 +1,5 @@
 function debug_run()
 {
-    cpu_run()
     let remote = "http://localhost:9009/run"
     fetch (remote, {
         method: 'GET',
@@ -10,6 +9,7 @@ function debug_run()
     .then ( json => {
         if (json.status == "ok") {
             $("#run").addClass("disabled-link")
+            cpu_run()
         }
     })
     .catch (error => { 
@@ -19,7 +19,6 @@ function debug_run()
 
 function debug_restart()
 {
-    cpu_run()
     let remote = "http://localhost:9009/restart"
     fetch (remote, {
         method: 'GET',
@@ -28,6 +27,7 @@ function debug_restart()
     .then ( response => response.json())
     .then ( json => {
         if (json.status == "ok") {
+            debug_run() // unlock the emulator
         }
     })
     .catch (error => { 
@@ -37,7 +37,6 @@ function debug_restart()
 
 function debug_continue()
 {
-    cpu_run()
     let remote = "http://localhost:9009/debug/continue";
     fetch (remote, {
         method: 'GET',
@@ -47,6 +46,7 @@ function debug_continue()
     .then ( json => {
         if (json.status == "ok") {
             source_removePC()       // erase the current PC pointer
+            cpu_run()
         }
     })
     .catch (error => { 
@@ -56,7 +56,6 @@ function debug_continue()
 
 function debug_stepinto()
 {
-    cpu_run()
     let remote = "http://localhost:9009/debug/stepinto";
     fetch (remote, {
         method: 'GET',
@@ -65,6 +64,7 @@ function debug_stepinto()
     .then ( response => response.json())
     .then ( json => {
         if (json.status == "ok") {
+            cpu_run()
         }
     })
     .catch (error => { 
@@ -74,7 +74,6 @@ function debug_stepinto()
 
 function debug_stepover()
 {
-    cpu_run()
     let remote = "http://localhost:9009/debug/stepover";
     fetch (remote, {
         method: 'GET',
@@ -83,6 +82,7 @@ function debug_stepover()
     .then ( response => response.json())
     .then ( json => {
         if (json.status == "ok") {
+            cpu_run()
         }
     })
     .catch (error => { 
@@ -92,7 +92,6 @@ function debug_stepover()
 
 function debug_stepout()
 {
-    cpu_run()
     let remote = "http://localhost:9009/debug/stepout";
     fetch (remote, {
         method: 'GET',
@@ -101,6 +100,7 @@ function debug_stepout()
     .then ( response => response.json())
     .then ( json => {
         if (json.status == "ok") {
+            cpu_run()
         }
     })
     .catch (error => { 

@@ -21,13 +21,14 @@ Design
 
 Features
 --------
+* Debug 65c02 instructions
 * Debug CA65 source code
-* Memory dump
-* Memory breakpoints
+* Memory & VRAM dump
 * Code breakpoints
-* Display memory as structure
+* Memory & VRAM breakpoints
+* Display memory as structure (format extracted from source code)
 
-Memory dump
+Memory & VRAM dump
 -----------
 * Dump 256 bytes of memory from the address provided in hexadecimal
 * Highlights bytes changed
@@ -43,7 +44,7 @@ Code breakpoints
 ----------------
 * Set breakpoints on instructions on the source code
 
-Memory breakpoints
+Memory & VRAM breakpoints
 ------------------
 * Trigger a breakpoint as soon as the content of the memory changes (byte, word, long)
 
@@ -58,7 +59,7 @@ Todo
 ----
 * [ ] Display memory as byte, word, long
 * [ ] Conditional code breakpoint
-* [ ] Trigger a breakpoint when the memory content reaches a predefined value_
+* [ ] Trigger a breakpoint when the memory content reaches a predefined value
 
 Configuration
 -------------
