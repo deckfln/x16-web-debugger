@@ -168,7 +168,7 @@ function ca65_syntax(line)
 
         if (next == " " || next == "\t" || next == '') {
             if (hmnemonics[op.toLowerCase()] != undefined) {
-                line = line.substr(0, start)+ "<span class=\"mnemonics\">" + op + "</span>" + line.substr(start+3, icomment-start-3)
+                line = line.substr(0, start)+ "<span class=\"mnemonics\">" + op + "</span>" + line.substr(start+3)
             }
         }
     }
@@ -176,19 +176,19 @@ function ca65_syntax(line)
     // render hexa number
     let hex = line.match(/#?(\$[\da-f]{1,4})\b/i)
     if (hex) {
-        line = line.replace(hex[1], '<span class="hlhex">' + hex[1] + '</space>')
+        line = line.replace(hex[1], '<span class="hlhex">' + hex[1] + '</span>')
     }
 
     // render binary number
     let bin = line.match(/#?(%[01]+)\b/i)
     if (bin) {
-        line = line.replace(bin[1], '<span class="hlhex">' + bin[1] + '</space>')
+        line = line.replace(bin[1], '<span class="hlhex">' + bin[1] + '</span>')
     }
 
     // render decimal number
     let dec = line.match(/#?\b(\d+)\b/i)
     if (dec) {
-        line = line.replace(dec[1], '<span class="hlhex">' + dec[1] + '</space>')
+        line = line.replace(dec[1], '<span class="hlhex">' + dec[1] + '</span>')
     }
 
     // render the controls

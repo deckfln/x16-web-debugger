@@ -131,6 +131,9 @@ function cpu_check()
                 // intercept debug keys
                 document.onkeydown = function(evt) {
                     switch (evt.key) {
+                        case 'F5':
+                            debug_continue()
+                            return false;
                         case 'F10':
                             debug_stepover()
                             return false;
