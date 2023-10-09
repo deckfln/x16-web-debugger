@@ -1,3 +1,5 @@
+"use strict";
+
 let currentStatus = undefined;
 let currentBank = undefined;
 

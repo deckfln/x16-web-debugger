@@ -1,3 +1,5 @@
+"use strict";
+
 let debug_info = {
     start: 0,
     structures: {},

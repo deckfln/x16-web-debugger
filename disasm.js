@@ -1,3 +1,5 @@
+"use strict";
+
 function snprintf(value, format) 
 {
 	let i = 0;
@@ -5,18 +7,13 @@ function snprintf(value, format)
 	let str_before = "";
 	let start = 0
 	let print = ""
+	let v
 	for (; i < format.length; i++) {
 		if (in_format) {
 			if (format[i] == "X") {
 				let len = parseInt(format.substring(start, i));
 				let zeros = "000000";
-				try {
-					v = ("000000" + parseInt(value).toString(16)).slice(-len);
-				}
-				catch {
-					console.log("error");
-					return "";
-				}
+				v = ("000000" + parseInt(value).toString(16)).slice(-len);
 				in_format = false;
 				print += v;
 			}

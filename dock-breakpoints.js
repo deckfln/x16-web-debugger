@@ -1,3 +1,5 @@
+"use strict";
+
 let Breakpoints={};
 
 /**
@@ -6,7 +8,7 @@ let Breakpoints={};
 function new_dock_breakpoints()
 {
     dock_new("Breakpoints", "dock-breakpoint")
-    load_breakpoints()
+    breakpoints_load()
 }
 
 function toggleBreapoint(addr, bank, upload)

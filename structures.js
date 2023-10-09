@@ -1,3 +1,5 @@
+"use strict";
+
 function structures_map()
 {
     // search for each structure in all the files

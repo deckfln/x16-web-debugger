@@ -1,3 +1,5 @@
+"use strict";
+
 let Menus = {}
 
 $(document).ready(function(){

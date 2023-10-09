@@ -1,4 +1,6 @@
-Vera = {
+"use strict";
+
+let Vera = {
     addr: undefined,
     previous : undefined
 }

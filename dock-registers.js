@@ -1,3 +1,5 @@
+"use strict";
+
 function dock_registers(bank, address)
 {
     let remote = "http://localhost:9009/dump/0/0002/32";
@@ -10,7 +12,7 @@ function dock_registers(bank, address)
         let words = new Uint16Array( buffer );
 
         let table=$('<table>');
-        for (r = 0; r < 16; r++) {
+        for (let r = 0; r < 16; r++) {
             let c = snprintf(words[r],"%04X")
             let clss = ''
 

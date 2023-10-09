@@ -1,3 +1,5 @@
+"use strict";
+
 let Watches = []
 
 /**
@@ -161,6 +163,7 @@ function display_struct(memory, struct, index, jstree, parent)
         let attr = structure.attributes[i]
         let type = attr.size.toLowerCase()
         let text
+        let v
 
         switch (type) {
             case ".byte":
@@ -236,6 +239,7 @@ function update_watch(index, struct, memory)
         const type = attr.size.toLowerCase()
         const id = struct + "_" + attr.name
         let text
+        let v
 
         let dom = $('#watch_root').jstree(true).get_node(id)
         switch (type) {

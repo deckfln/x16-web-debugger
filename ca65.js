@@ -1,3 +1,5 @@
+"use strict";
+
 const _controls = [
     "INTERRUPTOR",
     "FORCEIMPORT",
@@ -198,7 +200,7 @@ function ca65_syntax(line)
         control = "." + _controls[i]
         start = lineU.indexOf(control)
         if (start >= 0) {
-            next = line.substr(start+control.length, 1)
+            let next = line.substr(start+control.length, 1)
             if (next == " " || next == "\t" || next == '') {
                 line = line.substr(0, start)+ "<span class=\"control\">" + control + "</span>" + line.substr(start+control.length)
                 break

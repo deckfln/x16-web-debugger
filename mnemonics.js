@@ -1,3 +1,5 @@
+"use strict";
+
 // sourced from https://github.com/X16Community/x16-emulator/blob/master/src/cpu/mnemonics.h
 
 const mnemonics = [

@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * create a new dock
  */

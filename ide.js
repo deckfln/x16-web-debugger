@@ -1,3 +1,5 @@
+"use strict";
+
 // list of open panels
 let Panels = {
 }
@@ -121,7 +123,7 @@ function ide_restart()
         .then(ok => {
             structures_map()
             watch_bindStructures()
-            p = symbols_load(Config.symbols)
+            let p = symbols_load(Config.symbols)
             dock_sprite("http://localhost:9009/vera/sprite/0")
             breakpoints_load()
             .then(ok => {

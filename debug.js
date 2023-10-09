@@ -1,3 +1,5 @@
+"use strict";
+
 function debug_run()
 {
     let remote = "http://localhost:9009/run"
@@ -27,7 +29,7 @@ function debug_restart()
     .then ( response => response.json())
     .then ( json => {
         if (json.status == "ok") {
-            debug_run() // unlock the emulator
+            run() // unlock the emulator
         }
     })
     .catch (error => { 

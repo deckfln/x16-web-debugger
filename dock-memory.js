@@ -1,3 +1,5 @@
+"use strict";
+
 let memory = {
     'current' : {
         'bank': 0,
@@ -79,11 +81,11 @@ function dock_memory(bank, address)
         let clss = undefined
         let counter = 0
 
-        for (y=0; y<16; y++) {
+        for (let y=0; y<16; y++) {
             let tr=$('<tr>');
             tr.append("<td class=\"addr\">" + snprintf(addr,"%04X") + "</td>");
 
-            for (x=0; x<16; x++) {
+            for (let x=0; x<16; x++) {
                 clss = "brk_memory"
                 if (prev && memory.prev.bytes[i] != bytes[i]) {
                     clss += " updated"

@@ -1,3 +1,5 @@
+"use strict";
+
 let Vram = {
     'addr' : 0,
     'prev' : {
@@ -124,11 +126,11 @@ function dock_vram(address)
         let clss = undefined
         let counter = 0
 
-        for (y=0; y<16; y++) {
+        for (let y=0; y<16; y++) {
             let tr=$('<tr>');
             tr.append("<td class=\"addr\">" + snprintf(address,"%05X") + "</td>");
 
-            for (x=0; x<16; x++) {
+            for (let x=0; x<16; x++) {
                 let type = bytes[i]
                 let byte = bytes[i + 1]
                 clss = "brk_vram"

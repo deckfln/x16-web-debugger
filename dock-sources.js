@@ -1,3 +1,5 @@
+"use strict";
+
 let sources = {
     'update': undefined,
     'previous_pc': undefined

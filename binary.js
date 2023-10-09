@@ -1,6 +1,7 @@
 /****************************
  * Monitor if the binary got rebuild and reload everything in the debugger and in the emulator
  */
+"use strict";
 
 let Binary = {
     lastModified: 0
