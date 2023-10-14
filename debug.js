@@ -29,6 +29,7 @@ function debug_restart()
     .then ( response => response.json())
     .then ( json => {
         if (json.status == "ok") {
+            source_removePC()  // clean previous pointer
             run() // unlock the emulator
         }
     })
