@@ -74,15 +74,25 @@ function files_update()
     let root = jstree.get_node("#")
     jstree.delete_node(root.children)
 
+    let filenames = {}
     for (let fileID in debug_info.files) {
-        let file = debug_info.files[fileID] 
+        let file = debug_info.files[fileID].name 
+        filenames[file] = fileID
+    }
+    let b = Object.keys(filenames).sort()
+    for (let filename in b) {
+        let fileID = filenames[b[filename]]
+        let file = debug_info.files[fileID]
         let node = jstree.create_node(root, {
             text: file.name,
             id: 'f' + fileID,
             type: "file"
         })
 
-        for (let symbol in file.symbols) {
+        let c = Object.keys(file.symbols).sort()
+    
+        for (let i in c) {
+            let symbol = c[i]
             if (symbol.substring(0,1) != '@') {
                 let sym = jstree.create_node(node, {
                     text: symbol,
