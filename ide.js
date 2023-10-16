@@ -40,7 +40,10 @@ window.onload = () => {
     dockManager.dockFill(documentNode, d_disasm);
     let divNode = dockManager.dockRight(documentNode, d_files, 0.2);
         dockManager.dockDown(divNode, d_dump,0.4);
-    dockManager.dockDown(documentNode, d_sprite, 0.1);
+    dockManager.dockDown(documentNode, d_sprite, 0.12);
+
+    let d_tiles = new_dock_tiles(documentNode, "down", 0.1)
+
     dockManager.dockRight(documentNode, d_watch);
 
     $('#watch_root').jstree({
@@ -148,7 +151,7 @@ function ide_restart()
  * @param {*} id 
  * @returns 
  */
-function dock_new(title, id)
+function dock_new(title, id, prevNode, direction, size)
 {
     let dockManager = Panels.dockManager
     let divDockManager = Panels.divDockManager
@@ -160,7 +163,26 @@ function dock_new(title, id)
     panel.setAttribute("data-panel-caption", title)
     divDockManager.appendChild(panel)
     let d_panel = new DockSpawnTS.PanelContainer(panel, dockManager)
-    dockManager.dockFill(documentNode, d_panel)
+
+    if (prevNode == undefined) {
+        dockManager.dockFill(documentNode, d_panel)
+    }
+    else {
+        switch (direction) {
+            case "fill": 
+                dockManager.dockFill(prevNode, d_panel)
+                break
+            case "down": 
+                dockManager.dockDown(prevNode, d_panel, size)
+                break
+            case "right": 
+                dockManager.dockRight(prevNode, d_panel, size)
+                break
+            case "left": 
+                dockManager.dockLeft(prevNode, d_panel, size)
+                break
+        }
+    }
 
     Panels[id] = d_panel
 

@@ -12,6 +12,7 @@ $(document).ready(function(){
   Menus["dock-files"] = new_dock_files
   Menus["dock-vram"] = new_dock_vram
   Menus["dock-vera"] = new_dock_vera
+  Menus["dock-tiles"] = new_dock_tiles
 
   $("nav div").click(function(){
           $("ul").slideToggle();

@@ -177,6 +177,7 @@ function cpu_check()
             dock_registers()
             dock_vera()
             watches_update()
+            tiles_update()
         }
     })
     .catch (error => { 
