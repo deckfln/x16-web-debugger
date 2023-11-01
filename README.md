@@ -35,6 +35,7 @@ Memory & VRAM dump
 * Add memory breakpoints on individual bytes
 * Monitored memory bytes are highlight
 * Change size of monitored bytes on the fly (byte, word, long)
+* display tiles per layer (first 16x of the tile list)
 
 Source code
 -----------

@@ -38,29 +38,6 @@ html.dark-theme {
 .disasm-menu {
     width: 100%;
 }
-.debug-bar {
-    width: 200px; /* Set a specific width */
-    background-color: #eee; /* Dark-grey background */
-    height: 40px;
-  }
-  
-  .debug-bar a {
-    float: left; /* Float links side by side */
-    text-align: center; /* Center-align text */
-    width: 32px; /* Equal width (5 icons with 20% width each = 100%) */
-    padding: 12px 0; /* Some top and bottom padding */
-    color: white; /* White text color */
-    font-size: 36px; /* Increased font size */
-  }
-  
-  .debug-bar a:hover {
-    background-color: #999; /* Add a hover color */
-  }
-
-  .disabled-link {
-    pointer-events: none;
-    opacity: 0.25;
-  }
 
   .code {
     border-collapse:collapse;
@@ -71,30 +48,85 @@ html.dark-theme {
     white-space: pre;
   }
 
-  /* execute icon */
+
+/* breakpoint icons */
   .code .nobrk {
     min-width: 18px;
+    width: 18px;
+    height: 18px;
   }
 
-  /* breakpoint icon */
   .code .breakpoint {
-    min-width: 18px;
-    background-image: url("/images/breakpoint/on.png");
+    width: 18px;
+    height: 18px;
+    display: inline-block;    
+    background: url("/images/breakpoints.png") no-repeat;
+    background-position: 0px 0px;
   }
 
-  /* breakpoint exxecuted icon */
   .code .exec-breakpoint {
-    min-width: 18px;
-    background-image: url("/images/breakpoint/brk_pc.png");
+    width: 18px;
+    height: 18px;
+    display: inline-block;    
+    background: url("/images/breakpoints.png") no-repeat;
+    background-position: 0px -20px;
   }
 
-  /* execute icon */
   .code .exec {
-    min-width: 18px;
-    background-image: url("/images/breakpoint/pc.png");
+    width: 18px;
+    height: 18px;
+    display: inline-block;    
+    background: url("/images/breakpoints.png") no-repeat;
+    background-position: -40px 0px;
   }
-  
-  /* current instruction */
+
+/* breakpoint menu bar */
+.debug-bar {
+  width: 200px; /* Set a specific width */
+  background-color: #eee; /* Dark-grey background */
+  height: 40px;
+}
+.debug-bar a {
+  float: left; /* Float links side by side */
+  text-align: center; /* Center-align text */
+  padding: 12px 0; /* Some top and bottom padding */
+  color: white; /* White text color */
+  font-size: 36px; /* Increased font size */
+  width: 32px;
+  height: 8px;
+  display: inline-block;    
+  background: url("/images/debug-bar.png") no-repeat;
+}
+.debug-bar a:hover {
+  background-color: #999; /* Add a hover color */
+}
+.disabled-link {
+  pointer-events: none;
+  opacity: 0.25;
+}
+.debug-bar #continue {
+  background-position: 0px 0px;
+}
+.debug-bar #run {
+  background-position: 0px -32px;
+}
+.debug-bar #restart {
+  background-position: -92px 0px;
+}
+.debug-bar #stepinto {
+  background-position: -32px -32px;
+}
+.debug-bar #stepout {
+  background-position: -64px 0px;
+}
+.debug-bar #stepover {
+  background-position: -32px 0px;
+}
+.debug-bar .pause {
+  background-position: -192px 0px;
+}
+
+
   .code .pc {
     background: rgb(75,75,24);
   }
