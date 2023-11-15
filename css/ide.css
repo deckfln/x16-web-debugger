@@ -110,9 +110,6 @@ html.dark-theme {
 .debug-bar #run {
   background-position: 0px -32px;
 }
-.debug-bar #restart {
-  background-position: -92px 0px;
-}
 .debug-bar #stepinto {
   background-position: -32px -32px;
 }
@@ -120,6 +117,9 @@ html.dark-theme {
   background-position: -64px 0px;
 }
 .debug-bar #stepover {
+  background-position: -64px -32px;
+}
+.debug-bar #restart {
   background-position: -32px 0px;
 }
 .debug-bar .pause {
