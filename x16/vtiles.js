@@ -89,5 +89,8 @@ function tiles_get(index)
         Vera.tiles[index] = tiles_drawArray(bytes, 0, Vera.l0.tileW, Vera.l0.tileH, 8)
         return Vera.tiles[index]
     })
+    .catch (error => {
+        console.log(error)
+    })
     return premise
 }

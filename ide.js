@@ -69,6 +69,8 @@ window.onload = () => {
     .then ( response => response.json())
     .then ( json => {
         Config = json;
+        emulator_run()      // monitor the emulator, it will kick start the cpu monitor if needed
+        binary_monitor()    // monitor the PRG file        
         ide_restart()
     })
 
@@ -127,18 +129,7 @@ function ide_restart()
             structures_map()
             watch_bindStructures()
             let p = symbols_load(Config.symbols)
-            dock_sprite("http://localhost:9009/vera/sprite/0")
-            breakpoints_load()
-            .then(ok => {
-                dock_disasm(0, 0)
-                .then(ok => {
-                    if (first_init) {
-                        cpu_run()    // start CPU monitoring
-                        binary_monitor()  // start binary monitoring    
-                        first_init = false
-                    }
-                })
-            })
+            // TODO dock_sprite("http://localhost:9009/vera/sprite/0")
             return "ok"
         })
         return "OK"

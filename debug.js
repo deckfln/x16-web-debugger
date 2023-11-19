@@ -110,3 +110,21 @@ function debug_stepout()
         console.log(error);
     })       
 }
+
+// deactivate the debugbar
+function debug_deactivate()
+{
+    $("#run").addClass("disabled-link")
+    $("#restart").addClass("disabled-link")
+    $("#continue").addClass("disabled-link")
+    $("#stepinto").addClass("disabled-link")
+    $("#stepover").addClass("disabled-link")
+    $("#stepout").addClass("disabled-link")   
+}
+
+// deactivate the debugbar
+function debug_activate()
+{
+    $("#run").removeClass("disabled-link")
+    $("#restart").removeClass("disabled-link")
+}

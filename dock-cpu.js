@@ -4,7 +4,6 @@ let currentStatus = undefined;
 let currentBank = undefined;
 
 let cpu = {
-    'pid': -1,                      // emulator pid
     'status': 1,
     'previous_pc': undefined,
     'pc': undefined,
@@ -65,18 +64,6 @@ function cpu_check()
         if (cpu.status < 0) {
             $("#run").removeClass("disabled-link")
             $("#restart").removeClass("disabled-link")
-        }
-
-        if (cpu.pid < 0) {
-            // we are just starting, download breakpoints from the emulator
-            cpu.pid = json.pid
-            breakpoints_load()
-        }
-        else if (json.pid != cpu.pid) {
-            // we are speaking to a new emulator, prabably the user closed the emulator
-            cpu.pid = json.pid
-            breakpoints_upload()    //upload breakpoints to a new emulator
-            debug_restart()         //and restart the prg
         }
 
         $('#pc').html(snprintf(json.pc,"%04X"));

@@ -15,8 +15,6 @@ function new_dock_tiles(prevNode, direction, size)
     let node = $('#dock-tiles')
     node.html(html)
 
-    tiles_update()
-    
     return dock
 }
 
