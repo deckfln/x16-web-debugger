@@ -4,7 +4,8 @@
 let Emulator = {
     'monitor': undefined,
     'pid': -1,
-    'status': undefined
+    'status': undefined,
+    'inBasic': true
 }
 
 function emulator_run()
@@ -27,14 +28,10 @@ function emulator_check()
             case undefined:
             case "disconnected":
                 Emulator.status = "connected"
+                Emulator.inBasic = json.inBasic
                 cpu_run()
+                debug_activate()
                 break
-        }
-
-        // reactive run & restart after a network disconnection
-        if (Emulator.status < 0) {
-            $("#run").removeClass("disabled-link")
-            $("#restart").removeClass("disabled-link")
         }
 
         if (Emulator.pid < 0) {
@@ -48,8 +45,9 @@ function emulator_check()
             Emulator.pid = json.pid        
             dock_disasm(cpu.currentBank, cpu.pc)           // reload the asm code
             breakpoints_upload()    // upload breakpoints to a new emulator
-            debug_restart()         // and restart the prg
-            debug_activate()        // activate proper features on the debugbar
+            if (Emulator.inBasic) {
+                debug_run()         // and restart the prg
+            }
         }
     })
     .catch (error => { 

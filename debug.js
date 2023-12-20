@@ -10,7 +10,6 @@ function debug_run()
     .then ( response => response.json())
     .then ( json => {
         if (json.status == "ok") {
-            $("#run").addClass("disabled-link")
             cpu_run()
         }
     })
@@ -125,6 +124,8 @@ function debug_deactivate()
 // deactivate the debugbar
 function debug_activate()
 {
-    $("#run").removeClass("disabled-link")
+    if (!Emulator.inBasic) {
+        $("#run").removeClass("disabled-link")
+    }
     $("#restart").removeClass("disabled-link")
 }
