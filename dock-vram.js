@@ -125,10 +125,11 @@ function dock_vram(address)
         let prev = (address == Vram.addr && Vram.prev.bytes != undefined)
         let clss = undefined
         let counter = 0
+        let current = address
 
         for (let y=0; y<16; y++) {
             let tr=$('<tr>');
-            tr.append("<td class=\"addr\">" + snprintf(address,"%05X") + "</td>");
+            tr.append("<td class=\"addr\">" + snprintf(current,"%05X") + "</td>");
 
             for (let x=0; x<16; x++) {
                 let type = bytes[i]
@@ -138,8 +139,8 @@ function dock_vram(address)
                 if (prev && Vram.prev.bytes[i+1] != bytes[i+1]) {
                     clss += " updated"
                 }
-                if (Breakpoints[address] != undefined && Breakpoints[address].type == "vwatch") {
-                    counter = Breakpoints[address].len
+                if (Breakpoints[current] != undefined && Breakpoints[current].type == "vwatch") {
+                    counter = Breakpoints[current].len
                 }
 
                 if (counter > 0) {
@@ -147,9 +148,9 @@ function dock_vram(address)
                     counter--
                 }
                 
-                tr.append( "<td id=\"vmem_" + address + "\" class=\"" + clss + "\">"  + snprintf(byte,"%02X") + "</td>");
+                tr.append( "<td id=\"vmem_" + current + "\" class=\"" + clss + "\">"  + snprintf(byte,"%02X") + "</td>");
                 i += 2
-                address++
+                current++
             }
             table.append(tr);
         }
